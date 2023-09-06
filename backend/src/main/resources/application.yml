@@ -6,3 +6,9 @@ spring:
     url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: devA408
