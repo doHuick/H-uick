@@ -7,6 +7,12 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
   data:
     redis:
       host: localhost
