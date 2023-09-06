@@ -6,3 +6,15 @@ spring:
     url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: devA408
