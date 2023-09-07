@@ -1,4 +1,4 @@
-package com.dohit.huick.domain.member.entity;
+package com.dohit.huick.domain.user.entity;
 
 import java.time.LocalDateTime;
 
@@ -26,14 +26,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "Member")
-public class Member {
+@Table(name = "User")
+public class User {
 
 	@JsonIgnore
 	@Id
-	@Column(name = "member_id")
+	@Column(name = "user_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long memberId;
+	private Long userId;
 
 	@Column(name = "wallet_address", length = 512, unique = true)
 	@NotNull
@@ -86,10 +86,10 @@ public class Member {
 	private LocalDateTime issueDate;
 
 	@Builder
-	private Member(Long memberId, String walletAddress, SocialType socialType, String socialId,
+	private User(Long userId, String walletAddress, SocialType socialType, String socialId,
 		LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl, String rrn,
 		String address, String name, LocalDateTime issueDate) {
-		this.memberId = memberId;
+		this.userId = userId;
 		this.walletAddress = walletAddress;
 		this.socialType = socialType;
 		this.socialId = socialId;
@@ -103,7 +103,7 @@ public class Member {
 		this.issueDate = issueDate;
 	}
 
-	public Member(
+	public User(
 		@NotNull String walletAddress,
 		@NotNull SocialType socialType,
 		@NotNull String socialId,
