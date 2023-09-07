@@ -21,9 +21,9 @@ public enum ErrorCode {
 	NOT_EXIST_CALLBACK_TYPE(HttpStatus.FORBIDDEN, "403002", "잘못된 uri입니다."),
 
 	// 회원
-	INVALID_MEMBER_TYPE(HttpStatus.BAD_REQUEST, "404001", "잘못된 회원 타입 입니다. (memberType : KAKAO)"),
-	ALREADY_REGISTERED_MEMBER(HttpStatus.BAD_REQUEST, "404002", "이미 가입된 회원입니다."),
-	NOT_EXIST_MEMBER(HttpStatus.BAD_REQUEST, "404003", "존재하지 않는 회원입니다.");
+	INVALID_SOCIAL_TYPE(HttpStatus.BAD_REQUEST, "404001", "잘못된 소셜 타입 입니다."),
+	ALREADY_REGISTERED_USER(HttpStatus.BAD_REQUEST, "404002", "이미 가입된 회원입니다."),
+	NOT_EXIST_USER(HttpStatus.BAD_REQUEST, "404003", "존재하지 않는 회원입니다.");
 
 	ErrorCode(HttpStatus httpStatus, String errorCode, String message) {
 		this.httpStatus = httpStatus;
