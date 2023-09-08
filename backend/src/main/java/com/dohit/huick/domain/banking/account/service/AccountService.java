@@ -1,6 +1,7 @@
 package com.dohit.huick.domain.banking.account.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -28,5 +29,13 @@ public class AccountService {
 		}
 
 		return accounts.stream().map(AccountDto::from).collect(Collectors.toList());
+	}
+
+	public AccountDto getAccountByAccountNumber(String accountNumber) {
+		Optional<Account> account = accountRepository.findByAccountNumber(accountNumber);
+		if(account.isEmpty()) {
+			throw new BusinessException(ErrorCode.NO_ACCOUNT_EXIST);
+		}
+		return AccountDto.from(account.get());
 	}
 }
