@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 
 import com.dohit.huick.domain.auth.constant.Role;
 import com.dohit.huick.domain.auth.constant.SocialType;
+import com.dohit.huick.domain.user.dto.UserDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -89,4 +90,9 @@ public class User {
 		this.issueDate = issueDate;
 	}
 
+	public void signup(UserDto userDto) {
+		this.address = userDto.getAddress();
+		this.name = userDto.getName();
+		this.rrn = userDto.getRrn();
+	}
 }
