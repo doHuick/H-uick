@@ -1,5 +1,6 @@
 package com.dohit.huick.domain.banking.account.service;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,5 +38,20 @@ public class AccountService {
 			throw new BusinessException(ErrorCode.NO_ACCOUNT_EXIST);
 		}
 		return AccountDto.from(account.get());
+	}
+
+	public void createAccount(Long userId) {
+
+		SecureRandom secureRandom = new SecureRandom();
+
+		while (true) {
+			StringBuilder stringBuilder = new StringBuilder("110408");
+			stringBuilder.append(secureRandom.nextInt(900000) + 100000);
+			try {
+				accountRepository.save(Account.of(stringBuilder.toString(),userId,"001",0L));
+				return;
+			} catch (Exception ignored) {
+			}
+		}
 	}
 }
