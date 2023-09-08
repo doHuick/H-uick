@@ -19,10 +19,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findBySocialId(username).orElse(null);
-		if (user == null) {
-			throw new UsernameNotFoundException("Can not find username.");
-		}
+		User user = userRepository.findBySocialId(username).orElseThrow(() ->
+			new UsernameNotFoundException("Can not find username."));
 		return UserPrincipal.from(user);
 	}
 }
