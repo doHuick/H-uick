@@ -2,6 +2,7 @@ package com.dohit.huick.domain.banking.transaction.dto;
 
 import java.time.LocalDateTime;
 
+import com.dohit.huick.api.banking.TransactionApiDto;
 import com.dohit.huick.domain.banking.transaction.entity.Transaction;
 
 import lombok.Builder;
@@ -43,4 +44,11 @@ public class TransactionDto {
 			.build();
 	}
 
+	public static TransactionDto from(TransactionApiDto.Request request) {
+		return TransactionDto.builder()
+			.senderAccountNumber(request.getSenderAccountNumber())
+			.receiverAccountNumber(request.getReceiverAccountNumber())
+			.amount(request.getAmount())
+			.build();
+	}
 }
