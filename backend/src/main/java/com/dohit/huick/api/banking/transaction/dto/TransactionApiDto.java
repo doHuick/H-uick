@@ -3,6 +3,8 @@ package com.dohit.huick.api.banking.transaction.dto;
 import java.time.LocalDateTime;
 
 import com.dohit.huick.domain.banking.transaction.dto.TransactionDto;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +12,7 @@ import lombok.Getter;
 
 public class TransactionApiDto {
 	@Getter
+	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Request {
 		private String senderAccountNumber;
 		private String receiverAccountNumber;
@@ -24,6 +27,7 @@ public class TransactionApiDto {
 	}
 
 	@Getter
+	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Response {
 		private Long transactionId;
 		private String senderAccountNumber;
