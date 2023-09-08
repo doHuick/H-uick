@@ -86,10 +86,9 @@ public class User {
 	private LocalDateTime issueDate;
 
 	@Builder
-	private User(Long userId, String walletAddress, SocialType socialType, String socialId,
+	public User(String walletAddress, SocialType socialType, String socialId,
 		LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl, String rrn,
 		String address, String name, LocalDateTime issueDate) {
-		this.userId = userId;
 		this.walletAddress = walletAddress;
 		this.socialType = socialType;
 		this.socialId = socialId;
@@ -102,29 +101,5 @@ public class User {
 		this.name = name;
 		this.issueDate = issueDate;
 	}
-
-	public User(
-		@NotNull String walletAddress,
-		@NotNull SocialType socialType,
-		@NotNull String socialId,
-		@NotNull LocalDateTime createdTime,
-		@NotNull Role role,
-		LocalDateTime withdrawalTime,
-		@NotNull String signatureUrl,
-		@NotNull String rrn,
-		@NotNull String address,
-		@NotNull String name,
-		@NotNull LocalDateTime issueDate) {
-		this.walletAddress = walletAddress;
-		this.socialType = socialType;
-		this.socialId = socialId != null ? socialId : "NO_SOCIAL_ID";
-		this.createdTime = createdTime;
-		this.role = role;
-		this.withdrawalTime = withdrawalTime;
-		this.signatureUrl = signatureUrl;
-		this.rrn = rrn;
-		this.address = address;
-		this.name = name;
-		this.issueDate = issueDate;
-	}
+	
 }
