@@ -13,7 +13,6 @@ import com.dohit.huick.domain.banking.account.entity.Account;
 import com.dohit.huick.domain.banking.account.repository.AccountRepository;
 import com.dohit.huick.global.error.ErrorCode;
 import com.dohit.huick.global.error.exception.BankingException;
-import com.dohit.huick.global.error.exception.BusinessException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,10 +34,7 @@ public class AccountService {
 
 	public AccountDto getAccountByAccountNumber(String accountNumber) {
 		Optional<Account> account = accountRepository.findByAccountNumber(accountNumber);
-		if(account.isEmpty()) {
-			throw new BankingException(ErrorCode.NO_ACCOUNT_EXIST);
-		}
-		return AccountDto.from(account.get());
+		return AccountDto.from(account.orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_ACCOUNT)));
 	}
 
 	public void createAccount(Long userId) {
@@ -58,11 +54,8 @@ public class AccountService {
 
 	public void updateBalance(String accountNumber, Long money) {
 		Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
-		if(optionalAccount.isEmpty()) {
-			throw new BankingException(ErrorCode.NOT_EXIST_ACCOUNT);
-		}
 
-		Account account = optionalAccount.get();
+		Account account = optionalAccount.orElseThrow(() -> new BankingException(ErrorCode.NO_ACCOUNT_EXIST));
 
 		account.updateBalance(account.getBalance() + money);
 	}

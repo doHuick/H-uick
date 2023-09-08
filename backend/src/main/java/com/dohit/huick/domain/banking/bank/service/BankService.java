@@ -21,16 +21,10 @@ public class BankService {
 
 	public BankDto getBankByBankId(Long bankId) {
 		Optional<Bank> bank = bankRepository.findByBankId(bankId);
-		if(bank.isEmpty()) {
-			throw new BankingException(ErrorCode.NOT_EXIST_BANK);
-		}
-		return BankDto.from(bank.get());
+		return BankDto.from(bank.orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_BANK)));
 	}
 	public BankDto getBankByBankCode(String bankCode) {
 		Optional<Bank> bank = bankRepository.findByBankCode(bankCode);
-		if(bank.isEmpty()) {
-			throw new BankingException(ErrorCode.NOT_EXIST_BANK);
-		}
-		return BankDto.from(bank.get());
+		return BankDto.from(bank.orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_BANK)));
 	}
 }
