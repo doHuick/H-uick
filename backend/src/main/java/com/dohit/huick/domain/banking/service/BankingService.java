@@ -70,6 +70,7 @@ public class BankingService {
 	}
 
 	public List<TransactionDto> getTransactionsByUserId(Long userId) {
-		return transactionService.getTransactionsByUserId(userId);
+		String accountNumber = getAccountByUserId(userId).getAccountNumber();
+		return transactionService.getTransactionsByUserId(accountNumber);
 	}
 }

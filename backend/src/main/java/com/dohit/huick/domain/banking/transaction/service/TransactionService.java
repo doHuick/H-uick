@@ -23,7 +23,7 @@ public class TransactionService {
 		transactionRepository.save(Transaction.from(transactionDto));
 	}
 
-	public List<TransactionDto> getTransactionsByUserId(Long userId) {
-		return transactionRepository.findByUserId(userId).stream().map(TransactionDto::from).collect(Collectors.toList());
+	public List<TransactionDto> getTransactionsByUserId(String accountNumber) {
+		return transactionRepository.findBySenderAccountNumberIsOrReceiverAccountNumberIs(accountNumber, accountNumber).stream().map(TransactionDto::from).collect(Collectors.toList());
 	}
 }
