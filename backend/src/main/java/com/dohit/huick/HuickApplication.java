@@ -5,9 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import com.dohit.huick.global.property.AppProperties;
+import com.dohit.huick.global.property.CorsProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties({AppProperties.class})
+@EnableConfigurationProperties({
+	CorsProperties.class,
+	AppProperties.class
+})
 public class HuickApplication {
 
 	public static void main(String[] args) {
