@@ -26,5 +26,11 @@ public class BankService {
 		}
 		return BankDto.from(bank.get());
 	}
-
+	public BankDto getBankByBankCode(String bankCode) {
+		Optional<Bank> bank = bankRepository.findByBankCode(bankCode);
+		if(bank.isEmpty()) {
+			throw new BankingException(ErrorCode.NOT_EXIST_BANK);
+		}
+		return BankDto.from(bank.get());
+	}
 }
