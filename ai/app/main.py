@@ -8,10 +8,11 @@ def get_pdf(pdf: UploadFile = File(None)) -> UploadFile:
     return pdf
 
 @app.post("/contracts/start/")
-async def chat_openai(user_id: int, service_id: int, chat: str, pdf: UploadFile = Depends(get_pdf)):
+async def chat_openai(user_id: int, service_id: int, chat: str, file: UploadFile = Depends(get_pdf)):
     try:
-        if pdf:
-            response = llm_service.get_initial_contract_response_with_pdf(user_id, service_id, pdf, chat)
+        if file:
+            file_contents = await file.read()
+            response = llm_service.get_initial_contract_response_with_pdf(user_id, service_id, file_contents, chat)
         else:
             response = llm_service.get_initial_contract_response(user_id, service_id, chat)
 

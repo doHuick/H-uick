@@ -1,9 +1,9 @@
 from decouple import config
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
-from langchain.document_loaders import PyPDFLoader
-from fastapi import UploadFile
-import io
+
+from PyPDF2 import PdfReader
+from io import BytesIO
 
 from collections import defaultdict
 
@@ -80,6 +80,16 @@ def get_additional_request_response(user_id: int, service_id: int, chat: str) ->
 
 
 # Util
+
+def convert_file_to_text(file_contents: bytes) -> str:
+    pdf_file = BytesIO(file_contents)
+    reader = PdfReader(pdf_file)
+    
+    text = ""
+    for page_num in range(len(reader.pages)):
+        text += reader.pages[page_num].extract_text()
+
+    return text
 
 def save_history(user_id: int, service_id: int, conversation: dict):
     history_key = make_history_key(user_id, service_id)
