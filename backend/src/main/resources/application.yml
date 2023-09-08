@@ -18,3 +18,22 @@ spring:
       host: localhost
       port: 6379
       password: devA408
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            clientId: ${KAKAO_CLIENT_ID}
+            clientSecret: ${KAKAO_CLIENT_SECRET}
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirectUri: http://localhost:8080/login/oauth2/code/kakao
+            scope:
+              - account_email
+            clientName: Kakao
+        provider:
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
