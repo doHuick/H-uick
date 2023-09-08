@@ -27,7 +27,7 @@ public class AccountService {
 	public List<AccountDto> getAccountsByUserId(Long userId){
 		List<Account> accounts = accountRepository.findByUserId(userId);
 		if(accounts.size() == 0) {
-			throw new BusinessException(ErrorCode.NO_ACCOUNT_EXIST);
+			throw new BankingException(ErrorCode.NO_ACCOUNT_EXIST);
 		}
 
 		return accounts.stream().map(AccountDto::from).collect(Collectors.toList());
@@ -36,7 +36,7 @@ public class AccountService {
 	public AccountDto getAccountByAccountNumber(String accountNumber) {
 		Optional<Account> account = accountRepository.findByAccountNumber(accountNumber);
 		if(account.isEmpty()) {
-			throw new BusinessException(ErrorCode.NO_ACCOUNT_EXIST);
+			throw new BankingException(ErrorCode.NO_ACCOUNT_EXIST);
 		}
 		return AccountDto.from(account.get());
 	}
