@@ -1,6 +1,7 @@
 package com.dohit.huick.domain.banking.service;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,5 +67,9 @@ public class BankingService {
 
 		// 트랜잭션 데이터를 생성함
 		transactionService.createTransaction(transactionDto);
+	}
+
+	public List<TransactionDto> getTransactionsByUserId(Long userId) {
+		return transactionService.getTransactionsByUserId(userId);
 	}
 }
