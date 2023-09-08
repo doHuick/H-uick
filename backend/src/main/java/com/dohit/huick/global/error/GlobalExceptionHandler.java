@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = {BusinessException.class})
 	protected ResponseEntity<ErrorResponse> handleConflict(BusinessException e) {
-		log.error("BusinesException", e);
+		log.error("BusinessException", e);
 		ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode().getErrorCode(), e.getMessage());
 		return ResponseEntity.status(e.getErrorCode().getHttpStatus())
 			.body(errorResponse);
