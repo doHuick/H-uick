@@ -11,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 public class AccountApiDto {
-	@Builder
 	@Getter
 	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Response {
