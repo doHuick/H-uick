@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dohit.huick.api.banking.transaction.dto.TransactionApiDto;
@@ -16,7 +17,8 @@ import com.dohit.huick.domain.banking.service.BankingService;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController("/banking/transactions")
+@RestController
+@RequestMapping("/banking/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
 	private final BankingService bankingService;
