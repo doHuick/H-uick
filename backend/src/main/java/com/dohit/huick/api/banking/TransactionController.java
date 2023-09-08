@@ -1,6 +1,11 @@
 package com.dohit.huick.api.banking;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,5 +24,12 @@ public class TransactionController {
 	public ResponseEntity<Void> transferMoney(@RequestBody TransactionApiDto.Request request) {
 		bankingService.transferMoney(TransactionDto.from(request));
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/{userId}")
+	public ResponseEntity<List<TransactionApiDto.Response>> getTransactionsByUserId(@PathVariable Long userId) {
+		return ResponseEntity.ok(bankingService.getTransactionsByUserId(userId).stream().map(
+			TransactionApiDto.Response::from).collect(
+			Collectors.toList()));
 	}
 }
