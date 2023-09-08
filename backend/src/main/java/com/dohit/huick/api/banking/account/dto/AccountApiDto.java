@@ -1,4 +1,4 @@
-package com.dohit.huick.api.banking;
+package com.dohit.huick.api.banking.account.dto;
 
 import java.time.LocalDateTime;
 

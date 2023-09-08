@@ -2,7 +2,7 @@ package com.dohit.huick.domain.banking.transaction.dto;
 
 import java.time.LocalDateTime;
 
-import com.dohit.huick.api.banking.TransactionApiDto;
+import com.dohit.huick.api.banking.transaction.dto.TransactionApiDto;
 import com.dohit.huick.domain.banking.transaction.entity.Transaction;
 
 import lombok.Builder;

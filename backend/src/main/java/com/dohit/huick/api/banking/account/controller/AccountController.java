@@ -1,10 +1,11 @@
-package com.dohit.huick.api.banking;
+package com.dohit.huick.api.banking.account.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dohit.huick.api.banking.account.dto.AccountApiDto;
 import com.dohit.huick.domain.banking.service.BankingService;
 
 import lombok.RequiredArgsConstructor;

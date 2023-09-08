@@ -1,4 +1,4 @@
-package com.dohit.huick.api.banking;
+package com.dohit.huick.api.banking.transaction.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dohit.huick.api.banking.transaction.dto.TransactionApiDto;
 import com.dohit.huick.domain.banking.transaction.dto.TransactionDto;
 import com.dohit.huick.domain.banking.service.BankingService;
 
