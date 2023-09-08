@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.dohit.huick.domain.banking.transaction.dto.TransactionDto;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,5 +48,13 @@ public class Transaction {
 		this.receiverAccountNumber = receiverAccountNumber;
 		this.amount = amount;
 		this.transactionTime = transactionTime;
+	}
+
+	public static Transaction from(TransactionDto transactionDto) {
+		return Transaction.builder()
+			.senderAccountNumber(transactionDto.getSenderAccountNumber())
+			.receiverAccountNumber(transactionDto.getReceiverAccountNumber())
+			.amount(transactionDto.getAmount())
+			.build();
 	}
 }
