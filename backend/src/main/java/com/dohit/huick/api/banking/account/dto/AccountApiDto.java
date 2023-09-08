@@ -23,7 +23,7 @@ public class AccountApiDto {
 		private LocalDateTime createdTime;
 
 		@Builder
-		public Response(Long accountId, String accountNumber, String bankCode, BankType bankName, Long balance,
+		private Response(Long accountId, String accountNumber, String bankCode, BankType bankName, Long balance,
 			LocalDateTime createdTime) {
 			this.accountId = accountId;
 			this.accountNumber = accountNumber;

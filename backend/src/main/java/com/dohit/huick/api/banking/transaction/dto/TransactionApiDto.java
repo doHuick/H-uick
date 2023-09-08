@@ -16,7 +16,7 @@ public class TransactionApiDto {
 		private Long amount;
 
 		@Builder
-		public Request(String senderAccountNumber, String receiverAccountNumber, Long amount) {
+		private Request(String senderAccountNumber, String receiverAccountNumber, Long amount) {
 			this.senderAccountNumber = senderAccountNumber;
 			this.receiverAccountNumber = receiverAccountNumber;
 			this.amount = amount;
@@ -32,7 +32,7 @@ public class TransactionApiDto {
 		private LocalDateTime transactionTime;
 
 		@Builder
-		public Response(Long transactionId, String senderAccountNumber, String receiverAccountNumber, Long amount,
+		private Response(Long transactionId, String senderAccountNumber, String receiverAccountNumber, Long amount,
 			LocalDateTime transactionTime) {
 			this.transactionId = transactionId;
 			this.senderAccountNumber = senderAccountNumber;

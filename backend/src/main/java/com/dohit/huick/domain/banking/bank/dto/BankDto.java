@@ -13,7 +13,7 @@ public class BankDto {
 	private BankType bankName;
 
 	@Builder
-	public BankDto(Long bankId, String bankCode, BankType bankName) {
+	private BankDto(Long bankId, String bankCode, BankType bankName) {
 		this.bankId = bankId;
 		this.bankCode = bankCode;
 		this.bankName = bankName;

@@ -43,7 +43,7 @@ public class Account {
 	private LocalDateTime createdTime;
 
 	@Builder
-	public Account(Long accountId, String accountNumber, Long userId, String bankCode, Long balance,
+	private Account(Long accountId, String accountNumber, Long userId, String bankCode, Long balance,
 		LocalDateTime createdTime) {
 		this.accountId = accountId;
 		this.accountNumber = accountNumber;

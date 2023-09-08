@@ -17,7 +17,7 @@ public class TransactionDto {
 	private LocalDateTime transactionTime;
 
 	@Builder
-	public TransactionDto(Long transactionId, String senderAccountNumber, String receiverAccountNumber, Long amount,
+	private TransactionDto(Long transactionId, String senderAccountNumber, String receiverAccountNumber, Long amount,
 		LocalDateTime transactionTime) {
 		this.transactionId = transactionId;
 		this.senderAccountNumber = senderAccountNumber;

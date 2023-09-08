@@ -19,7 +19,7 @@ public class AccountDto {
 	private LocalDateTime createdTime;
 
 	@Builder
-	public AccountDto(Long accountId, String accountNumber, String bankCode, BankType bankName, Long balance,
+	private AccountDto(Long accountId, String accountNumber, String bankCode, BankType bankName, Long balance,
 		LocalDateTime createdTime) {
 		this.accountId = accountId;
 		this.accountNumber = accountNumber;
