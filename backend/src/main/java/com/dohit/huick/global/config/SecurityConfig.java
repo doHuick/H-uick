@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -45,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final UserRepository userRepository;
+	private final LogoutHandler logoutHandler;
 
 	/*
 	 * UserDetailsService 설정
@@ -88,7 +90,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.userService(oAuth2UserService)
 			.and()
 			.successHandler(oAuth2AuthenticationSuccessHandler())
-			.failureHandler(oAuth2AuthenticationFailureHandler());
+			.failureHandler(oAuth2AuthenticationFailureHandler())
+			.and()
+			.logout()
+			.logoutUrl("/*/v1/user/logout")
+			.clearAuthentication(true)
+			.deleteCookies(OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN)
+			.addLogoutHandler(logoutHandler)
+			.logoutSuccessUrl("/")
+			.permitAll();
 
 		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
