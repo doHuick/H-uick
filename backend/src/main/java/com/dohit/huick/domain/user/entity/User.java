@@ -97,8 +97,12 @@ public class User {
 	}
 
 	public void withdraw() {
-		this.withdrawalTime = LocalDateTime.now();
-		System.out.println(this.withdrawalTime);
+		this.walletAddress = null;
+		this.rrn = null;
+		this.address = null;
+		this.name = null;
+		this.issueDate = null;
+		this.withdrawalTime = LocalDateTime.now().plusMonths(1);
 	}
-	
+
 }
