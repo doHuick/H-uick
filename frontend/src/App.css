@@ -26,6 +26,10 @@
 
 body {
   -ms-overflow-style: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-use-select: none;
+  user-select: none;
 }
 ::-webkit-scrollbar {
   display: none;
