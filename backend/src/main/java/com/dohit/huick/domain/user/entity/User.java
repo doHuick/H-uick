@@ -95,4 +95,10 @@ public class User {
 		this.name = userDto.getName();
 		this.rrn = userDto.getRrn();
 	}
+
+	public void withdraw() {
+		this.withdrawalTime = LocalDateTime.now();
+		System.out.println(this.withdrawalTime);
+	}
+	
 }
