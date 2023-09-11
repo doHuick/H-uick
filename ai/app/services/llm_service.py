@@ -49,13 +49,17 @@ def get_initial_contract_response(user_id: int, service_id: int, chat: str) -> s
 # 계약 작성 중 대화할 때 LLM 답변 요청하는 서비스 메서드
 # 대화 내용 저장
 def get_ongoing_contract_response(user_id: int, service_id: int, chat: str, history: dict) -> str:
-    conversations = ' '.join([item['user'] + item['bot'] for item in history]) + chat
+    # chat_history에서 이전 대화 내용 복원
+    history_key = make_history_key(user_id, service_id)
+    previous_conversations = chat_history[history_key]
+    conversations = ' '.join([item['user'] + item['bot'] for item in previous_conversations]) + chat
     contracts_msg = HumanMessage(content=conversations)
 
     response = contracts_model([contracts_sys, contracts_msg]).content
     conversation = {'user': chat, 'bot': response}
 
     save_history(user_id, service_id, conversation)
+
     return response
 
 
@@ -64,6 +68,7 @@ def get_ongoing_contract_response(user_id: int, service_id: int, chat: str, hist
 def get_initial_contract_response_with_pdf(user_id: int, service_id: int, file_contents: bytes, chat: str) -> str:
     pdf_text = convert_file_to_text(file_contents)
     request_text = pdf_text + chat
+
     return get_initial_contract_response(user_id, service_id, request_text)
 
 
@@ -88,7 +93,7 @@ def convert_file_to_text(file_contents: bytes) -> str:
     text = ""
     for page_num in range(len(reader.pages)):
         text += reader.pages[page_num].extract_text()
-
+        
     return text
 
 def save_history(user_id: int, service_id: int, conversation: dict):
@@ -96,4 +101,5 @@ def save_history(user_id: int, service_id: int, conversation: dict):
     chat_history[history_key].append(conversation)
 
 def make_history_key(user_id: int, service_id: int) -> str:
+
     return str(user_id) + ':' + str(service_id)
