@@ -1,5 +1,6 @@
 package com.dohit.huick.domain.user.service;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,20 @@ public class UserService {
 		User user = userRepository.findByUserId(userDto.getUserId())
 			.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
 		user.signup(userDto);
+	}
+
+	@Transactional
+	public void withdraw() throws BusinessException {
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		if (name == null) {
+			throw new BusinessException(ErrorCode.NOT_EXIST_USER);
+		}
+
+		Long userId = Long.valueOf(name);
+		User user = userRepository.findByUserId(userId)
+			.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+		
+		user.withdraw();
 	}
 
 }
