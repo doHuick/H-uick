@@ -4,6 +4,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dohit.huick.domain.auth.repository.RefreshTokenRepository;
 import com.dohit.huick.domain.user.dto.UserDto;
 import com.dohit.huick.domain.user.entity.User;
 import com.dohit.huick.domain.user.repository.UserRepository;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final RefreshTokenRepository refreshTokenRepository;
 
 	@Transactional
 	public void signup(UserDto userDto) throws BusinessException {
@@ -35,8 +37,9 @@ public class UserService {
 		Long userId = Long.valueOf(name);
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
-		
+
 		user.withdraw();
+		refreshTokenRepository.deleteByUserId(userId);
 	}
 
 }
