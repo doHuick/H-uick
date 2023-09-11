@@ -1,11 +1,13 @@
 import React from 'react';
 import './App.css';
-// import Router from './router/Router';
+import Router from './router/Router';
 
 function App() {
-  // return <Router />;
-  return <div>H-uick</div>;
-  
+  return (
+    <>
+      <Router></Router>
+    </>
+  );
 }
 
 export default App;
