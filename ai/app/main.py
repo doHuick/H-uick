@@ -8,7 +8,7 @@ def get_pdf(pdf: UploadFile = File(None)) -> UploadFile:
     return pdf
 
 @app.post("/contracts/start/")
-async def chat_openai(user_id: int, service_id: int, chat: str, file: UploadFile = Depends(get_pdf)):
+async def request_initial_contracts(user_id: int, service_id: int, chat: str, file: UploadFile = Depends(get_pdf)):
     try:
         if file:
             file_contents = await file.read()
@@ -22,7 +22,7 @@ async def chat_openai(user_id: int, service_id: int, chat: str, file: UploadFile
         raise HTTPException(status_code=500, detail=str(e))
     
 @app.post("/contracts/continue/")
-async def additional_request_openai(user_id: int, service_id: int, chat: str):
+async def request_additional_contracts(user_id: int, service_id: int, chat: str):
     try:
         response = llm_service.get_additional_request_response(user_id, service_id, chat)
         return {"answer": response}
