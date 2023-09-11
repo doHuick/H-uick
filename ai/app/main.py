@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Depends
-from .services import llm_service
+from services import llm_service
+from models.contract_info import ContractInfo
 
 
 app = FastAPI()
@@ -25,6 +26,15 @@ async def request_initial_contracts(user_id: int, service_id: int, chat: str, fi
 async def request_additional_contracts(user_id: int, service_id: int, chat: str):
     try:
         response = llm_service.get_additional_request_response(user_id, service_id, chat)
+        return {"answer": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/contracts/convert-to-pdf/")
+async def request_convert_to_pdf(contract_info: ContractInfo):
+    try:
+        response = llm_service.convert_to_pdf(contract_info)
         return {"answer": response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

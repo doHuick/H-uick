@@ -5,6 +5,12 @@ from langchain.schema import HumanMessage, SystemMessage
 from PyPDF2 import PdfReader
 from io import BytesIO
 
+from docx import Document
+from docx.shared import Pt
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx2pdf import convert
+from datetime import datetime
+
 from collections import defaultdict
 
 chat_history = defaultdict(list)
@@ -82,7 +88,72 @@ def get_additional_request_response(user_id: int, service_id: int, chat: str) ->
 
     return response
 
+def convert_to_pdf(contract_info: ContractInfo) -> bytes:
+    word = contractInfo_to_word(contract_info)
+    html = word.to_html()
 
+    # HTML을 PDF로 변환
+    pdf = pdfkit.from_string(html, False)
+
+    # BytesIO 객체로 변환하여 반환
+    pdf_stream = BytesIO(pdf)
+    return pdf_stream
+
+# ContractInfo to word
+# contract_info가 입력됐다고 가정하고 작성
+# 프로토타입 모델
+def contractInfo_to_word(contract_info: ContractInfo) -> Document:
+    doc = Document()
+
+    # 문서 제목
+    p = doc.add_paragraph()
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    run = p.add_run('차용증')
+    run.bold = True
+    run.font.size = Pt(24)
+
+    # 차용금액
+    doc.add_paragraph(f'원({contract_info.loanDetails.loanAmountInKorean})')
+
+    # 빌린 날짜 및 이자, 원금 상환일
+    repayment_condition = contract_info.repaymentDetails.repaymentCondition or '-'
+    repayment_method = contract_info.repaymentDetails.repaymentMethod or '-'
+    maturity_date = contract_info.repaymentDetails.maturityDate or '-'
+    
+    doc.add_paragraph(f'위 금액을 채무자가 채권자로부터 {contract_info.loanDetails.borrowedDate} 틀림없이 빌렸습니다. '
+                      f'이자는 연 {repayment_condition}으로 하여 매월 {repayment_method}일까지 갚겠으며, '
+                      f'원금은 {maturity_date}까지 채권자에게 갚겠습니다.')
+
+    # 채무자 정보
+    p = doc.add_paragraph()
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+    p.add_run(f'채무자 이름 : {contract_info.debtorInfo.name} (서명 또는 인)')
+    p = doc.add_paragraph()
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+    p.add_run(f'(빌리는 사람) 주소 : {contract_info.debtorInfo.address}')
+    p = doc.add_paragraph()
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+    p.add_run(f'주민등록번호 : {contract_info.debtorInfo.ssn}')
+    p = doc.add_paragraph()
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+    p.add_run(f'전화번호 : {contract_info.debtorInfo.contact}')
+
+    # 채권자 정보
+    p = doc.add_paragraph()
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+    p.add_run(f'채권자 이름 : {contract_info.creditorInfo.name} 귀하')
+    p = doc.add_paragraph()
+    p.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
+    p.add_run(f'(빌려주는 사람) 주소 : {contract_info.creditorInfo.address}')
+
+    # 작성 날짜
+    today = datetime.today().strftime('%Y년 %m월 %d일')
+    doc.add_paragraph(today)
+
+    # 파일 저장
+    doc.save('차용증.docx')
+
+    return doc
 
 # Util
 
