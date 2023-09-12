@@ -14,6 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.constant.IntervalUnit;
+import com.dohit.huick.domain.contract.dto.ContractDto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -77,6 +78,20 @@ public class Contract {
 		this.rate = rate;
 		this.status = status;
 		this.createdTime = createdTime;
+	}
+
+	public static Contract from(ContractDto contractDto) {
+		return Contract.builder()
+			.lesseeId(contractDto.getLesseeId())
+			.lessorId(contractDto.getLessorId())
+			.startDate(contractDto.getStartDate())
+			.dueDate(contractDto.getDueDate())
+			.interval(contractDto.getInterval())
+			.amount(contractDto.getAmount())
+			.repaymentAmount(contractDto.getRepaymentAmount())
+			.rate(contractDto.getRate())
+			.status(contractDto.getStatus())
+			.build();
 	}
 
 	public void updateStatus(ContractStatus status) {
