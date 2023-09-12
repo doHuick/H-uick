@@ -11,6 +11,8 @@ import javax.persistence.Id;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +42,14 @@ public class AutoTransfer {
 		this.contractId = contractId;
 		this.nextTransferDate = nextTransferDate;
 		this.unpaidCount = unpaidCount;
+	}
+
+	public static AutoTransfer from(AutoTransferDto autoTransferDto) {
+		return AutoTransfer.builder()
+			.contractId(autoTransferDto.getContractId())
+			.nextTransferDate(autoTransferDto.getNextTransferDate())
+			.unpaidCount(autoTransferDto.getUnpaidCount())
+			.build();
 	}
 
 	public void updateUnpaidCount(Integer unpaidCount) {
