@@ -19,8 +19,9 @@ public class TransactionService {
 
 	private final TransactionRepository transactionRepository;
 
-	public void createTransaction(TransactionDto transactionDto) {
-		transactionRepository.save(Transaction.from(transactionDto));
+	public Long createTransaction(TransactionDto transactionDto) {
+		Transaction transaction = transactionRepository.save(Transaction.from(transactionDto));
+		return transaction.getTransactionId();
 	}
 
 	public List<TransactionDto> getTransactionsByUserId(String accountNumber) {
