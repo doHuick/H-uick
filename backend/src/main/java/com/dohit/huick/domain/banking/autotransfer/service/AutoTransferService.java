@@ -40,4 +40,10 @@ public class AutoTransferService {
 			ErrorCode.NOT_EXIST_AUTO_TRANSFER));
 		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() + 1);
 	}
+
+	public void decreaseUnpaidCount(Long autoTransferId) {
+		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(
+			ErrorCode.NOT_EXIST_AUTO_TRANSFER));
+		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() - 1);
+	}
 }
