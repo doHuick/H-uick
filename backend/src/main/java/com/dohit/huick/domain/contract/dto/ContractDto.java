@@ -2,6 +2,7 @@ package com.dohit.huick.domain.contract.dto;
 
 import java.time.LocalDateTime;
 
+import com.dohit.huick.api.contract.dto.ContractApiDto;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.constant.IntervalUnit;
 import com.dohit.huick.domain.contract.entity.Contract;
@@ -57,6 +58,22 @@ public class ContractDto {
 			.rate(contract.getRate())
 			.status(contract.getStatus())
 			.createdTime(contract.getCreatedTime())
+			.build();
+	}
+
+	public static ContractDto from(ContractApiDto.Request request) {
+		return ContractDto.builder()
+			.lesseeId(request.getLesseeId())
+			.lessorId(request.getLessorId())
+			.startDate(request.getStartDate())
+			.dueDate(request.getDueDate())
+			.interval(request.getInterval())
+			.intervalUnit(request.getIntervalUnit())
+			.amount(request.getAmount())
+			.repaymentAmount(request.getRepaymentAmount())
+			.rate(request.getRate())
+			.status(request.getStatus())
+			.useAutoTransfer(request.getUseAutoTransfer())
 			.build();
 	}
 
