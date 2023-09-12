@@ -1,5 +1,7 @@
 package com.dohit.huick.domain.banking.repayment.dto;
 
+import com.dohit.huick.domain.banking.repayment.entity.Repayment;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,6 +25,15 @@ public class RepaymentDto {
 			.contractId(contractId)
 			.transactionId(transactionId)
 			.repaymentNumber(repaymentNumber)
+			.build();
+	}
+
+	public static RepaymentDto from(Repayment repayment) {
+		return RepaymentDto.builder()
+			.repaymentId(repayment.getRepaymentId())
+			.contractId(repayment.getContractId())
+			.transactionId(repayment.getTransactionId())
+			.repaymentNumber(repayment.getRepaymentNumber())
 			.build();
 	}
 }
