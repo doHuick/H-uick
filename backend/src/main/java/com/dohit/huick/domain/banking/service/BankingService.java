@@ -1,6 +1,7 @@
 package com.dohit.huick.domain.banking.service;
 
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -112,5 +113,9 @@ public class BankingService {
 		}
 
 		return Objects.equals(contractDto.getAmount(), totalRepaymentAmount);
+	}
+
+	public void updateNextTransferDate(Long autoTransferId, LocalDateTime nextTransferDate) {
+		autoTransferService.updateNextTransferDate(autoTransferId, nextTransferDate);
 	}
 }
