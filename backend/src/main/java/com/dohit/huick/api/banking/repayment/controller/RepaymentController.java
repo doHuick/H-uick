@@ -21,7 +21,7 @@ public class RepaymentController {
 
 	@PostMapping
 	public ResponseEntity<Void> repay(@RequestBody RepaymentApiDto.Request request){
-		bankingService.repay(contractService.getContractByContractId(request.getContractId()), request.getAmount());\
+		bankingService.repay(contractService.getContractByContractId(request.getContractId()), request.getAmount());
 
 		return ResponseEntity.ok().build();
 	}
