@@ -2,6 +2,9 @@ package com.dohit.huick.domain.contract.dto;
 
 import java.time.LocalDateTime;
 
+import com.dohit.huick.domain.contract.constant.ContractStatus;
+import com.dohit.huick.domain.contract.constant.IntervalUnit;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,24 +15,30 @@ public class ContractDto {
 	Long lessorId;
 	LocalDateTime startDate;
 	LocalDateTime dueDate;
-	LocalDateTime interval;
+	Integer interval;
+	IntervalUnit intervalUnit;
 	Long amount;
+	Long repaymentAmount;
 	Float rate;
-	String status;
+	ContractStatus status;
 	LocalDateTime createdTime;
+	String useAutoTransfer;
 
 	@Builder
 	private ContractDto(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-		LocalDateTime interval, Long amount, Float rate, String status, LocalDateTime createdTime) {
+		Integer interval, IntervalUnit intervalUnit, Long amount, Long repaymentAmount,Float rate, ContractStatus status, LocalDateTime createdTime, String useAutoTransfer) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
 		this.lessorId = lessorId;
 		this.startDate = startDate;
 		this.dueDate = dueDate;
 		this.interval = interval;
+		this.intervalUnit = intervalUnit;
 		this.amount = amount;
+		this.repaymentAmount = repaymentAmount;
 		this.rate = rate;
 		this.status = status;
 		this.createdTime = createdTime;
+		this.useAutoTransfer = useAutoTransfer;
 	}
 }
