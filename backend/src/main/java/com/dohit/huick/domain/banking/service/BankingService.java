@@ -90,4 +90,8 @@ public class BankingService {
 	public void increaseUnpaidCount(Long autoTransferId) {
 		autoTransferService.increaseUnpaidCount(autoTransferId);
 	}
+
+	public void decreaseUnpaidCount(Long autoTransferId) {
+		autoTransferService.decreaseUnpaidCount(autoTransferId);
+	}
 }
