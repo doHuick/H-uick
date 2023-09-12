@@ -11,6 +11,7 @@ import com.dohit.huick.domain.banking.account.service.AccountService;
 import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
 import com.dohit.huick.domain.banking.autotransfer.service.AutoTransferService;
 import com.dohit.huick.domain.banking.bank.service.BankService;
+import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.service.RepaymentService;
 import com.dohit.huick.domain.banking.transaction.dto.TransactionDto;
 import com.dohit.huick.domain.banking.transaction.service.TransactionService;
@@ -93,5 +94,10 @@ public class BankingService {
 
 	public void decreaseUnpaidCount(Long autoTransferId) {
 		autoTransferService.decreaseUnpaidCount(autoTransferId);
+	}
+
+	public void createRepayment(Long contractId, Long transactionId) {
+		Integer repaymentNumber = repaymentService.getRepaymentsByContractId(contractId).size() + 1;
+		repaymentService.createRepayment(RepaymentDto.of(contractId, transactionId, repaymentNumber));
 	}
 }
