@@ -99,11 +99,11 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
 		// DB 저장
 		RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId).orElse(null);
-		if (refreshToken != null) {
+		if (refreshToken.getRefreshToken() != null) {
 			refreshToken.setRefreshToken(token.getToken());
 		} else {
-			refreshToken = new RefreshToken(userId, token.getToken());
-			refreshTokenRepository.saveAndFlush(refreshToken);
+			refreshToken = RefreshToken.of(userId, token.getToken());
+			refreshTokenRepository.save(refreshToken);
 		}
 
 		int cookieMaxAge = (int)refreshTokenExpiry / 60;

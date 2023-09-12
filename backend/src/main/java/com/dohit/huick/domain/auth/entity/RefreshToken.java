@@ -16,12 +16,16 @@ public class RefreshToken {
 	private Long userId;
 	private String refreshToken;
 
-	public RefreshToken(
-		@NotNull @Size(max = 64) Long userId,
-		@NotNull @Size(max = 256) String refreshToken
-	) {
+	@Builder
+	public RefreshToken(Long userId, String refreshToken) {
 		this.userId = userId;
 		this.refreshToken = refreshToken;
 	}
 
+	static public RefreshToken of(Long userId, String refreshToken) {
+		return RefreshToken.builder()
+			.userId(userId)
+			.refreshToken(refreshToken)
+			.build();
+	}
 }
