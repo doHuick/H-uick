@@ -2,6 +2,7 @@ package com.dohit.huick.domain.banking.service;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.service.RepaymentService;
 import com.dohit.huick.domain.banking.transaction.dto.TransactionDto;
 import com.dohit.huick.domain.banking.transaction.service.TransactionService;
+import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.service.ContractService;
 import com.dohit.huick.global.error.ErrorCode;
 import com.dohit.huick.global.error.exception.BankingException;
@@ -99,5 +101,16 @@ public class BankingService {
 	public void createRepayment(Long contractId, Long transactionId) {
 		Integer repaymentNumber = repaymentService.getRepaymentsByContractId(contractId).size() + 1;
 		repaymentService.createRepayment(RepaymentDto.of(contractId, transactionId, repaymentNumber));
+	}
+
+	public Boolean isRepaymentDone(ContractDto contractDto) {
+		List<RepaymentDto> repaymentDtos = repaymentService.getRepaymentsByContractId(contractDto.getContractId());
+		Long totalRepaymentAmount = 0L;
+		for (RepaymentDto repaymentDto : repaymentDtos) {
+			totalRepaymentAmount += transactionService.getTransactionByTransactionId(repaymentDto.getTransactionId())
+				.getAmount();
+		}
+
+		return Objects.equals(contractDto.getAmount(), totalRepaymentAmount);
 	}
 }
