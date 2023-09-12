@@ -1,8 +1,11 @@
 package com.dohit.huick.domain.auth.service;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dohit.huick.domain.auth.entity.RefreshToken;
 import com.dohit.huick.domain.auth.repository.RefreshTokenRepository;
 import com.dohit.huick.global.error.ErrorCode;
 import com.dohit.huick.global.error.exception.BusinessException;
@@ -27,6 +30,7 @@ public class AuthService {
 		if (name == null) {
 			throw new BusinessException(ErrorCode.NOT_EXIST_USER);
 		}
-		refreshTokenRepository.deleteByUserId(Long.valueOf(name));
+		AuthToken refreshToken = authTokenProvider.createAuthToken(name, new Date(System.currentTimeMillis()));
+		refreshTokenRepository.save(RefreshToken.of(Long.valueOf(name), refreshToken.getToken()));
 	}
 }
