@@ -78,4 +78,8 @@ public class Contract {
 		this.status = status;
 		this.createdTime = createdTime;
 	}
+
+	public void updateStatus(ContractStatus status) {
+		this.status = status;
+	}
 }
