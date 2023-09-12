@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
 import com.dohit.huick.domain.banking.autotransfer.entity.AutoTransfer;
 import com.dohit.huick.domain.banking.autotransfer.repository.AutoTransferRepository;
-import com.dohit.huick.global.error.ErrorCode;
-import com.dohit.huick.global.error.exception.BankingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,5 +27,9 @@ public class AutoTransferService {
 		return autoTransferRepository.findByNextTransferDateBetween(startOfDay, endOfDay).stream().map(
 			AutoTransferDto::from).collect(
 			Collectors.toList());
+	}
+
+	public void createAutoTransfer(AutoTransferDto autoTransferDto) {
+		autoTransferRepository.save(AutoTransfer.from(autoTransferDto));
 	}
 }
