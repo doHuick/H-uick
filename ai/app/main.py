@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, UploadFile, Form, File, Depends
-from services import llm_service
-from models.contract_info import ContractInfo
+from .services import llm_service
+from app.services.models.contract_info import ContractInfo
 
 
 app = FastAPI()

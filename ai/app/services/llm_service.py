@@ -13,6 +13,8 @@ from datetime import datetime
 
 from collections import defaultdict
 
+from ai.app.models.contract_info import ContractInfo
+
 chat_history = defaultdict(list)
 
 # OpenAI API 키 설정
