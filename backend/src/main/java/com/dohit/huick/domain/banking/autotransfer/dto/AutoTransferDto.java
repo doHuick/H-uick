@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 
+import com.dohit.huick.domain.banking.autotransfer.entity.AutoTransfer;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -26,6 +28,15 @@ public class AutoTransferDto {
 		this.contractId = contractId;
 		this.nextTransferDate = nextTransferDate;
 		this.unpaidCount = unpaidCount;
+	}
+
+	public static AutoTransferDto from(AutoTransfer autoTransfer) {
+		return AutoTransferDto.builder()
+			.autoTransferId(autoTransfer.getAutoTransferId())
+			.contractId(autoTransfer.getContractId())
+			.nextTransferDate(autoTransfer.getNextTransferDate())
+			.unpaidCount(autoTransfer.getUnpaidCount())
+			.build();
 	}
 
 	public static AutoTransferDto of(Long contractId, Integer unpaidCount) {
