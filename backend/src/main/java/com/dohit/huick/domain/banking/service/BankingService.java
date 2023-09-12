@@ -17,6 +17,7 @@ import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.service.RepaymentService;
 import com.dohit.huick.domain.banking.transaction.dto.TransactionDto;
 import com.dohit.huick.domain.banking.transaction.service.TransactionService;
+import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.service.ContractService;
 import com.dohit.huick.global.error.ErrorCode;
@@ -117,5 +118,16 @@ public class BankingService {
 
 	public void updateNextTransferDate(Long autoTransferId, LocalDateTime nextTransferDate) {
 		autoTransferService.updateNextTransferDate(autoTransferId, nextTransferDate);
+	}
+
+	public void repay(ContractDto contractDto, Long amount) {
+		// 이체시키고
+		Long transactionId = transferMoney(TransactionDto.of( getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(), getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
+		// 상환데이터 넣고
+		createRepayment(contractDto.getContractId(), transactionId);
+		// 상환 끝났는지 체크하기
+		if(isRepaymentDone(contractDto)) {
+			contractService.updateContractStatus(contractDto.getContractId(), ContractStatus.REPAYMENT_COMPLETED);
+		}
 	}
 }
