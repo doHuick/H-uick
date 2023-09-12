@@ -29,7 +29,9 @@ public enum ErrorCode {
 	NOT_EXIST_ACCOUNT(HttpStatus.BAD_REQUEST, "404011", "존재하지 않는 계좌입니다."),
 	NO_ACCOUNT_EXIST(HttpStatus.BAD_REQUEST, "404012", "개설된 계좌가 없습니다."),
 	NOT_ENOUGH_MONEY(HttpStatus.BAD_REQUEST, "404013", "잔고가 부족합니다."),
-	NOT_EXIST_BANK(HttpStatus.BAD_REQUEST, "404014", "존재하지 않는 은행입니다.");
+
+	// 계약
+	NOT_EXIST_CONTRACT(HttpStatus.BAD_REQUEST, "404021", "존재하지 않는 계약입니다.");
 
 
 	ErrorCode(HttpStatus httpStatus, String errorCode, String message) {
