@@ -13,7 +13,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.dohit.huick.domain.contract.constant.ContractStatus;
-import com.dohit.huick.domain.contract.constant.IntervalUnit;
+import com.dohit.huick.domain.contract.constant.TermUnit;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 
 import lombok.AccessLevel;
@@ -43,16 +43,16 @@ public class Contract {
 	LocalDateTime dueDate;
 
 	@Column(nullable = true)
-	Integer interval;
+	Integer term;
 
 	@Column(nullable = true)
-	IntervalUnit intervalUnit;
+	TermUnit termUnit;
 
 	@Column(nullable = false)
 	Long amount;
 
 	@Column(nullable = true)
-	Long repaymentAmount;
+	Long repaymentAmountPerOnce;
 
 	@Column(nullable = true)
 	Float rate;
@@ -65,16 +65,16 @@ public class Contract {
 
 	@Builder
 	private Contract(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-		Integer interval, IntervalUnit intervalUnit, Long amount, Long repaymentAmount,Float rate, ContractStatus status, LocalDateTime createdTime) {
+		Integer term, TermUnit termUnit, Long amount, Long repaymentAmountPerOnce,Float rate, ContractStatus status, LocalDateTime createdTime) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
 		this.lessorId = lessorId;
 		this.startDate = startDate;
 		this.dueDate = dueDate;
-		this.interval = interval;
-		this.intervalUnit = intervalUnit;
+		this.term = term;
+		this.termUnit = termUnit;
 		this.amount = amount;
-		this.repaymentAmount = repaymentAmount;
+		this.repaymentAmountPerOnce = repaymentAmountPerOnce;
 		this.rate = rate;
 		this.status = status;
 		this.createdTime = createdTime;
@@ -86,9 +86,10 @@ public class Contract {
 			.lessorId(contractDto.getLessorId())
 			.startDate(contractDto.getStartDate())
 			.dueDate(contractDto.getDueDate())
-			.interval(contractDto.getInterval())
+			.term(contractDto.getTerm())
+			.termUnit(contractDto.getTermUnit())
 			.amount(contractDto.getAmount())
-			.repaymentAmount(contractDto.getRepaymentAmount())
+			.repaymentAmountPerOnce(contractDto.getRepaymentAmountPerOnce())
 			.rate(contractDto.getRate())
 			.status(contractDto.getStatus())
 			.build();

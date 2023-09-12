@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.dohit.huick.api.contract.dto.ContractApiDto;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
-import com.dohit.huick.domain.contract.constant.IntervalUnit;
+import com.dohit.huick.domain.contract.constant.TermUnit;
 import com.dohit.huick.domain.contract.entity.Contract;
 
 import lombok.Builder;
@@ -17,10 +17,10 @@ public class ContractDto {
 	Long lessorId;
 	LocalDateTime startDate;
 	LocalDateTime dueDate;
-	Integer interval;
-	IntervalUnit intervalUnit;
+	Integer term;
+	TermUnit termUnit;
 	Long amount;
-	Long repaymentAmount;
+	Long repaymentAmountPerOnce;
 	Float rate;
 	ContractStatus status;
 	LocalDateTime createdTime;
@@ -28,16 +28,16 @@ public class ContractDto {
 
 	@Builder
 	private ContractDto(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-		Integer interval, IntervalUnit intervalUnit, Long amount, Long repaymentAmount,Float rate, ContractStatus status, LocalDateTime createdTime, String useAutoTransfer) {
+		Integer term, TermUnit termUnit, Long amount, Long repaymentAmountPerOnce,Float rate, ContractStatus status, LocalDateTime createdTime, String useAutoTransfer) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
 		this.lessorId = lessorId;
 		this.startDate = startDate;
 		this.dueDate = dueDate;
-		this.interval = interval;
-		this.intervalUnit = intervalUnit;
+		this.term = term;
+		this.termUnit = termUnit;
 		this.amount = amount;
-		this.repaymentAmount = repaymentAmount;
+		this.repaymentAmountPerOnce = repaymentAmountPerOnce;
 		this.rate = rate;
 		this.status = status;
 		this.createdTime = createdTime;
@@ -51,10 +51,10 @@ public class ContractDto {
 			.lessorId(contract.getLessorId())
 			.startDate(contract.getStartDate())
 			.dueDate(contract.getDueDate())
-			.interval(contract.getInterval())
-			.intervalUnit(contract.getIntervalUnit())
+			.term(contract.getTerm())
+			.termUnit(contract.getTermUnit())
 			.amount(contract.getAmount())
-			.repaymentAmount(contract.getRepaymentAmount())
+			.repaymentAmountPerOnce(contract.getRepaymentAmountPerOnce())
 			.rate(contract.getRate())
 			.status(contract.getStatus())
 			.createdTime(contract.getCreatedTime())
@@ -67,10 +67,10 @@ public class ContractDto {
 			.lessorId(request.getLessorId())
 			.startDate(request.getStartDate())
 			.dueDate(request.getDueDate())
-			.interval(request.getInterval())
-			.intervalUnit(request.getIntervalUnit())
+			.term(request.getTerm())
+			.termUnit(request.getTermUnit())
 			.amount(request.getAmount())
-			.repaymentAmount(request.getRepaymentAmount())
+			.repaymentAmountPerOnce(request.getRepaymentAmountPerOnce())
 			.rate(request.getRate())
 			.status(request.getStatus())
 			.useAutoTransfer(request.getUseAutoTransfer())
