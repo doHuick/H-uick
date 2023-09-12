@@ -41,4 +41,11 @@ public class ContractDto {
 		this.createdTime = createdTime;
 		this.useAutoTransfer = useAutoTransfer;
 	}
+
+	public static ContractDto of(Long contractId, ContractStatus status) {
+		return ContractDto.builder()
+			.contractId(contractId)
+			.status(status)
+			.build();
+	}
 }
