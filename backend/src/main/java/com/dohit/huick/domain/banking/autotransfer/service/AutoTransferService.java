@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
 import com.dohit.huick.domain.banking.autotransfer.entity.AutoTransfer;
 import com.dohit.huick.domain.banking.autotransfer.repository.AutoTransferRepository;
+import com.dohit.huick.global.error.ErrorCode;
+import com.dohit.huick.global.error.exception.BankingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,5 +33,11 @@ public class AutoTransferService {
 
 	public void createAutoTransfer(AutoTransferDto autoTransferDto) {
 		autoTransferRepository.save(AutoTransfer.from(autoTransferDto));
+	}
+
+	public void increaseUnpaidCount(Long autoTransferId) {
+		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(
+			ErrorCode.NOT_EXIST_AUTO_TRANSFER));
+		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() + 1);
 	}
 }
