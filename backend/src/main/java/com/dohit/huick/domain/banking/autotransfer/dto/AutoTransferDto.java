@@ -27,4 +27,11 @@ public class AutoTransferDto {
 		this.nextTransferDate = nextTransferDate;
 		this.unpaidCount = unpaidCount;
 	}
+
+	public static AutoTransferDto of(Long contractId, Integer unpaidCount) {
+		return AutoTransferDto.builder()
+			.contractId(contractId)
+			.unpaidCount(unpaidCount)
+			.build();
+	}
 }
