@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.constant.IntervalUnit;
+import com.dohit.huick.domain.contract.entity.Contract;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -40,6 +41,23 @@ public class ContractDto {
 		this.status = status;
 		this.createdTime = createdTime;
 		this.useAutoTransfer = useAutoTransfer;
+	}
+
+	public static ContractDto from(Contract contract) {
+		return ContractDto.builder()
+			.contractId(contract.getContractId())
+			.lesseeId(contract.getLesseeId())
+			.lessorId(contract.getLessorId())
+			.startDate(contract.getStartDate())
+			.dueDate(contract.getDueDate())
+			.interval(contract.getInterval())
+			.intervalUnit(contract.getIntervalUnit())
+			.amount(contract.getAmount())
+			.repaymentAmount(contract.getRepaymentAmount())
+			.rate(contract.getRate())
+			.status(contract.getStatus())
+			.createdTime(contract.getCreatedTime())
+			.build();
 	}
 
 	public static ContractDto of(Long contractId, ContractStatus status) {
