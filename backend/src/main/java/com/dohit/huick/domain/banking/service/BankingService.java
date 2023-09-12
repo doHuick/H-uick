@@ -86,4 +86,8 @@ public class BankingService {
 	public List<AutoTransferDto> getAutoTransfersOfToday() {
 		return autoTransferService.getAutoTransfersOfToday();
 	}
+	
+	public void increaseUnpaidCount(Long autoTransferId) {
+		autoTransferService.increaseUnpaidCount(autoTransferId);
+	}
 }
