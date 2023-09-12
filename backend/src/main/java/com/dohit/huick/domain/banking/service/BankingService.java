@@ -1,9 +1,7 @@
 package com.dohit.huick.domain.banking.service;
 
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +11,9 @@ import com.dohit.huick.domain.banking.account.service.AccountService;
 import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
 import com.dohit.huick.domain.banking.autotransfer.service.AutoTransferService;
 import com.dohit.huick.domain.banking.bank.service.BankService;
-import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.service.RepaymentService;
 import com.dohit.huick.domain.banking.transaction.dto.TransactionDto;
 import com.dohit.huick.domain.banking.transaction.service.TransactionService;
-import com.dohit.huick.domain.contract.constant.ContractStatus;
-import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.service.ContractService;
 import com.dohit.huick.global.error.ErrorCode;
 import com.dohit.huick.global.error.exception.BankingException;
@@ -86,5 +81,9 @@ public class BankingService {
 	public List<TransactionDto> getTransactionsByUserId(Long userId) {
 		String accountNumber = getAccountByUserId(userId).getAccountNumber();
 		return transactionService.getTransactionsByUserId(accountNumber);
+	}
+
+	public List<AutoTransferDto> getAutoTransfersOfToday() {
+		return autoTransferService.getAutoTransfersOfToday();
 	}
 }
