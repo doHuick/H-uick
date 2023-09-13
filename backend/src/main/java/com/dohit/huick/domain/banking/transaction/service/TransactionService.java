@@ -3,6 +3,9 @@ package com.dohit.huick.domain.banking.transaction.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.LockModeType;
+
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,7 @@ public class TransactionService {
 
 	private final TransactionRepository transactionRepository;
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public Long createTransaction(TransactionDto transactionDto) {
 		Transaction transaction = transactionRepository.save(Transaction.from(transactionDto));
 		return transaction.getTransactionId();

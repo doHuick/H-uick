@@ -6,6 +6,9 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.LockModeType;
+
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,22 +34,26 @@ public class AutoTransferService {
 			Collectors.toList());
 	}
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void createAutoTransfer(AutoTransferDto autoTransferDto) {
 		autoTransferRepository.save(AutoTransfer.from(autoTransferDto));
 	}
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void increaseUnpaidCount(Long autoTransferId) {
 		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(
 			ErrorCode.NOT_EXIST_AUTO_TRANSFER));
 		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() + 1);
 	}
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void decreaseUnpaidCount(Long autoTransferId) {
 		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(
 			ErrorCode.NOT_EXIST_AUTO_TRANSFER));
 		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() - 1);
 	}
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void updateNextTransferDate(Long autoTransferId, LocalDateTime nextTransferDate) {
 		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_AUTO_TRANSFER));
 		autoTransfer.updateNextTransferDate(nextTransferDate);
