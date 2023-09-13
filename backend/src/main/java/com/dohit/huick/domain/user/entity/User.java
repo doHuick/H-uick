@@ -23,52 +23,52 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "User")
+@Table
 public class User {
 
 	@Id
-	@Column(name = "user_id")
+	@Column
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
-	@Column(name = "wallet_address", length = 512, unique = true)
+	@Column(length = 512, unique = true)
 	@Size(max = 512)
 	private String walletAddress;
 
-	@Column(name = "social_type", length = 20)
+	@Column(length = 20)
 	@Enumerated(EnumType.STRING)
 	private SocialType socialType;
 
-	@Column(name = "social_id", length = 512, unique = true)
+	@Column(length = 512, unique = true)
 	@Size(max = 512)
 	private String socialId;
 
-	@Column(name = "created_time")
+	@Column
 	private LocalDateTime createdTime;
 
-	@Column(name = "role", length = 20)
+	@Column(length = 20)
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	@Column(name = "withdrawal_time")
+	@Column
 	private LocalDateTime withdrawalTime;
 
-	@Column(name = "signature_url")
+	@Column
 	private String signatureUrl;
 
-	@Column(name = "rrn", length = 13)
+	@Column(length = 13)
 	@Size(min = 13, max = 13)
 	private String rrn;
 
-	@Column(name = "address", length = 100)
+	@Column(length = 100)
 	@Size(max = 100)
 	private String address;
 
-	@Column(name = "name", length = 20)
+	@Column(length = 20)
 	@Size(max = 20)
 	private String name;
 
-	@Column(name = "issue_date")
+	@Column
 	private LocalDateTime issueDate;
 
 	@Builder
