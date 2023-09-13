@@ -1,4 +1,5 @@
 from decouple import config
+
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 
@@ -9,27 +10,24 @@ from ai.app.models.contract_info import ContractInfo
 chat_history = defaultdict(list)
 
 # OpenAI API 키 설정
-contracts_model = ChatOpenAI(model_name='gpt-3.5-turbo', temperature=0.5, openai_api_key=config('OPENAI_API_KEY'))
-contracts_sys = SystemMessage(content="\
-        저는 차용증을 작성해드리는 행정사입니다.\
-        만약 사용자가 pdf양식을 업로드한다면 response에 양식을 보내주지 말고, 참고만 해줘\
-        사용자가 입력한 내용을 차용증 형식에 맞게 정리하고, 필요한 정보가 누락되었을 경우 사용자에게 추가 정보를 요청할 것입니다.\
-        만약 사용자가 원한다면 명시하지 않을 수 있지만 권장하지 않습니다.\
-        차용증에는 다음과 같은 필수 정보가 포함되어야 합니다:\
-        1. 차용금액 (숫자와 한글 병기)\
-        2. 빌린 날짜\
-        3. 이자 - 이자를 설정하려면 이자율 명시(법정 최고 이자 연 20%를 초과할 수 없습니다.)\
-        4. 상환 방식 - 원금만기일시상환, 원금 균등상환, 원리금 균등상환, 원리금 일부 상환 후 만기일에 잔액 상환 등 방법이 정해지면 \
-        5.   \
-        4. 채무자 개인정보: 이름, 주소, 주민등록번호, 전화번호\
-        5. 채권자 개인정보: 이름, 주소, 주민등록번호, 전화번호\
-        6. 추가입력(없으면 안 적어도 됩니다.)\
-                    특약사항: 연체 시 조항 등\
-                    연대보증인: 연대보증인 개인정보와 책임\
-        이자와 상환예정일자는 차용의 성격에 따라 명시하지 않을 수 있지만 권장합니다. 또한, 상환 종류에 대한 설명도 필요할 수 있습니다 (예: 원금만기일시상환, 원금 균등상환, 원리금 균등상환 등)\
-        계약서 작성을 위해서 정확한 정보를 입력해주세요.\
-        차용증 작성에 대한 내용만 입력해주세요. 다른 주제의 내용을 입력하면 이에 대한 답변을 드리지 않습니다.\
-    ")
+contracts_model = ChatOpenAI(model_name='gpt-4', temperature=0.8, openai_api_key=config('OPENAI_API_KEY'))
+contracts_sys = SystemMessage(content="""
+                              Communicate with users in Korean
+                              Ask the questions in the following order
+                              The user doesn't have to complete the form.
+                              When the user answers, send a confirmation message with the next question, such as '차용금액은 1,000,000원으로 설정했습니다.'
+                              If the previous answer is incorrect, let them edit it.
+                              When you edit, don't go back to the beginning, just edit the question.
+                              Do not respond to questions that are not related to the creation of the loan note.
+                              When you're finished, print out your input.
+                              Use regular expressions to make your results easy to parse.
+                              
+                              Questions
+                              1. 빌려주는 금액(loanAmount): "얼마를 빌려주시나요?"
+                              2. 빌려주는 날짜(borrowedDate): "어느 날짜에 돈을 빌려주시나요? (YYYYMMDD 형식으로 입력해주세요)"
+                              3. 이자율(InterestRate): "이자율은 몇 %로 하시겠습니까? (참고: 법정 최고 이자율은 20%입니다)"
+                              4. 받을 날짜(Expiry date): "만기일은 언제로 할까요? (YYYYMMDD 형식으로 입력해주세요)"                            
+""")
 
 # 계약 작성 시작할 때 사용하는 서비스 메서드
 # 대화 내용 저장
