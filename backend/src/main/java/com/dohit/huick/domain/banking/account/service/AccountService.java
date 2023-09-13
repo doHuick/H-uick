@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.LockModeType;
+
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,7 @@ public class AccountService {
 		return AccountDto.from(account.orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_ACCOUNT)));
 	}
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void createAccount(Long userId) {
 
 		SecureRandom secureRandom = new SecureRandom();
@@ -52,6 +56,7 @@ public class AccountService {
 		}
 	}
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void updateBalance(String accountNumber, Long money) {
 		Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
 
