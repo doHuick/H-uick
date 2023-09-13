@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from .services import llm_service
-from app.services.models.contract_info import ContractInfo
+from ai.app.models.contract_info import ContractInfo
 
 
 app = FastAPI()
