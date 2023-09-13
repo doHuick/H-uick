@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.dohit.huick.domain.auth.constant.Role;
 import com.dohit.huick.domain.auth.constant.SocialType;
@@ -24,6 +28,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table
 public class User {
 
@@ -45,6 +50,7 @@ public class User {
 	private String socialId;
 
 	@Column
+	@CreatedDate
 	private LocalDateTime createdTime;
 
 	@Column(length = 20)
@@ -74,12 +80,11 @@ public class User {
 
 	@Builder
 	public User(String walletAddress, SocialType socialType, String socialId,
-		LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl, String rrn,
+		Role role, LocalDateTime withdrawalTime, String signatureUrl, String rrn,
 		String address, String name, LocalDateTime issueDate) {
 		this.walletAddress = walletAddress;
 		this.socialType = socialType;
 		this.socialId = socialId;
-		this.createdTime = createdTime;
 		this.role = role;
 		this.withdrawalTime = withdrawalTime;
 		this.signatureUrl = signatureUrl;

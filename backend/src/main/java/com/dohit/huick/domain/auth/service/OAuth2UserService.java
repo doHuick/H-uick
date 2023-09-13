@@ -66,7 +66,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 			.socialId(String.valueOf(userInfo.getId()))
 			.socialType(socialType)
 			.role(Role.USER)
-			.createdTime(now)
 			.build(); // 다른 정보들을 더 넣는 수정 작업 필요
 
 		return userRepository.saveAndFlush(user);
@@ -76,5 +75,5 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
 		return user;
 	}
-	
+
 }
