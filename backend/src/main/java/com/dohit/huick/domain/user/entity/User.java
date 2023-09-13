@@ -16,12 +16,13 @@ import com.dohit.huick.domain.auth.constant.Role;
 import com.dohit.huick.domain.auth.constant.SocialType;
 import com.dohit.huick.domain.user.dto.UserDto;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table
 public class User {
