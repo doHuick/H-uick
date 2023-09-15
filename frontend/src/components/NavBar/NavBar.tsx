@@ -98,7 +98,7 @@ const BottomBar = styled.div`
   justify-content: center;
   align-items: center;
   gap: 70px;
-  background-color: var(--white);
+  background-color: #F0F0F0;
 `;
 
 const NavItem = styled.div<NavItemProps>`

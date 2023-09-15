@@ -25,6 +25,7 @@ export const CancleButton = styled(ConfirmButton)`
 
 export const MiniConfirmButton = styled(ConfirmButton)`
   width: 150px;
+  /* 높이 46px로 */
 `;
 
 export const MiniCancleButton = styled(MiniConfirmButton)`

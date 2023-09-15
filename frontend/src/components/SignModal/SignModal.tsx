@@ -1,23 +1,21 @@
-// import './SignModalMain.css'
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
+import './SignModal.css'
+import ModalBase from '../Modal/ModalBase'
 import styled from 'styled-components';
+import SignatureCanvas from 'react-signature-canvas'
 import { ReactComponent as ModalClose } from '../../assets/icons/close-button.svg'
-// import SignaturePad from "react-signature-canvas";
 import { MiniConfirmButton } from '../Button/Button';
-import { DarkBackground } from '../Modal/DarkBackground';
-import ModalContainer from '../Modal/ModalContainer';
-import SignatureCanvas from "react-signature-canvas";
 import toast, { toastConfig } from 'react-simple-toasts'
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
 import 'react-simple-toasts/dist/theme/light.css';
 
-interface SignModalMainProps {
+interface SignModalProps {
   closeModal: () => void;
   onSave: (imageData: string) => void;
+  frameHeight: String;
 }
 
-export default function SignModalMain({ closeModal, onSave }: SignModalMainProps) {
-  const [isClosing, setIsClosing] = useState(false);
+export default function SignModal({ closeModal, onSave, frameHeight }: SignModalProps) {
 
   toastConfig({
     theme: 'frosted-glass',
@@ -26,22 +24,8 @@ export default function SignModalMain({ closeModal, onSave }: SignModalMainProps
     maxVisibleToasts: 1
   })
 
-  const handleDarkBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      closeAndAnimate();
-    }
-  };
-  
-
-  const isModalCloseClick = () => {
-    closeAndAnimate();
-  };
-
-  const closeAndAnimate = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      closeModal();
-    }, 350);
+  const handleSignModalCloseClick = () => {
+    closeModal(); // ModalBase.tsx에서 전달한 closeModal 함수 호출
   };
 
   const handleSaveClick = () => {
@@ -52,17 +36,15 @@ export default function SignModalMain({ closeModal, onSave }: SignModalMainProps
     } else {
 
       // 여기서 POST
+      const image = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
+      onSave(image);
 
-      setIsClosing(true);
       setTimeout(() => {
-        const image = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
-        onSave(image);
-      }, 350);
+        closeModal();
+      }, 260);
 
     }
   };
-
-
 
   const signCanvas = useRef() as React.MutableRefObject<any>;
 
@@ -71,21 +53,13 @@ export default function SignModalMain({ closeModal, onSave }: SignModalMainProps
   };
 
 
-  // const save = () => {
-  //   const image = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
-  //   onSave(image);
-  // };
-  
   return (
-    <>
-      <DarkBackground onClick={handleDarkBackgroundClick} isClosing={isClosing} />
-      <ModalContainer isClosing={isClosing}>
-
-        <SignModalUpperBar>
+    <ModalBase closeModal={closeModal} frameHeight={frameHeight}>
+              <SignModalUpperBar>
           <SignModalTitle>서명등록</SignModalTitle>
           <SignModalUpperButtons>
             <SignModalEraseButton  onClick={clear} >&nbsp;&nbsp;재설정&nbsp;&nbsp;</SignModalEraseButton>
-            <SignModalCloseButton onClick={isModalCloseClick} />
+            <SignModalCloseButton onClick={handleSignModalCloseClick}/>
           </SignModalUpperButtons>
         </SignModalUpperBar>
 
@@ -101,12 +75,9 @@ export default function SignModalMain({ closeModal, onSave }: SignModalMainProps
             저장
           </SignSaveButton>
         </SignSaveButtonFrame>
-
-      </ModalContainer>
-    </>
-  );
+    </ModalBase>
+  )
 }
-
 
 const SignModalUpperBar = styled.div`
   position: relative;
@@ -156,10 +127,11 @@ const SignatureArea = styled.div`
 `
 
 const SignSaveButtonFrame = styled.div`
-  position: relative;
+  position: absolute;
   width: 100%;
   display: flex;
   justify-content: center;
+  bottom: 48px;
 `
 
 // const SignSaveButtonDisabled = styled.div`
@@ -174,7 +146,6 @@ const SignSaveButtonFrame = styled.div`
 
 const SignSaveButton = styled(MiniConfirmButton)`
   position: relative;
-  margin-top: 28px;
   margin-left: 30px;
   margin-right: 30px;
   width: 100%;
