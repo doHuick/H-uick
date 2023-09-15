@@ -1,15 +1,15 @@
 import React from 'react'
 import { styled } from 'styled-components'
-import { ReactComponent as LeftArrow } from '../../../assets/icons/left-arrow.svg'
+import { ReactComponent as LeftArrow } from '../../assets/icons/left-arrow.svg'
 
 interface HeadBarProps {
   pageName: string;
-  bgColor: string;
+  bgcolor?: string;
 }
 
-export default function HeadBar({ pageName, bgColor } : HeadBarProps) {
+export default function HeadBar({ pageName, bgcolor } : HeadBarProps) {
   return (
-    <HeadBarContainer style={{ backgroundColor: `var(--${bgColor})` }} >
+    <HeadBarContainer bgcolor={bgcolor}>
         <HeadBarInner>
           <HeadBarLeft>
             <LeftArrow />
@@ -23,13 +23,13 @@ export default function HeadBar({ pageName, bgColor } : HeadBarProps) {
   )
 }
 
-const HeadBarContainer = styled.div`
+const HeadBarContainer = styled.div<HeadBarProps['bgcolor']>`
   position: fixed;
   top: 0px;
   width: 100%;
   height: 96px;
   z-index: 1;
-  background-color: var(--background);
+  background-color: ${(props) => props.bgcolor || 'var(--white)'};
 `
 
 const HeadBarInner = styled.div`

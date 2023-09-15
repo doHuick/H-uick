@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from '../../components/NavBar/NavBar';
 import { styled } from 'styled-components';
+import { Main } from '../../style';
 import { TextBox } from '../../components/TextBox/TextBox';
 import { ReactComponent as Dots } from '../../assets/icons/dots.svg';
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg';
@@ -16,7 +17,7 @@ export default function Mainpage() {
   const [nowActive, setNowActive] = useState<string>('borrowing');
 
   return (
-    <>
+    <Main>
       {/* 계좌 박스 */}
       <BlueBox>
         {/* 계좌 정보 */}
@@ -114,7 +115,7 @@ export default function Mainpage() {
         </FlexDiv>
       </WhiteBox>
       <NavBar />
-    </>
+    </Main>
   );
 }
 
