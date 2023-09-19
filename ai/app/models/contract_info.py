@@ -6,4 +6,4 @@ class ContractInfo(BaseModel):
     borrowedDate: Optional[str] = None  # 빌린 날짜
     interestRate: Optional[float] = None  # 이자율
     maturityDate: Optional[str] = None  # 갚을 날짜
-    specialAgreement: Optional[str] = None  # 특약사항(선택)
+    # specialAgreement: Optional[str] = None  # 특약사항(선택)

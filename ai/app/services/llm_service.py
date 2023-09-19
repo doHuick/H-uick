@@ -27,10 +27,7 @@ contracts_sys = SystemMessage(content="""
                               1. 빌려주는 금액(loanAmount): "얼마를 빌려주시나요? ('1000원'과 같은 형태로 입력해주세요)"
                               2. 빌려주는 날짜(borrowedDate): "어느 날짜에 돈을 빌려주시나요? ('YYYYMMDD' 형식으로 입력해주세요)"
                               3. 이자율(interestRate): "이자율은 몇 %로 하시겠습니까? ('3%'와 같은 형태로 입력해주세요)"
-                              4. 받을 날짜(maturityDate): "만기일은 언제로 할까요? ('YYYYMMDD' 형식으로 입력해주세요)"
-                              5. 특약사항(specialAgreements): "이외에 추가로 정하실 사항이 있으신가요? ('예 혹은 아니오'로 입력해주세요.)"
-                                (예) 5-1. 특약사항을 입력해주세요.
-                                (아니오) 5-2. 계약을 완료하겠습니다.                              
+                              4. 받을 날짜(maturityDate): "만기일은 언제로 할까요? ('YYYYMMDD' 형식으로 입력해주세요)"                          
                               """)
 
 # 계약보조 챗봇
@@ -61,9 +58,8 @@ def create_contract_info_template(contract_info: ContractInfo):
     2. "어느 날짜에 돈을 빌려주시나요? ('YYYYMMDD' 형식으로 입력해주세요)" {contract_info.borrowedDate}
     3. "이자율은 몇 %로 하시겠습니까? ('3%'와 같은 형태로 입력해주세요)" 연 {contract_info.interestRate}%
     4. 받을 날짜(maturityDate): "만기일은 언제로 할까요? ('YYYYMMDD' 형식으로 입력해주세요)" {contract_info.maturityDate}
-    5. 특약사항(specialAgreements): "이외에 추가로 정하실 사항이 있으신가요? ('예 혹은 아니오'로 입력해주세요.)"
-    (예) 5-1. 특약사항을 입력해주세요. {contract_info.specialAgreement}
-    (아니오) 5-2. 계약을 완료하겠습니다. 계약
+    
+    Anything that is None is either a question that hasn't been asked yet or hasn't been answered by the user.
     """
 
     return contract_info_template
