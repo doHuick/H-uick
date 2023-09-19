@@ -25,6 +25,7 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
+	private final Long userId;
 	private final String socialId;
 	private final SocialType socialType;
 	private final Role role;
@@ -48,12 +49,12 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
 	@Override
 	public String getName() {
-		return socialId;
+		return String.valueOf(userId);
 	}
 
 	@Override
 	public String getUsername() {
-		return socialId;
+		return String.valueOf(userId);
 	}
 
 	@Override
@@ -92,8 +93,9 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 	}
 
 	@Builder
-	private UserPrincipal(String socialId, SocialType socialType, Role role,
+	private UserPrincipal(Long userId, String socialId, SocialType socialType, Role role,
 		Collection<GrantedAuthority> authorities, Map<String, Object> attributes) {
+		this.userId = userId;
 		this.socialId = socialId;
 		this.socialType = socialType;
 		this.role = role;
@@ -103,6 +105,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
 	public static UserPrincipal from(User user) {
 		return UserPrincipal.builder()
+			.userId(user.getUserId())
 			.socialId(user.getSocialId())
 			.socialType(user.getSocialType())
 			.role(Role.USER)
@@ -112,6 +115,7 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 
 	public static UserPrincipal of(User user, Map<String, Object> attributes) {
 		return UserPrincipal.builder()
+			.userId(user.getUserId())
 			.socialId(user.getSocialId())
 			.socialType(user.getSocialType())
 			.role(Role.USER)
@@ -121,4 +125,3 @@ public class UserPrincipal implements OAuth2User, UserDetails, OidcUser {
 	}
 
 }
-
