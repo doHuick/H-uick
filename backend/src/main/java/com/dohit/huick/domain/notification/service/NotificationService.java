@@ -80,4 +80,8 @@ public class NotificationService {
 			});
 		}
 	}
+
+	public NotificationDto createNotification(NotificationDto notificationDto) {
+		return NotificationDto.from(notificationRepository.save(com.dohit.huick.domain.notification.entity.Notification.from(notificationDto)));
+	}
 }
