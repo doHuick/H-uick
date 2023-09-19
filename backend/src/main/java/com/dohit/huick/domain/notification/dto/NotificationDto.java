@@ -3,6 +3,7 @@ package com.dohit.huick.domain.notification.dto;
 import java.time.LocalDateTime;
 
 import com.dohit.huick.domain.notification.constant.NotificationType;
+import com.dohit.huick.domain.notification.entity.Notification;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,6 +33,16 @@ public class NotificationDto {
 			.userId(userId)
 			.contractId(contractId)
 			.notificationType(notificationType)
+			.build();
+	}
+
+	public static NotificationDto from(Notification notification) {
+		return NotificationDto.builder()
+			.notificationId(notification.getNotificationId())
+			.userId(notification.getUserId())
+			.contractId(notification.getContractId())
+			.notificationType(notification.getNotificationType())
+			.createdTime(notification.getCreatedTime())
 			.build();
 	}
 }
