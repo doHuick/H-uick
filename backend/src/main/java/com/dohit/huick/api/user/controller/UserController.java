@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dohit.huick.api.user.dto.UserApiDto;
 import com.dohit.huick.domain.user.dto.UserDto;
 import com.dohit.huick.domain.user.service.UserService;
+import com.dohit.huick.global.userinfo.UserInfo;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +22,8 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/rrn")
-	public ResponseEntity<Void> signup(@RequestBody UserApiDto.Request request) {
-		userService.signup(UserDto.from(request));
+	public ResponseEntity<Void> signup(@UserInfo Long userId, @RequestBody UserApiDto.Request request) {
+		userService.signup(UserDto.of(userId, request));
 
 		return ResponseEntity.ok().build();
 	}

@@ -9,9 +9,9 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.dohit.huick.global.userinfo.UserInfoArgumentResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 	private final ObjectMapper objectMapper;
+	private final UserInfoArgumentResolver userInfoArgumentResolver;
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -47,4 +48,8 @@ public class WebConfig implements WebMvcConfigurer {
 		return new MappingJackson2HttpMessageConverter(copy);
 	}
 
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+		resolvers.add(userInfoArgumentResolver);
+	}
 }
