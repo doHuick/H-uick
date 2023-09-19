@@ -13,6 +13,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.dohit.huick.domain.notification.constant.NotificationType;
+import com.dohit.huick.domain.notification.dto.NotificationDto;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,5 +49,13 @@ public class Notification {
 		this.contractId = contractId;
 		this.notificationType = notificationType;
 		this.createdTime = createdTime;
+	}
+
+	public static Notification from(NotificationDto notificationDto) {
+		return Notification.builder()
+			.userId(notificationDto.getUserId())
+			.contractId(notificationDto.getContractId())
+			.notificationType(notificationDto.getNotificationType())
+			.build();
 	}
 }
