@@ -9,6 +9,8 @@ import javax.persistence.Id;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.dohit.huick.domain.notification.dto.DeviceTokenDto;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,5 +36,12 @@ public class DeviceToken {
 		this.deviceTokenId = deviceTokenId;
 		this.userId = userId;
 		this.deviceToken = deviceToken;
+	}
+
+	public static DeviceToken from(DeviceTokenDto deviceTokenDto) {
+		return DeviceToken.builder()
+			.userId(deviceTokenDto.getUserId())
+			.deviceToken(deviceTokenDto.getDeviceToken())
+			.build();
 	}
 }
