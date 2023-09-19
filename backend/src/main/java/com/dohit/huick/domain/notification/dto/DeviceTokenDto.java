@@ -27,4 +27,11 @@ public class DeviceTokenDto {
 			.deviceToken(deviceToken.getDeviceToken())
 			.build();
 	}
+
+	public static DeviceTokenDto of(Long userId, String deviceToken) {
+		return DeviceTokenDto.builder()
+			.userId(userId)
+			.deviceToken(deviceToken)
+			.build();
+	}
 }
