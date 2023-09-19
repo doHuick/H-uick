@@ -9,13 +9,18 @@ from ai.app.models.contract_info import ContractInfo
 
 conversation_history = defaultdict(list)
 
-# OpenAI API 키 설정
-contracts_model = ChatOpenAI(model_name='gpt-4', temperature=0.8, openai_api_key=config('OPENAI_API_KEY'))
+# OpenAI API model 설정
+MODEL_NAME = 'gpt-4'
+TEMPERATURE = 0.8
+OPENAI_API_KEY = config('OPENAI_API_KEY')
+
+contracts_model = ChatOpenAI(model_name=MODEL_NAME, temperature=TEMPERATURE, openai_api_key=OPENAI_API_KEY)
+# System 프롬프트 작성
 contracts_sys = SystemMessage(content="""
     """)
 
 # 계약보조 챗봇
-## 나중에 user_id 토큰에서 가져오기
+# 나중에 user_id 토큰에서 가져오기
 def get_assist_chat_response(user_id: int, contract_tmp_key: str, contract_info: ContractInfo, chat: str) -> str:
     chat_template = create_contract_info_template(contract_info)
     chat_template += create_chat_template(user_id, contract_tmp_key)
@@ -35,6 +40,7 @@ def get_assist_chat_response(user_id: int, contract_tmp_key: str, contract_info:
 
 # Util
 
+# ContractInfo를 Human 프롬프트로 만들기
 def create_contract_info_template(contract_info: ContractInfo):
     contract_info_template = f"""
         본인은 {contract_info.borrowedDate}에 {contract_info.loanAmount}원을 차용하였습니다.
@@ -45,6 +51,7 @@ def create_contract_info_template(contract_info: ContractInfo):
     """
     return contract_info_template
 
+# 유저 chat을 Human 프롬프트로 만들기
 def create_chat_template(contract_info: ContractInfo, chat: str):
     chat_template = f"""
         위 정보는 지금까지 사용자가 입력한 계약 정보야.
@@ -52,9 +59,9 @@ def create_chat_template(contract_info: ContractInfo, chat: str):
     """
     return chat_template
 
+# 이전 대화 내용을 Human 프롬프트로 만들기
 def create_conversation_template(user_id: int, contract_tmp_key: str):
-    history_key = make_history_key(user_id, contract_tmp_key)
-    conversations = conversation_history[history_key][-3:] # 최근 3개의 대화 기록만 가져옴
+    conversations = get_conversations(user_id, contract_tmp_key, 3) # 최근 대화 3개로 제한
     
     conversation_template = "다음은 이전에 우리가 나누었던 대화야"
 
@@ -67,17 +74,23 @@ def create_conversation_template(user_id: int, contract_tmp_key: str):
 
     return conversation_template
 
-def save_history(user_id: int, contract_tmp_key: int, conversation: dict):
-    history_key = make_history_key(user_id, contract_tmp_key)
-    conversation_history[history_key].append(conversation)
-
+# 대화내용 저장 키 만들기
 def make_history_key(user_id: int, contract_tmp_key: str) -> str:
 
     return str(user_id) + ':' + contract_tmp_key
 
+# (Update 예정) 대화를 메모리에 저장하기
+def save_history(user_id: int, contract_tmp_key: int, conversation: dict):
+    history_key = make_history_key(user_id, contract_tmp_key)
+    conversation_history[history_key].append(conversation)
+
+# (Update 예정) 저장된 대화내용이 있는지 확인하기
 def exist_conversations(user_id: int, contract_tmp_key: str) -> bool:
     history_key = make_history_key(user_id, contract_tmp_key)
     return history_key in conversation_history
 
-def get_conversations(user_id: int, contract_tmp_key: str) -> str:
-    return ContractInfo(contract_tmp_key)
+# (Update 예정) 저장된 대화내용 가져오기
+def get_conversations(user_id: int, contract_tmp_key: str, limit: int) -> str:
+    history_key = make_history_key(user_id, contract_tmp_key)
+    conversations = conversation_history[history_key][-limit:] # 최근 {limit}개의 대화 기록만 가져옴
+    return conversations
