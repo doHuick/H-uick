@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class AutoTransferService {
 	private final AutoTransferRepository autoTransferRepository;
 
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public List<AutoTransferDto> getAutoTransfersOfToday() {
 		LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
 		LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
@@ -57,5 +58,13 @@ public class AutoTransferService {
 	public void updateNextTransferDate(Long autoTransferId, LocalDateTime nextTransferDate) {
 		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_AUTO_TRANSFER));
 		autoTransfer.updateNextTransferDate(nextTransferDate);
+	}
+
+	public List<AutoTransferDto> getAutoTransfersAfter3Days() {
+		LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now().plusDays(3L), LocalTime.MIN);
+		LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now().plusDays(3L), LocalTime.MAX);
+		return autoTransferRepository.findByNextTransferDateBetween(startOfDay, endOfDay).stream().map(
+			AutoTransferDto::from).collect(
+			Collectors.toList());
 	}
 }

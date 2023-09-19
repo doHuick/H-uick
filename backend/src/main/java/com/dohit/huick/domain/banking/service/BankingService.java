@@ -130,4 +130,8 @@ public class BankingService {
 			contractService.updateContractStatus(contractDto.getContractId(), ContractStatus.REPAYMENT_COMPLETED);
 		}
 	}
+
+	public List<AutoTransferDto> getAutoTransfersAfter3Days() {
+		return autoTransferService.getAutoTransfersAfter3Days();
+	}
 }
