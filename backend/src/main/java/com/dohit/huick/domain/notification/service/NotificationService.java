@@ -1,6 +1,7 @@
 package com.dohit.huick.domain.notification.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -88,5 +89,9 @@ public class NotificationService {
 
 	public void createDeviceToken(DeviceTokenDto deviceTokenDto) {
 		deviceTokenRepository.save(DeviceToken.from(deviceTokenDto));
+	}
+
+	public List<DeviceTokenDto> getDeviceTokenByUserId(Long userId) {
+		return deviceTokenRepository.findByUserId(userId).stream().map(DeviceTokenDto::from).collect(Collectors.toList());
 	}
 }
