@@ -1,5 +1,7 @@
 package com.dohit.huick.domain.notification.dto;
 
+import com.dohit.huick.domain.notification.entity.DeviceToken;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,5 +18,13 @@ public class DeviceTokenDto {
 		this.deviceTokenId = deviceTokenId;
 		this.userId = userId;
 		this.deviceToken = deviceToken;
+	}
+
+	public static DeviceTokenDto from(DeviceToken deviceToken) {
+		return DeviceTokenDto.builder()
+			.deviceTokenId(deviceToken.getDeviceTokenId())
+			.userId(deviceToken.getUserId())
+			.deviceToken(deviceToken.getDeviceToken())
+			.build();
 	}
 }
