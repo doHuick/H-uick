@@ -21,9 +21,9 @@ public class UserDto {
 		this.address = address;
 	}
 
-	public static UserDto from(UserApiDto.Request request) {
+	public static UserDto of(Long userId, UserApiDto.Request request) {
 		return UserDto.builder()
-			.userId(request.getUserId())
+			.userId(userId)
 			.name(request.getName())
 			.rrn(request.getRrn())
 			.address(request.getAddress())
