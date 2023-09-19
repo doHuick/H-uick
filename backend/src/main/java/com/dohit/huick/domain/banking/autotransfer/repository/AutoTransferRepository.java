@@ -17,4 +17,7 @@ public interface AutoTransferRepository extends JpaRepository<AutoTransfer, Long
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<AutoTransfer> findByAutoTransferId(Long autoTransferId);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	List<AutoTransfer> findByUnpaidCountGreaterThan(Integer unpaidCount);
 }

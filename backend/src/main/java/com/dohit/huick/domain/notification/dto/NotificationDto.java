@@ -1,6 +1,9 @@
 package com.dohit.huick.domain.notification.dto;
 
-import com.dohit.huick.api.notification.dto.NotificationApiDto;
+import java.time.LocalDateTime;
+
+import com.dohit.huick.domain.notification.constant.NotificationType;
+import com.dohit.huick.domain.notification.entity.Notification;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,25 +13,36 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotificationDto {
-	private Long userId;
-	private String token;
-	private String title;
-	private String body;
+	Long notificationId;
+	Long userId;
+	Long contractId;
+	NotificationType notificationType;
+	LocalDateTime createdTime;
 
 	@Builder
-	private NotificationDto(Long userId, String token, String title, String body) {
+	private NotificationDto(Long notificationId, Long userId, Long contractId, NotificationType notificationType, LocalDateTime createdTime) {
+		this.notificationId = notificationId;
 		this.userId = userId;
-		this.token = token;
-		this.title = title;
-		this.body = body;
+		this.contractId = contractId;
+		this.notificationType = notificationType;
+		this.createdTime = createdTime;
 	}
 
-	static public NotificationDto from(NotificationApiDto.Request request) {
+	static public NotificationDto of(Long userId, Long contractId, NotificationType notificationType) {
 		return NotificationDto.builder()
-			.userId(request.getUserId())
-			.token(request.getToken())
-			.title(request.getTitle())
-			.body(request.getBody())
+			.userId(userId)
+			.contractId(contractId)
+			.notificationType(notificationType)
+			.build();
+	}
+
+	public static NotificationDto from(Notification notification) {
+		return NotificationDto.builder()
+			.notificationId(notification.getNotificationId())
+			.userId(notification.getUserId())
+			.contractId(notification.getContractId())
+			.notificationType(notification.getNotificationType())
+			.createdTime(notification.getCreatedTime())
 			.build();
 	}
 }
