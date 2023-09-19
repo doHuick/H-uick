@@ -67,4 +67,10 @@ public class AutoTransferService {
 			AutoTransferDto::from).collect(
 			Collectors.toList());
 	}
+
+	public List<AutoTransferDto> getOverdueAutoTransfers() {
+		return autoTransferRepository.findByUnpaidCountGreaterThan(0).stream().map(
+			AutoTransferDto::from).collect(
+			Collectors.toList());
+	}
 }

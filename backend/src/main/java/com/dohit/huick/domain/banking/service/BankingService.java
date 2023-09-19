@@ -134,4 +134,8 @@ public class BankingService {
 	public List<AutoTransferDto> getAutoTransfersAfter3Days() {
 		return autoTransferService.getAutoTransfersAfter3Days();
 	}
+
+	public List<AutoTransferDto> getOverdueAutoTransfers() {
+		return autoTransferService.getOverdueAutoTransfers();
+	}
 }
