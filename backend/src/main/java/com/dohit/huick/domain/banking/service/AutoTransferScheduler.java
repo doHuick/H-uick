@@ -13,7 +13,11 @@ import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.constant.TermUnit;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.service.ContractService;
+import com.dohit.huick.domain.notification.constant.NotificationType;
+import com.dohit.huick.domain.notification.dto.NotificationDto;
+import com.dohit.huick.domain.notification.service.NotificationService;
 import com.dohit.huick.global.error.exception.TransferException;
+import com.google.firebase.messaging.FirebaseMessagingException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class AutoTransferScheduler  {
 	private final BankingService bankingService;
 	private final ContractService contractService;
+	private final NotificationService notificationService;
 
 	@Scheduled(cron = "0 0 9 * * ?", zone = "Asia/Seoul")
 	public void transferAutomatically() {
@@ -47,6 +52,9 @@ public class AutoTransferScheduler  {
 					bankingService.decreaseUnpaidCount(autoTransferId);
 				}
 
+				NotificationDto notificationDto = notificationService.createNotification(NotificationDto.of(contractDto.getLesseeId(), contractId, NotificationType.TRANSFER_SUCCESS));
+				notificationService.sendNotification(notificationDto);
+
 				// Repayment Data 생성하기
 				bankingService.createRepayment(contractId, transactionId);
 
@@ -69,6 +77,7 @@ public class AutoTransferScheduler  {
 		} catch (TransferException b) {
 			// 실패하면 미납 횟수를 증가시킨다
 			bankingService.increaseUnpaidCount(autoTransferId);
+		} catch (FirebaseMessagingException ignore) {
 		}
 	}
 }
