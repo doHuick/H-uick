@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dohit.huick.domain.notification.constant.NotificationType;
+import com.dohit.huick.domain.notification.dto.DeviceTokenDto;
 import com.dohit.huick.domain.notification.dto.NotificationDto;
 import com.dohit.huick.domain.notification.entity.DeviceToken;
 import com.dohit.huick.domain.notification.repository.DeviceTokenRepository;
@@ -83,5 +84,9 @@ public class NotificationService {
 
 	public NotificationDto createNotification(NotificationDto notificationDto) {
 		return NotificationDto.from(notificationRepository.save(com.dohit.huick.domain.notification.entity.Notification.from(notificationDto)));
+	}
+
+	public void createDeviceToken(DeviceTokenDto deviceTokenDto) {
+		deviceTokenRepository.save(DeviceToken.from(deviceTokenDto));
 	}
 }
