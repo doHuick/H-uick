@@ -18,15 +18,6 @@ public class UserApiDto {
 		private String name;
 		private String rrn;
 		private String address;
-
-		public static Request of(Long userId, String name, String rrn, String address) {
-			return Request.builder()
-				.userId(userId)
-				.name(name)
-				.rrn(rrn)
-				.address(address)
-				.build();
-		}
 	}
 
 }
