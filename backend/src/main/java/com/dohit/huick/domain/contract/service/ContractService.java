@@ -51,4 +51,8 @@ public class ContractService {
 	public List<ContractDto> getContractByLesseeId(Long lesseeId) {
 		return contractRepository.findByLesseeId(lesseeId).stream().map(ContractDto::from).collect(Collectors.toList());
 	}
+
+	public List<ContractDto> getContractByLessorId(Long lessorId) {
+		return contractRepository.findByLessorId(lessorId).stream().map(ContractDto::from).collect(Collectors.toList());
+	}
 }
