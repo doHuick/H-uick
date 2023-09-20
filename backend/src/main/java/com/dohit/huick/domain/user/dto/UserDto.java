@@ -71,4 +71,21 @@ public class UserDto {
 			.issueDate(user.getIssueDate())
 			.build();
 	}
+
+	public static UserDto of(UserDto userDto, AccountDto accountDto) {
+		return UserDto.builder()
+			.userId(userDto.getUserId())
+			.rrn(userDto.getRrn())
+			.address(userDto.getAddress())
+			.walletAddress(userDto.getWalletAddress())
+			.socialType(userDto.getSocialType())
+			.socialId(userDto.getSocialId())
+			.createdTime(userDto.getCreatedTime())
+			.role(userDto.getRole())
+			.withdrawalTime(userDto.getWithdrawalTime())
+			.signatureUrl(userDto.getSignatureUrl())
+			.issueDate(userDto.getIssueDate())
+			.accountInfo(accountDto)
+			.build();
+	}
 }
