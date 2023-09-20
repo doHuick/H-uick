@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.dohit.huick.api.user.dto.UserApiDto;
 import com.dohit.huick.domain.auth.constant.Role;
 import com.dohit.huick.domain.auth.constant.SocialType;
+import com.dohit.huick.domain.banking.account.dto.AccountDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -24,11 +25,12 @@ public class UserDto {
 	private LocalDateTime withdrawalTime;
 	private String signatureUrl;
 	private LocalDateTime issueDate;
+	private AccountDto accountInfo;
 
 	@Builder
 	private UserDto(Long userId, String name, String rrn, String address, String walletAddress, SocialType socialType,
 		String socialId, LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl,
-		LocalDateTime issueDate) {
+		LocalDateTime issueDate, AccountDto accountInfo) {
 		this.userId = userId;
 		this.name = name;
 		this.rrn = rrn;
@@ -41,6 +43,7 @@ public class UserDto {
 		this.withdrawalTime = withdrawalTime;
 		this.signatureUrl = signatureUrl;
 		this.issueDate = issueDate;
+		this.accountInfo = accountInfo;
 	}
 
 	public static UserDto of(Long userId, UserApiDto.Request request) {
