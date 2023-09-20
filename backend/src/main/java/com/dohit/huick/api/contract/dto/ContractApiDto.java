@@ -10,10 +10,12 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class ContractApiDto {
 
 	@Getter
+	@NoArgsConstructor
 	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Request{
 		Long lesseeId;

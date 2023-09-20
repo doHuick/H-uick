@@ -94,4 +94,8 @@ public class NotificationService {
 	public List<DeviceTokenDto> getDeviceTokenByUserId(Long userId) {
 		return deviceTokenRepository.findByUserId(userId).stream().map(DeviceTokenDto::from).collect(Collectors.toList());
 	}
+
+	public List<NotificationDto> getNotificationUserId(Long userId) {
+		return notificationRepository.findByUserId(userId).stream().map(NotificationDto::from).collect(Collectors.toList());
+	}
 }

@@ -1,5 +1,8 @@
 package com.dohit.huick.domain.contract.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.LockModeType;
 
 import org.springframework.data.jpa.repository.Lock;
@@ -22,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ContractService {
 	private final ContractRepository contractRepository;
-	private AutoTransferService autoTransferService;
+	private final AutoTransferService autoTransferService;
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void createContract(ContractDto contractDto) {
@@ -43,5 +46,13 @@ public class ContractService {
 		Contract contract = contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
 			ErrorCode.NOT_EXIST_CONTRACT));
 		contract.updateStatus(contractStatus);
+	}
+
+	public List<ContractDto> getContractByLesseeId(Long lesseeId) {
+		return contractRepository.findByLesseeId(lesseeId).stream().map(ContractDto::from).collect(Collectors.toList());
+	}
+
+	public List<ContractDto> getContractByLessorId(Long lessorId) {
+		return contractRepository.findByLessorId(lessorId).stream().map(ContractDto::from).collect(Collectors.toList());
 	}
 }

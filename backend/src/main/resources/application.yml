@@ -10,6 +10,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+    defer-datasource-initialization: true
     properties:
       hibernate:
         format_sql: true
@@ -18,6 +19,11 @@ spring:
       host: localhost
       port: 6379
       password: devA408
+  sql:
+    init:
+      data-locations: classpath*:database/data.sql
+      mode: always
+      platform: mariadb
   security:
     oauth2:
       client:
