@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,5 +48,11 @@ public class ContractController {
 		return ResponseEntity.ok().body(contractService.getContractByLessorId(lessorId).stream().map(
 			ContractApiDto.Response::from).collect(
 			Collectors.toList()));
+	}
+
+	@PatchMapping("/status/{contractId}")
+	public ResponseEntity<Void> updateContractStatus(@PathVariable Long contractId, @RequestBody ContractApiDto.Request request) {
+		contractService.updateContractStatus(contractId, request.getStatus());
+		return ResponseEntity.ok().build();
 	}
 }
