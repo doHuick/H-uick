@@ -1,5 +1,8 @@
 package com.dohit.huick.domain.contract.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.LockModeType;
 
 import org.springframework.data.jpa.repository.Lock;
@@ -43,5 +46,9 @@ public class ContractService {
 		Contract contract = contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
 			ErrorCode.NOT_EXIST_CONTRACT));
 		contract.updateStatus(contractStatus);
+	}
+
+	public List<ContractDto> getContractByLesseeId(Long lesseeId) {
+		return contractRepository.findByLesseeId(lesseeId).stream().map(ContractDto::from).collect(Collectors.toList());
 	}
 }
