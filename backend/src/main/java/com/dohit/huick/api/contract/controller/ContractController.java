@@ -41,4 +41,11 @@ public class ContractController {
 			ContractApiDto.Response::from).collect(
 			Collectors.toList()));
 	}
+
+	@GetMapping("/lessor/me")
+	public ResponseEntity<List<ContractApiDto.Response>> getContractByLessorId(@UserInfo Long lessorId) {
+		return ResponseEntity.ok().body(contractService.getContractByLessorId(lessorId).stream().map(
+			ContractApiDto.Response::from).collect(
+			Collectors.toList()));
+	}
 }
