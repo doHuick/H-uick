@@ -1,0 +1,23 @@
+version: "3.5"
+
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    restart: always
+    environment:
+      - MARIADB_USER=DOHIT
+      - MARIADB_PASSWORD=devA408
+      - MARIADB_ROOT_PASSWORD=devA408
+      - MARIADB_DATABASE=huick_user
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./develop/mariadb/conf.d:/etc/mysql/conf.d"
+      - "./develop/mariadb/data:/var/lib/mysql"
+  redis:
+    container_name: redis
+    image: redis:7.2-rc3
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass devA408
