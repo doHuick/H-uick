@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.dohit.huick.domain.auth.constant.Role;
 import com.dohit.huick.domain.auth.constant.SocialType;
 import com.dohit.huick.domain.auth.entity.UserPrincipal;
+import com.dohit.huick.domain.banking.service.BankingService;
 import com.dohit.huick.domain.user.entity.OAuth2UserInfo;
 import com.dohit.huick.domain.user.entity.OAuth2UserInfoFactory;
 import com.dohit.huick.domain.user.entity.User;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
 	private final UserRepository userRepository;
+	private final BankingService bankingService;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -68,12 +70,19 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 			.role(Role.USER)
 			.build(); // 다른 정보들을 더 넣는 수정 작업 필요
 
-		return userRepository.saveAndFlush(user);
+		user = userRepository.saveAndFlush(user);
+		createAccount(user.getUserId());
+
+		return user;
 	}
 
 	private User updateUser(User user, OAuth2UserInfo userInfo) {
-
 		return user;
+	}
+
+	private void createAccount(Long userId) {
+		bankingService.createAccount(userId);
+		bankingService.transferRandomMoney(bankingService.getAccountByUserId(userId).getAccountNumber());
 	}
 
 }
