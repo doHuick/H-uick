@@ -6,6 +6,7 @@ import com.dohit.huick.api.user.dto.UserApiDto;
 import com.dohit.huick.domain.auth.constant.Role;
 import com.dohit.huick.domain.auth.constant.SocialType;
 import com.dohit.huick.domain.banking.account.dto.AccountDto;
+import com.dohit.huick.domain.user.entity.User;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -52,6 +53,22 @@ public class UserDto {
 			.name(request.getName())
 			.rrn(request.getRrn())
 			.address(request.getAddress())
+			.build();
+	}
+
+	public static UserDto from(User user) {
+		return UserDto.builder()
+			.userId(user.getUserId())
+			.rrn(user.getRrn())
+			.address(user.getAddress())
+			.walletAddress(user.getWalletAddress())
+			.socialType(user.getSocialType())
+			.socialId(user.getSocialId())
+			.createdTime(user.getCreatedTime())
+			.role(user.getRole())
+			.withdrawalTime(user.getWithdrawalTime())
+			.signatureUrl(user.getSignatureUrl())
+			.issueDate(user.getIssueDate())
 			.build();
 	}
 }
