@@ -13,17 +13,11 @@ public class NotificationApiDto {
 	@NoArgsConstructor
 	@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Request {
-		Long userId;
 		String token;
-		String title;
-		String body;
 
 		@Builder
-		private Request(Long userId, String token, String title, String body) {
-			this.userId = userId;
+		private Request(String token) {
 			this.token = token;
-			this.title = title;
-			this.body = body;
 		}
 	}
 }
