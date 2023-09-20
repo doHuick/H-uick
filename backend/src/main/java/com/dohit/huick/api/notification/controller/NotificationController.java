@@ -1,6 +1,10 @@
 package com.dohit.huick.api.notification.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +27,12 @@ public class NotificationController {
 	public ResponseEntity<Void> createDeviceToken(@UserInfo Long userId, @RequestBody NotificationApiDto.Request request) {
 		notificationService.createDeviceToken(DeviceTokenDto.of(userId, request.getToken()));
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/me")
+	public ResponseEntity<List<NotificationApiDto.Response>> getNotificationByUserId(@UserInfo Long userId) {
+		return ResponseEntity.ok().body(notificationService.getNotificationUserId(userId).stream().map(
+			NotificationApiDto.Response::from).collect(
+			Collectors.toList()));
 	}
 }
