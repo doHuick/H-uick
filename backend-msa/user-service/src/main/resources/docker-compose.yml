@@ -9,7 +9,7 @@ services:
       - MARIADB_USER=DOHIT
       - MARIADB_PASSWORD=devA408
       - MARIADB_ROOT_PASSWORD=devA408
-      - MARIADB_DATABASE=huick_user
+      - MARIADB_DATABASE=huick
     ports:
       - "3306:3306"
     volumes:
