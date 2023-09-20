@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ContractService {
 	private final ContractRepository contractRepository;
-	private AutoTransferService autoTransferService;
+	private final AutoTransferService autoTransferService;
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void createContract(ContractDto contractDto) {
