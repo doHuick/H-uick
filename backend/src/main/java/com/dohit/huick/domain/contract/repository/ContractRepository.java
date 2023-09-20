@@ -1,5 +1,6 @@
 package com.dohit.huick.domain.contract.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.LockModeType;
@@ -13,4 +14,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<Contract> findByContractId(Long contractId);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	List<Contract> findByLesseeId(Long lesseeId);
 }
