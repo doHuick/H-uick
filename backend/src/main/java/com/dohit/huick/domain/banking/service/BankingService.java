@@ -2,6 +2,8 @@ package com.dohit.huick.domain.banking.service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -113,7 +115,22 @@ public class BankingService {
 				.getAmount())
 			.sum();
 
-		return Objects.equals(contractDto.getAmount(), totalRepaymentAmount);
+		Long totalAmount = 0L;
+		LocalDateTime startDate = contractDto.getStartDate();
+		LocalDateTime dueDate = contractDto.getDueDate();
+
+		while (!startDate.isEqual(dueDate)) {
+			LocalDateTime endDateOfYearOfStartDate = LocalDateTime.of(startDate.getYear() + 1, 0, 0, 0, 0);
+			if (endDateOfYearOfStartDate.isAfter(dueDate)) { // 이번년도에 계약 상환이 끝나야 함
+				endDateOfYearOfStartDate = dueDate;
+			}
+			totalAmount +=
+				(long)(contractDto.getAmount() * (1 + contractDto.getRate()) / (Year.of(startDate.getYear()).isLeap() ?
+					366 : 365) * ChronoUnit.DAYS.between(startDate, endDateOfYearOfStartDate));
+			startDate = endDateOfYearOfStartDate;
+		}
+
+		return Objects.equals(totalAmount, totalRepaymentAmount);
 	}
 
 	public void updateNextTransfer(Long autoTransferId, LocalDateTime nextTransferDate, Long amount) {
