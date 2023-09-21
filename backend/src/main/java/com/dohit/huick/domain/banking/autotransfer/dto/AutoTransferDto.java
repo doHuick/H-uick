@@ -20,13 +20,18 @@ public class AutoTransferDto {
 	private LocalDateTime nextTransferDate;
 
 	@Column(nullable = false)
+	private Long amount;
+
+	@Column(nullable = false)
 	private Integer unpaidCount;
 
 	@Builder
-	private AutoTransferDto(Long autoTransferId, Long contractId, LocalDateTime nextTransferDate, Integer unpaidCount) {
+	public AutoTransferDto(Long autoTransferId, Long contractId, LocalDateTime nextTransferDate, Long amount,
+		Integer unpaidCount) {
 		this.autoTransferId = autoTransferId;
 		this.contractId = contractId;
 		this.nextTransferDate = nextTransferDate;
+		this.amount = amount;
 		this.unpaidCount = unpaidCount;
 	}
 
@@ -35,6 +40,7 @@ public class AutoTransferDto {
 			.autoTransferId(autoTransfer.getAutoTransferId())
 			.contractId(autoTransfer.getContractId())
 			.nextTransferDate(autoTransfer.getNextTransferDate())
+			.amount(autoTransfer.getAmount())
 			.unpaidCount(autoTransfer.getUnpaidCount())
 			.build();
 	}
