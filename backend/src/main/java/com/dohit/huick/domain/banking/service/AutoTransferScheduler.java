@@ -44,7 +44,6 @@ public class AutoTransferScheduler {
 					.getAccountNumber();
 				String receiverAccountNumber = bankingService.getAccountByUserId(contractDto.getLessorId())
 					.getAccountNumber();
-				;
 
 				// 송금한다 -> Transaction Data 생성됨
 				Long transactionId = bankingService.transferMoney(
