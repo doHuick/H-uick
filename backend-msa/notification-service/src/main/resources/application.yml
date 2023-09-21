@@ -1,4 +1,9 @@
+server:
+  port: 9003
+
 spring:
+  application:
+    name: notification-service
   config:
     import: optional:file:.env[.properties]
   datasource:
