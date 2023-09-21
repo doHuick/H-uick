@@ -116,8 +116,8 @@ public class BankingService {
 		return Objects.equals(contractDto.getAmount(), totalRepaymentAmount);
 	}
 
-	public void updateNextTransferDate(Long autoTransferId, LocalDateTime nextTransferDate) {
-		autoTransferService.updateNextTransferDate(autoTransferId, nextTransferDate);
+	public void updateNextTransfer(Long autoTransferId, LocalDateTime nextTransferDate, Long amount) {
+		autoTransferService.updateNextTransfer(autoTransferId, nextTransferDate, amount);
 	}
 
 	public void repay(ContractDto contractDto, Long amount) {
