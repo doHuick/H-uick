@@ -62,7 +62,8 @@ public class AutoTransfer {
 		this.unpaidCount = unpaidCount;
 	}
 
-	public void updateNextTransferDate(LocalDateTime nextTransferDate) {
+	public void updateNextTransfer(LocalDateTime nextTransferDate, Long amount) {
 		this.nextTransferDate = nextTransferDate;
+		this.amount = amount;
 	}
 }
