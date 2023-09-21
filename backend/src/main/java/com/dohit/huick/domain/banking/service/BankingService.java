@@ -107,11 +107,10 @@ public class BankingService {
 
 	public Boolean isRepaymentDone(ContractDto contractDto) {
 		List<RepaymentDto> repaymentDtos = repaymentService.getRepaymentsByContractId(contractDto.getContractId());
-		Long totalRepaymentAmount = 0L;
-		for (RepaymentDto repaymentDto : repaymentDtos) {
-			totalRepaymentAmount += transactionService.getTransactionByTransactionId(repaymentDto.getTransactionId())
-				.getAmount();
-		}
+		Long totalRepaymentAmount = repaymentDtos.stream()
+			.mapToLong(repaymentDto -> transactionService.getTransactionByTransactionId(repaymentDto.getTransactionId())
+				.getAmount())
+			.sum();
 
 		return Objects.equals(contractDto.getAmount(), totalRepaymentAmount);
 	}
