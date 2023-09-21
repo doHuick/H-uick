@@ -2,6 +2,7 @@ package com.dohit.huick.api.user.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,12 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
+
+	@GetMapping("/me")
+	public ResponseEntity<UserApiDto.Response> getUserByUserId(@UserInfo Long userId) {
+		UserApiDto.Response response = UserApiDto.Response.from(userService.getUserByUserId(userId));
+		return ResponseEntity.ok().body(response);
+	}
 
 	@PostMapping("/rrn")
 	public ResponseEntity<Void> signup(@UserInfo Long userId, @RequestBody UserApiDto.Request request) {

@@ -8,10 +8,11 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Builder;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
 
 public class TransactionApiDto {
 	@Getter
+	@NoArgsConstructor
 	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Request {
 		private String senderAccountNumber;
