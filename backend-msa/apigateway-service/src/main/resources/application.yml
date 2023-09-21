@@ -1,0 +1,113 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+spring:
+  application:
+    name: apigateway-service
+  cloud:
+    gateway:
+      #      default-filters:
+      #        - name: GlobalFilter
+      #          args:
+      #            baseMessage: Spring Cloud Gateway Global Filter
+      #            preLogger: true
+      #            postLogger: true
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} # `/user-service/**` ? ???? `/**` ? ??
+        #        - id: user-service
+        #          uri: lb://USER-SERVICE
+        #          predicates:
+        #            - Path=/user-service/login
+        #            - Method=POST
+        #          filters:
+        #            - RemoveRequestHeader=Cookie
+        #            - RewritePath=/user-service/(?<segment>.*), /$\{segment} # `/user-service/**` ? ???? `/**` ? ??
+        #        - id: user-service
+        #          uri: lb://USER-SERVICE
+        #          predicates:
+        #            - Path=/user-service/users
+        #            - Method=POST
+        #          filters:
+        #            - RemoveRequestHeader=Cookie
+        #            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        #        - id: user-service
+        #          uri: lb://USER-SERVICE
+        #          predicates:
+        #            - Path=/user-service/**
+        #            - Method=GET
+        #          filters:
+        #            - RemoveRequestHeader=Cookie
+        #            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        #            - AuthorizationHeaderFilter
+        #        - id: user-service
+        #          uri: lb://USER-SERVICE
+        #          predicates:
+        #            - Path=/user-service/actuator/**
+        #            - Method=GET,POST
+        #          filters:
+        #            - RemoveRequestHeader=Cookie
+        #            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: contract-service
+          uri: lb://CONTRACT-SERVICE
+          predicates:
+            - Path=/contract-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/contract-service/(?<segment>.*), /$\{segment}
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/notification-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/notification-service/(?<segment>.*), /$\{segment}
+        - id: banking-service
+          uri: lb://BANKING-SERVICE
+          predicates:
+            - Path=/banking-service/**
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/banking-service/(?<segment>.*), /$\{segment}
+#        - id: first-service
+#          uri: lb://MY-FIRST-SERVICE
+#          predicates: # ???
+#            - Path=/first-service/**
+#          filters:
+#            #            - AddRequestHeader=first-request, first-request-header2
+#            #            - AddResponseHeader=first-response, first-response-header2
+#            - CustomFilter
+#        - id: second-service
+#          uri: lb://MY-SECOND-SERVICE
+#          predicates:
+#            - Path=/second-service/**
+#          filters:
+#            #            - AddRequestHeader=second-request, second-request-header2
+#            #            - AddResponseHeader=second-response, second-response-header2
+#            - name: CustomFilter
+#            - name: LoggingFilter
+#              args:
+#                baseMessage: Hi, there.
+#                preLogger: true
+#                postLogger: true
+
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: refresh, health, beans, httptrace
+
+#token:
+#  secret: user_token
