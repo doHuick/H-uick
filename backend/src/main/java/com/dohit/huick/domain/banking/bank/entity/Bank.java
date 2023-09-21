@@ -33,5 +33,4 @@ public class Bank {
 	@Enumerated(EnumType.STRING)
 	private BankType bankName;
 
-
 }
