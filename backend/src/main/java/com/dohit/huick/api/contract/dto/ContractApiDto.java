@@ -3,7 +3,6 @@ package com.dohit.huick.api.contract.dto;
 import java.time.LocalDateTime;
 
 import com.dohit.huick.domain.contract.constant.ContractStatus;
-import com.dohit.huick.domain.contract.constant.TermUnit;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -17,33 +16,28 @@ public class ContractApiDto {
 	@Getter
 	@NoArgsConstructor
 	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-	public static class Request{
+	public static class Request {
 		Long lesseeId;
 		Long lessorId;
 		LocalDateTime startDate;
 		LocalDateTime dueDate;
-		Integer term;
-		TermUnit termUnit;
 		Long amount;
-		Long repaymentAmountPerOnce;
 		Float rate;
 		ContractStatus status;
+		String pdfPath;
 		String useAutoTransfer;
 
 		@Builder
-		private Request(Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-			Integer term, TermUnit termUnit,
-			Long amount, Long repaymentAmountPerOnce, Float rate,ContractStatus status, String useAutoTransfer) {
+		private Request(Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate, Long amount,
+			Float rate, ContractStatus status, String pdfPath, String useAutoTransfer) {
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
 			this.startDate = startDate;
 			this.dueDate = dueDate;
-			this.term = term;
-			this.termUnit = termUnit;
 			this.amount = amount;
-			this.repaymentAmountPerOnce = repaymentAmountPerOnce;
 			this.rate = rate;
 			this.status = status;
+			this.pdfPath = pdfPath;
 			this.useAutoTransfer = useAutoTransfer;
 		}
 	}
@@ -56,29 +50,25 @@ public class ContractApiDto {
 		Long lessorId;
 		LocalDateTime startDate;
 		LocalDateTime dueDate;
-		Integer term;
-		TermUnit termUnit;
 		Long amount;
-		Long repaymentAmountPerOnce;
 		Float rate;
 		ContractStatus status;
 		LocalDateTime createdTime;
+		String pdfPath;
 
 		@Builder
-		private Response(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-			Integer term, TermUnit termUnit, Long amount, Long repaymentAmountPerOnce,Float rate, ContractStatus status, LocalDateTime createdTime) {
+		public Response(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
+			Long amount, Float rate, ContractStatus status, LocalDateTime createdTime, String pdfPath) {
 			this.contractId = contractId;
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
 			this.startDate = startDate;
 			this.dueDate = dueDate;
-			this.term = term;
-			this.termUnit = termUnit;
 			this.amount = amount;
-			this.repaymentAmountPerOnce = repaymentAmountPerOnce;
 			this.rate = rate;
 			this.status = status;
 			this.createdTime = createdTime;
+			this.pdfPath = pdfPath;
 		}
 
 		public static Response from(ContractDto contractDto) {
@@ -88,13 +78,11 @@ public class ContractApiDto {
 				.lessorId(contractDto.getLessorId())
 				.startDate(contractDto.getStartDate())
 				.dueDate(contractDto.getDueDate())
-				.term(contractDto.getTerm())
-				.termUnit(contractDto.getTermUnit())
 				.amount(contractDto.getAmount())
-				.repaymentAmountPerOnce(contractDto.getRepaymentAmountPerOnce())
 				.rate(contractDto.getRate())
 				.status(contractDto.getStatus())
 				.createdTime(contractDto.getCreatedTime())
+				.pdfPath(contractDto.getPdfPath())
 				.build();
 		}
 	}
