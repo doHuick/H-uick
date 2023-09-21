@@ -1,10 +1,13 @@
 package com.dohit.huick.domain.banking.autotransfer.dto;
 
 import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.temporal.ChronoUnit;
 
 import javax.persistence.Column;
 
 import com.dohit.huick.domain.banking.autotransfer.entity.AutoTransfer;
+import com.dohit.huick.domain.contract.dto.ContractDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -45,10 +48,33 @@ public class AutoTransferDto {
 			.build();
 	}
 
-	public static AutoTransferDto of(Long contractId, Integer unpaidCount) {
+	public static AutoTransferDto from(ContractDto contractDto) {
+		boolean lessThanMonth = contractDto.getStartDate().plusMonths(1L).isAfter(contractDto.getDueDate());
+		LocalDateTime nextTransferDate =
+			lessThanMonth ? contractDto.getDueDate() : contractDto.getStartDate().plusMonths(1L);
+		long between = ChronoUnit.DAYS.between(contractDto.getStartDate(), nextTransferDate);
+
+		boolean isStartDateLeapYear = Year.of(contractDto.getStartDate().getYear()).isLeap();
+		boolean isNextTransferDateLeapYear = Year.of(nextTransferDate.getYear()).isLeap();
+		long amount = (long)(contractDto.getAmount() * (1 + contractDto.getRate()) / (isStartDateLeapYear ? 366 : 365)
+			* between);
+		if (contractDto.getStartDate().getYear() != nextTransferDate.getYear()) {
+			int nextTransferDateDayOfYear = nextTransferDate.getDayOfYear();
+			amount = (long)(
+				contractDto.getAmount() * (1 + contractDto.getRate()) / (isStartDateLeapYear ? 366 : 365) * (between
+					- nextTransferDateDayOfYear)
+					+ contractDto.getAmount() * (1 + contractDto.getRate()) / (isNextTransferDateLeapYear ? 366 : 365)
+					* nextTransferDateDayOfYear);
+		}
+
 		return AutoTransferDto.builder()
-			.contractId(contractId)
-			.unpaidCount(unpaidCount)
+			.contractId(contractDto.getContractId())
+			.nextTransferDate(nextTransferDate)
+			.amount(
+				(long)(contractDto.getAmount() * (1 + contractDto.getRate()) / 365 * (
+					ChronoUnit.DAYS.between(nextTransferDate, contractDto.getStartDate()))))
+			.amount(amount)
+			.unpaidCount(0)
 			.build();
 	}
 }
