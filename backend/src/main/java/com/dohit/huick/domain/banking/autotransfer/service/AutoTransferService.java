@@ -42,22 +42,25 @@ public class AutoTransferService {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void increaseUnpaidCount(Long autoTransferId) {
-		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(
-			ErrorCode.NOT_EXIST_AUTO_TRANSFER));
+		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId)
+			.orElseThrow(() -> new BankingException(
+				ErrorCode.NOT_EXIST_AUTO_TRANSFER));
 		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() + 1);
 	}
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public void decreaseUnpaidCount(Long autoTransferId) {
-		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(
-			ErrorCode.NOT_EXIST_AUTO_TRANSFER));
+		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId)
+			.orElseThrow(() -> new BankingException(
+				ErrorCode.NOT_EXIST_AUTO_TRANSFER));
 		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() - 1);
 	}
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	public void updateNextTransferDate(Long autoTransferId, LocalDateTime nextTransferDate) {
-		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId).orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_AUTO_TRANSFER));
-		autoTransfer.updateNextTransferDate(nextTransferDate);
+	public void updateNextTransfer(Long autoTransferId, LocalDateTime nextTransferDate, Long amount) {
+		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId)
+			.orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_AUTO_TRANSFER));
+		autoTransfer.updateNextTransfer(nextTransferDate, amount);
 	}
 
 	public List<AutoTransferDto> getAutoTransfersAfter3Days() {

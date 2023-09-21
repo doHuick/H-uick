@@ -68,7 +68,7 @@ public class BankingService {
 	public Long transferMoney(TransactionDto transactionDto) throws BankingException {
 		// from 계좌 가져옴
 		AccountDto senderAccountDto = accountService.getAccountByAccountNumber(transactionDto.getSenderAccountNumber());
-		if(senderAccountDto.getBalance() < transactionDto.getAmount()) {
+		if (senderAccountDto.getBalance() < transactionDto.getAmount()) {
 			throw new TransferException(ErrorCode.NOT_ENOUGH_MONEY);
 		}
 
@@ -76,7 +76,8 @@ public class BankingService {
 		accountService.updateBalance(senderAccountDto.getAccountNumber(), -transactionDto.getAmount());
 
 		// to 계좌  가져와서 돈을 넣음
-		AccountDto receiverAccountDto = accountService.getAccountByAccountNumber(transactionDto.getReceiverAccountNumber());
+		AccountDto receiverAccountDto = accountService.getAccountByAccountNumber(
+			transactionDto.getReceiverAccountNumber());
 		accountService.updateBalance(receiverAccountDto.getAccountNumber(), transactionDto.getAmount());
 
 		// 트랜잭션 데이터를 생성함
@@ -91,7 +92,7 @@ public class BankingService {
 	public List<AutoTransferDto> getAutoTransfersOfToday() {
 		return autoTransferService.getAutoTransfersOfToday();
 	}
-	
+
 	public void increaseUnpaidCount(Long autoTransferId) {
 		autoTransferService.increaseUnpaidCount(autoTransferId);
 	}
@@ -121,11 +122,13 @@ public class BankingService {
 
 	public void repay(ContractDto contractDto, Long amount) {
 		// 이체시키고
-		Long transactionId = transferMoney(TransactionDto.of( getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(), getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
+		Long transactionId = transferMoney(
+			TransactionDto.of(getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(),
+				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
 		// 상환데이터 넣고
 		createRepayment(contractDto.getContractId(), transactionId);
 		// 상환 끝났는지 체크하기
-		if(isRepaymentDone(contractDto)) {
+		if (isRepaymentDone(contractDto)) {
 			contractService.updateContractStatus(contractDto.getContractId(), ContractStatus.REPAYMENT_COMPLETED);
 		}
 	}
