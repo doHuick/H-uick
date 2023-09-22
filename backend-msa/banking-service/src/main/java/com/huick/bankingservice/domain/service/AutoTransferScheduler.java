@@ -5,6 +5,7 @@ import java.time.Year;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import com.huick.bankingservice.feign.contract.client.ContractServiceClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 public class AutoTransferScheduler {
 	private final BankingService bankingService;
+	private final ContractServiceClient contractServiceClient;
 	// private final ContractService contractService;	// 페인 클라이언트로 불러다가 쓰기
 	// private final NotificationService notificationService;	// 카프카로 불러다 쓰기
 
@@ -35,7 +37,7 @@ public class AutoTransferScheduler {
 			for (AutoTransferDto autoTransferDto : autoTransferDtos) {
 				autoTransferId = autoTransferDto.getAutoTransferId();
 				Long contractId = autoTransferDto.getContractId();
-				ContractDto contractDto = ContractDto.builder().build(); // contractService.getContractByContractId(contractId);
+				ContractDto contractDto = ContractDto.from(contractServiceClient.getContractByContractId(contractId)); // contractService.getContractByContractId(contractId);
 				String senderAccountNumber = bankingService.getAccountByUserId(contractDto.getLesseeId())
 					.getAccountNumber();
 				String receiverAccountNumber = bankingService.getAccountByUserId(contractDto.getLessorId())
