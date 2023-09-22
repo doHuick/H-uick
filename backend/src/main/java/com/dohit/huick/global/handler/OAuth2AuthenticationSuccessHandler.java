@@ -92,25 +92,24 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		// refresh 토큰 설정
 		long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
 
-		AuthToken token = tokenProvider.createAuthToken(
+		AuthToken refreshToken = tokenProvider.createAuthToken(
 			appProperties.getAuth().getTokenSecret(),
 			new Date(now.getTime() + refreshTokenExpiry)
 		);
+		RefreshToken newRefreshToken = RefreshToken.of(userId, refreshToken.getToken());
 
 		// DB 저장
-		RefreshToken refreshToken = refreshTokenRepository.findByUserId(userId).orElse(null);
-		if (refreshToken.getRefreshToken() != null) {
-			refreshToken.setRefreshToken(token.getToken());
+		RefreshToken oldRefreshToken = refreshTokenRepository.findByUserId(userId).orElse(null);
+		if (oldRefreshToken == null) {
+			refreshTokenRepository.save(newRefreshToken);
 		} else {
-			refreshToken = RefreshToken.of(userId, token.getToken());
-			refreshTokenRepository.save(refreshToken);
+			refreshTokenRepository.updateRefreshToken(userId, newRefreshToken);
 		}
 
 		int cookieMaxAge = (int)refreshTokenExpiry / 60;
 
 		CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
-		CookieUtil.addCookie(response, REFRESH_TOKEN, token.getToken(), cookieMaxAge);
-
+		CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 		return UriComponentsBuilder.fromUriString(targetUrl)
 			.queryParam("token", accessToken.getToken())
 			.build().toUriString();
