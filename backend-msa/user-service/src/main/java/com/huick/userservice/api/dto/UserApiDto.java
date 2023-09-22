@@ -1,19 +1,18 @@
-package com.dohit.huick.api.user.dto;
+package com.huick.userservice.api.dto;
 
 import java.time.LocalDateTime;
 
-import com.dohit.huick.domain.auth.constant.Role;
-import com.dohit.huick.domain.auth.constant.SocialType;
-import com.dohit.huick.domain.banking.account.dto.AccountDto;
-import com.dohit.huick.domain.user.dto.UserDto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.huick.userservice.domain.constant.Role;
+import com.huick.userservice.domain.constant.SocialType;
+import com.huick.userservice.domain.dto.AccountDto;
+import com.huick.userservice.domain.dto.UserDto;
 
 import lombok.Builder;
 import lombok.Getter;
 
 public class UserApiDto {
-
 	@Getter
 	@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Request {
@@ -77,5 +76,4 @@ public class UserApiDto {
 				.build();
 		}
 	}
-
 }
