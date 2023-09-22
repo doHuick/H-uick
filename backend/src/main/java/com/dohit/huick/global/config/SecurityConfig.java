@@ -93,11 +93,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.failureHandler(oAuth2AuthenticationFailureHandler())
 			.and()
 			.logout()
-			.logoutUrl("/*/v1/user/logout")
+			.logoutUrl("/v1/user/logout")
+			.logoutSuccessUrl("/")
 			.clearAuthentication(true)
 			.deleteCookies(OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN)
 			.addLogoutHandler(logoutHandler)
-			.logoutSuccessUrl("/")
 			.permitAll();
 
 		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
