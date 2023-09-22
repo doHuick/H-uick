@@ -1,11 +1,13 @@
 package com.huick.bankingservice.domain.autotransfer.dto;
 
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.temporal.ChronoUnit;
 
 import javax.persistence.Column;
 
 import com.huick.bankingservice.domain.autotransfer.entity.AutoTransfer;
+import com.huick.bankingservice.domain.dto.ContractDto;
 
 import lombok.Builder;
 import lombok.Getter;
