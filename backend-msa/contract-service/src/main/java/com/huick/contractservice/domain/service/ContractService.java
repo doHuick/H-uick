@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.huick.contractservice.domain.constant.ContractStatus;
+import com.huick.contractservice.domain.dto.AutoTransferDto;
 import com.huick.contractservice.domain.dto.ContractDto;
 import com.huick.contractservice.domain.entity.Contract;
 import com.huick.contractservice.domain.repository.ContractRepository;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ContractService {
 	private final ContractRepository contractRepository;
+	private final KafkaProducer kafkaProducer;
 	// private final AutoTransferService autoTransferService;	// 카프카 사용
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -32,6 +34,7 @@ public class ContractService {
 		if (contractDto.getUseAutoTransfer().equals("Y")) {
 			// autoTransferService.createAutoTransfer(AutoTransferDto.from(contractDto));
 			// 카프카 사용하여 데이터 생성
+			kafkaProducer.createAutoTransfer("create-autotransfer-topic", AutoTransferDto.from(contractDto));
 		}
 	}
 
