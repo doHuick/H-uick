@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
+import com.huick.bankingservice.feign.contract.client.ContractServiceClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ public class BankingService {
 	private final BankService bankService;
 	private final AutoTransferService autoTransferService;
 	private final RepaymentService repaymentService;
+	private final ContractServiceClient contractServiceClient;
 
 	// private final ContractService contractService; //카프카로 불러다 쓰기
 
@@ -139,7 +141,7 @@ public class BankingService {
 
 	public void repay(Long contractId, Long amount) {
 		// 이체시키고
-		ContractDto contractDto = ContractDto.builder().build();	// contractId로 페인클라이언트 이용해서 ContractDto 가져오기
+		ContractDto contractDto = ContractDto.from(contractServiceClient.getContractByContractId(contractId));	// contractId로 페인클라이언트 이용해서 ContractDto 가져오기
 		Long transactionId = transferMoney(
 			TransactionDto.of(getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(),
 				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
