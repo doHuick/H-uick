@@ -16,6 +16,7 @@ import com.huick.userservice.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
