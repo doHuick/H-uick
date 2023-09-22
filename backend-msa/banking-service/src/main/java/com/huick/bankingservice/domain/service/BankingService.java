@@ -39,7 +39,7 @@ public class BankingService {
 	private final AutoTransferService autoTransferService;
 	private final RepaymentService repaymentService;
 
-	// private final ContractService contractService; //페인 클라이언트로 불러다가 쓰기
+	// private final ContractService contractService; //카프카로 불러다 쓰기
 
 	public void createAccount(Long userId) {
 		accountService.createAccount(userId);

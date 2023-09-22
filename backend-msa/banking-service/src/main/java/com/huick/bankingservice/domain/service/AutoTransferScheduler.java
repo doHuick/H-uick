@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class AutoTransferScheduler {
 	private final BankingService bankingService;
 	// private final ContractService contractService;	// 페인 클라이언트로 불러다가 쓰기
-	// private final NotificationService notificationService;	// 페인 클라이언트로 불러다 쓰기
+	// private final NotificationService notificationService;	// 카프카로 불러다 쓰기
 
 	@Scheduled(cron = "0 0 9 * * ?", zone = "Asia/Seoul")
 	public void transferAutomatically() {
