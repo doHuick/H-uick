@@ -32,7 +32,7 @@ public class ContractService {
 		// 계약 생성 메서드
 		Contract contract = contractRepository.save(Contract.from(contractDto));
 		if (contractDto.getUseAutoTransfer().equals("Y")) {
-			autoTransferService.createAutoTransfer(AutoTransferDto.of(contract.getContractId(), 0));
+			autoTransferService.createAutoTransfer(AutoTransferDto.from(contractDto));
 		}
 	}
 
