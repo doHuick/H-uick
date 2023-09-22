@@ -11,7 +11,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.huick.userservice.global.error.exception.BusinessException;
 
 import lombok.extern.slf4j.Slf4j;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
