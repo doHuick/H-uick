@@ -1,7 +1,8 @@
 package com.huick.userservice.domain.service;
 
-import java.util.Date;
-
+import com.huick.userservice.domain.dto.AccountDto;
+import com.huick.userservice.feign.banking.client.BankingServiceClient;
+import com.huick.userservice.feign.banking.dto.AccountApiDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final BankingServiceClient bankingServiceClient;
 	// private final RefreshTokenRepository refreshTokenRepository;
 	// private final AuthTokenProvider authTokenProvider;
 	// private final BankingService bankingService;
@@ -26,23 +28,23 @@ public class UserService {
 	@Transactional
 	public void signup(UserDto userDto) throws BusinessException {
 		User user = userRepository.findByUserId(userDto.getUserId())
-			.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+				.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
 		user.signup(userDto);
 	}
 
 	// @Transactional
 	// public void withdraw() throws BusinessException {
-	// 	String name = SecurityContextHolder.getContext().getAuthentication().getName();
-	// 	if (name == null) {
-	// 		throw new BusinessException(ErrorCode.NOT_EXIST_USER);
-	// 	}
+	//     String name = SecurityContextHolder.getContext().getAuthentication().getName();
+	//     if (name == null) {
+	//         throw new BusinessException(ErrorCode.NOT_EXIST_USER);
+	//     }
 	//
-	// 	Long userId = Long.valueOf(name);
-	// 	User user = userRepository.findByUserId(userId)
-	// 		.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
-	// 	user.withdraw();
-	// 	AuthToken refreshToken = authTokenProvider.createAuthToken(name, new Date(System.currentTimeMillis()));
-	// 	refreshTokenRepository.save(RefreshToken.of(Long.valueOf(name), refreshToken.getToken()));
+	//     Long userId = Long.valueOf(name);
+	//     User user = userRepository.findByUserId(userId)
+	//         .orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
+	//     user.withdraw();
+	//     AuthToken refreshToken = authTokenProvider.createAuthToken(name, new Date(System.currentTimeMillis()));
+	//     refreshTokenRepository.save(RefreshToken.of(Long.valueOf(name), refreshToken.getToken()));
 	// }
 
 	public UserDto getUserByUserId(Long userId) {
@@ -50,11 +52,11 @@ public class UserService {
 		UserDto userDto = UserDto.from(userRepository.findByUserId(userId).orElseThrow(() -> new AuthenticationException(ErrorCode.NOT_EXIST_USER)));
 
 		// 페인 클라이언트 사용해서 유저아이디로 계정 정보 가져오기
-		// bankingService.getAccountByUserId(userId);
+		AccountApiDto.Response response = bankingServiceClient.getAccountByUserId(userId);
 
-		// return UserDto.of(userDto, bankingService.getAccountByUserId(userId));
+		return UserDto.of(userDto, AccountDto.from(response));
 
-		return userDto;
+		// return userDto;
 	}
 
 }
