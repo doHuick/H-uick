@@ -68,3 +68,6 @@ eureka:
 #  oauth2:
 #    authorizedRedirectUris:
 #      - http://localhost:5173/oauth/redirect
+logging:
+  level:
+    com.huick.userservice.feign.banking.client: DEBUG
