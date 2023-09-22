@@ -18,7 +18,7 @@ import com.huick.bankingservice.domain.transaction.dto.TransactionDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/banking/transactions")
+@RequestMapping("/transactions")
 @RequiredArgsConstructor
 public class TransactionController {
 	private final BankingService bankingService;

@@ -12,7 +12,7 @@ import com.huick.bankingservice.domain.service.BankingService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/banking/accounts")
+@RequestMapping("/accounts")
 @RequiredArgsConstructor
 public class AccountController {
 	private final BankingService bankingService;

@@ -15,7 +15,7 @@ import com.huick.bankingservice.domain.service.BankingService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/banking/repayment")
+@RequestMapping("/repayment")
 @RequiredArgsConstructor
 public class RepaymentController {
 	private final BankingService bankingService;
@@ -23,7 +23,8 @@ public class RepaymentController {
 
 	@PostMapping
 	public ResponseEntity<Void> repay(@RequestBody RepaymentApiDto.Request request){
-		bankingService.repay(contractService.getContractByContractId(request.getContractId()), request.getAmount());
+		// 페인 클라이언트
+		// bankingService.repay(contractService.getContractByContractId(request.getContractId()), request.getAmount());
 
 		return ResponseEntity.ok().build();
 	}
