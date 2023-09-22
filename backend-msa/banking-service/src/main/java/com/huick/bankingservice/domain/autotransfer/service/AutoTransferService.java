@@ -1,0 +1,80 @@
+package com.huick.bankingservice.domain.autotransfer.service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.LockModeType;
+
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.huick.bankingservice.domain.autotransfer.dto.AutoTransferDto;
+import com.huick.bankingservice.domain.autotransfer.entity.AutoTransfer;
+import com.huick.bankingservice.domain.autotransfer.repository.AutoTransferRepository;
+import com.huick.bankingservice.global.error.ErrorCode;
+import com.huick.bankingservice.global.error.exception.BankingException;
+
+import lombok.RequiredArgsConstructor;
+
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class AutoTransferService {
+	private final AutoTransferRepository autoTransferRepository;
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	public List<AutoTransferDto> getAutoTransfersOfToday() {
+		LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+		LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+		return autoTransferRepository.findByNextTransferDateBetween(startOfDay, endOfDay).stream().map(
+			AutoTransferDto::from).collect(
+			Collectors.toList());
+	}
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	public void createAutoTransfer(AutoTransferDto autoTransferDto) {
+		autoTransferRepository.save(AutoTransfer.from(autoTransferDto));
+	}
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	public void increaseUnpaidCount(Long autoTransferId) {
+		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId)
+			.orElseThrow(() -> new BankingException(
+				ErrorCode.NOT_EXIST_AUTO_TRANSFER));
+		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() + 1);
+	}
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	public void decreaseUnpaidCount(Long autoTransferId) {
+		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId)
+			.orElseThrow(() -> new BankingException(
+				ErrorCode.NOT_EXIST_AUTO_TRANSFER));
+		autoTransfer.updateUnpaidCount(autoTransfer.getUnpaidCount() - 1);
+	}
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	public void updateNextTransfer(Long autoTransferId, LocalDateTime nextTransferDate, Long amount) {
+		AutoTransfer autoTransfer = autoTransferRepository.findByAutoTransferId(autoTransferId)
+			.orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_AUTO_TRANSFER));
+		autoTransfer.updateNextTransfer(nextTransferDate, amount);
+	}
+
+	public List<AutoTransferDto> getAutoTransfersAfter3Days() {
+		LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now().plusDays(3L), LocalTime.MIN);
+		LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now().plusDays(3L), LocalTime.MAX);
+		return autoTransferRepository.findByNextTransferDateBetween(startOfDay, endOfDay).stream().map(
+			AutoTransferDto::from).collect(
+			Collectors.toList());
+	}
+
+	public List<AutoTransferDto> getOverdueAutoTransfers() {
+		return autoTransferRepository.findByUnpaidCountGreaterThan(0).stream().map(
+			AutoTransferDto::from).collect(
+			Collectors.toList());
+	}
+}
