@@ -137,8 +137,9 @@ public class BankingService {
 		autoTransferService.updateNextTransfer(autoTransferId, nextTransferDate, amount);
 	}
 
-	public void repay(ContractDto contractDto, Long amount) {
+	public void repay(Long contractId, Long amount) {
 		// 이체시키고
+		ContractDto contractDto = ContractDto.builder().build();	// contractId로 페인클라이언트 이용해서 ContractDto 가져오기
 		Long transactionId = transferMoney(
 			TransactionDto.of(getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(),
 				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
