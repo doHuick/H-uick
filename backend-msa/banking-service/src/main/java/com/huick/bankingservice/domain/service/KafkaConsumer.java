@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class KafkaConsumer {
 	private AutoTransferRepository autoTransferRepository;
 
-	@KafkaListener(topics = "create-autotransfer-topic")
+	@KafkaListener(topics = "create-autotransfer")
 	public void createAutoTransfer(String kafkaMessage) {
 		log.info("Consumer Kafka Message : " + kafkaMessage);
 
