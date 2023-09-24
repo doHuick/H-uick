@@ -120,7 +120,19 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   const handleUpload = () => {
     if (localStorage.getItem('kakaoUploaded') == 'false') {
       const botMessage = createChatBotMessage('만들어 드리겠습니다!');
-      const toSend = JSON.parse(localStorage.getItem('tempContractLocal'));
+      // 여기서 이미지 보내고 내용 받기
+      // const toSend = JSON.parse(localStorage.getItem('tempContractLocal'));
+
+      // 더미데이터
+      const toSend = {
+        loanAmount: 120,
+        maturityDate: '20240101',
+        interestRate: 12,
+      };
+      localStorage.setItem("tempContractLocal", JSON.stringify(toSend))
+
+
+
       var date = new Date();
       var borrowedYear = date.getFullYear();
       var borrowedMonth = ('0' + (1 + date.getMonth())).slice(-2);
@@ -143,10 +155,11 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
       )}월 ${toSend.maturityDate.slice(6, 8)}일
       이자율: ${toSend.interestRate}%\n
       위 내용이 맞나요`,
-        { widget: 'confirmbutton' },
+        { widget: 'confirmbutton', delay: 900 },
       );;
 
-
+      const toSendContract = { isLender: isLender, loanAmount: toSend.loanAmount, maturityDate: toSend.maturityDate, interestRate: toSend.interestRate }
+      localStorage.setItem("toSendLocal", JSON.stringify(toSendContract))
       // 여기서 이미지 POST, 정보 GET
       
       setState((prev) => ({
@@ -241,6 +254,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     }));
   };
 
+  // 내용확인
   const contractConfirm = (toSend, borrowedDate) => {
     const botMessage = createChatBotMessage(
       `금액: ${toSend.loanAmount
@@ -277,8 +291,8 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
         const clientmessage = createClientMessage('맞아용');
         const botMessage = createChatBotMessage('위의 내용으로 만들어드릴게요');
         const botMessageSecond = createChatBotMessage(
-        '작성된 차용증을 확인하고 송금해보세요 \n여기에 차용증으로 가는거 띄우기',
-        { delay: 900 },
+        '작성된 임시 차용증을 확인해보세요',
+        { widget: 'finalconfirmbutton', delay: 1600 },
         );
         
         setState((prev) => ({
@@ -356,13 +370,9 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   };
 
 
-  const handleEnd = () => {
-    const botMessage = createChatBotMessage('금액');
-
-    setState((prev) => ({
-      ...prev,
-      messages: [...prev.messages, botMessage],
-    }));
+  const goToPage = () => {
+    const navigate = useNavigate();
+    navigate("/contractTemp")
   };
 
   // Put the handleHello function in the actions object to pass to the MessageParser
@@ -392,6 +402,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
             handlePriceEdit,
             handleDateEdit,
             handleRateEdit,
+            goToPage
           },
         });
       })}

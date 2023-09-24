@@ -3,8 +3,9 @@ import { createChatBotMessage } from 'react-chatbot-kit';
 import ConfirmButton from './ConfirmButton';
 import LendBorrowButton from './LendBorrowButton';
 import EditButton from './EditButton';
-import ChatKakaoButton from './ChatKaKaoButton';
-import UserImageUpload from './userImageUpload';
+import ChatKakaoButton from './ChatKakaoButton';
+import UserImageUpload from './UserImageUpload';
+import FinalConfirmButton from './FinalContract';
 
 const config = {
   initialMessages: [
@@ -65,6 +66,10 @@ const config = {
     {
       widgetName: 'userimageupload',
       widgetFunc: (props) => <UserImageUpload {...props} />,
+    },
+    {
+      widgetName: 'finalconfirmbutton',
+      widgetFunc: (props) => <FinalConfirmButton {...props} />,
     },
   ],
 };

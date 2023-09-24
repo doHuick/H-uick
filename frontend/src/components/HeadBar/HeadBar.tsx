@@ -27,7 +27,7 @@ const HeadBarContainer = styled.div<HeadBarProps['bgcolor']>`
   position: fixed;
   top: 0px;
   width: 100%;
-  height: 96px;
+  height: 100px;
   z-index: 1;
   background-color: ${(props) => props.bgcolor || 'var(--white)'};
 `

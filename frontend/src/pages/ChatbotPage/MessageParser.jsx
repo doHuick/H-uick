@@ -27,10 +27,10 @@ const MessageParser = ({ children, actions, props }) => {
     }
 
     // 금액
-    if (userChat.length == 1 && !userButtons[0]) {
+    if (userChat.length == 1 && !userButtons[0] && userButtons.length < 3) {
       userChat.pop();
       actions.startAfterButton();
-    } else if (userChat.length == 1 && userButtons[0]) {
+    } else if (userChat.length == 1 && userButtons[0] && userButtons.length < 3) {
       message = message.replace(/,/g, '');
       message = message.replace('원', '');
 
@@ -48,7 +48,7 @@ const MessageParser = ({ children, actions, props }) => {
     }
 
     // 만기일자
-    if (userChat.length == 2) {
+    if (userChat.length == 2 && userButtons.length < 3) {
       var year = '';
       var month = '';
       var day = '';
@@ -129,7 +129,7 @@ const MessageParser = ({ children, actions, props }) => {
     }
 
     // 이자율
-    if (userChat.length == 3) {
+    if (userChat.length == 3 && userButtons.length < 3) {
       const letters = ['%', '퍼센트', '퍼'];
       for (var i = 0; i < letters.length; i++) {
         message = message.replace(letters[i], '');
@@ -150,7 +150,9 @@ const MessageParser = ({ children, actions, props }) => {
     }
 
     // 수정
-    if (userChat.length == 4 && userButtons[2]) {
+    if (userButtons[2] == 'handleConfirm') {
+      const toSend2 = JSON.parse(localStorage.getItem('tempContractLocal'));
+
       // 금액수정
       if (userButtons[3] == 'handlePriceEdit') {
         message = message.replace(/,/g, '');
@@ -160,13 +162,13 @@ const MessageParser = ({ children, actions, props }) => {
           userChat.pop();
           actions.lessThanZero();
         } else if (!isNaN(message)) {
-          toSend.loanAmount = message;
+          toSend2.loanAmount = message;
           userButtons.pop();
           userButtons.pop();
           userChat.pop();
           localStorage.setItem('userButtonsLocal', JSON.stringify(userButtons));
-          localStorage.setItem('tempContractLocal', JSON.stringify(toSend));
-          actions.contractConfirm(toSend, borrowedDate);
+          localStorage.setItem('tempContractLocal', JSON.stringify(toSend2));
+          actions.contractConfirm(toSend2, borrowedDate);
         } else {
           userChat.pop();
           actions.priceFailed();
@@ -247,13 +249,13 @@ const MessageParser = ({ children, actions, props }) => {
           userChat.pop();
           actions.endDateFailed();
         } else {
-          toSend.maturityDate = combined;
+          toSend2.maturityDate = combined;
           userButtons.pop();
           userButtons.pop();
           userChat.pop();
           localStorage.setItem('userButtonsLocal', JSON.stringify(userButtons));
-          localStorage.setItem('tempContractLocal', JSON.stringify(toSend));
-          actions.contractConfirm(toSend, borrowedDate);
+          localStorage.setItem('tempContractLocal', JSON.stringify(toSend2));
+          actions.contractConfirm(toSend2, borrowedDate);
         }
         // 이자율 수정
       } else if (userButtons[3] == 'handleRateEdit') {
@@ -266,7 +268,7 @@ const MessageParser = ({ children, actions, props }) => {
             userChat.pop();
             actions.maxRate();
           } else {
-            toSend.interestRate = message;
+            toSend2.interestRate = message;
             userButtons.pop();
             userButtons.pop();
             userChat.pop();
@@ -274,8 +276,8 @@ const MessageParser = ({ children, actions, props }) => {
               'userButtonsLocal',
               JSON.stringify(userButtons),
             );
-            localStorage.setItem('tempContractLocal', JSON.stringify(toSend));
-            actions.contractConfirm(toSend, borrowedDate);
+            localStorage.setItem('tempContractLocal', JSON.stringify(toSend2));
+            actions.contractConfirm(toSend2, borrowedDate);
           }
         } else {
           userChat.pop();

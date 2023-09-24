@@ -5,6 +5,7 @@ import SignUppage from '../pages/SignUppage/SignUppage';
 import MyPage from '../pages/MyPage/MyPage';
 import ChatbotPage from '../pages/ChatbotPage/ChatbotPage';
 import TransferPage from '../pages/TransferPage/TransferPage';
+import ContractTempPage from '../pages/ContractTempPage/ContractTempPage';
 
 export default function Router() {
   return (
@@ -15,6 +16,7 @@ export default function Router() {
         <Route path="/mypage" element={<MyPage />}></Route>
         <Route path="/chatbot" element={<ChatbotPage />}></Route>
         <Route path="/transfer" element={<TransferPage />}></Route>
+        <Route path="/contractTemp" element={<ContractTempPage />}></Route>
       </Routes>
     </BrowserRouter>
   );
