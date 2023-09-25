@@ -5,6 +5,8 @@ import java.time.Year;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import com.huick.bankingservice.domain.constant.NotificationType;
+import com.huick.bankingservice.domain.dto.NotificationDto;
 import com.huick.bankingservice.feign.contract.client.ContractServiceClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -27,6 +29,7 @@ public class AutoTransferScheduler {
 	private final ContractServiceClient contractServiceClient;
 	// private final ContractService contractService;	// 페인 클라이언트로 불러다가 쓰기
 	// private final NotificationService notificationService;	// 카프카로 불러다 쓰기
+	private final KafkaProducer kafkaProducer;
 
 	@Scheduled(cron = "0 0 9 * * ?", zone = "Asia/Seoul")
 	public void transferAutomatically() {
@@ -52,15 +55,16 @@ public class AutoTransferScheduler {
 					bankingService.decreaseUnpaidCount(autoTransferId);
 				}
 
-				// NotificationDto notificationDto = notificationService.createNotification(
-				// 	NotificationDto.of(contractDto.getLesseeId(), contractId, NotificationType.TRANSFER_SUCCESS));
+				NotificationDto notificationDto = NotificationDto.of(contractDto.getLesseeId(), contractId, NotificationType.TRANSFER_SUCCESS);
 				// notificationService.sendNotification(notificationDto);
+				kafkaProducer.createNotification("create-notification", notificationDto);
 
 				// Repayment Data 생성하기
 				bankingService.createRepayment(contractId, transactionId);
 
 				if (bankingService.isRepaymentDone(contractDto)) {    // 상환이 끝났으면 계약 상태를 `상환 완료` 로 업데이트 한다
 					// contractService.updateContractStatus(contractId, ContractStatus.REPAYMENT_COMPLETED);
+					kafkaProducer.updateContractStatus("update-contractstatus", ContractDto.of(contractId, ContractStatus.REPAYMENT_COMPLETED));
 				} else {    // 상환이 끝나지 않았으면 다음 상환날짜를 구해서 업데이트 한다
 					LocalDateTime today = autoTransferDto.getNextTransferDate();
 					LocalDateTime nextTransferDate = today.plusMonths(1L);

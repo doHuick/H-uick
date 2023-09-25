@@ -40,6 +40,7 @@ public class BankingService {
 	private final AutoTransferService autoTransferService;
 	private final RepaymentService repaymentService;
 	private final ContractServiceClient contractServiceClient;
+	private final KafkaProducer kafkaProducer;
 
 	// private final ContractService contractService; //카프카로 불러다 쓰기
 
@@ -150,6 +151,7 @@ public class BankingService {
 		// 상환 끝났는지 체크하기
 		if (isRepaymentDone(contractDto)) {
 			// contractService.updateContractStatus(contractDto.getContractId(), ContractStatus.REPAYMENT_COMPLETED);
+			kafkaProducer.updateContractStatus("update-contractstatus", ContractDto.of(contractDto.getContractId(), ContractStatus.REPAYMENT_COMPLETED));
 		}
 	}
 
