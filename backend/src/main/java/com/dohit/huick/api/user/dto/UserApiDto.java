@@ -62,6 +62,7 @@ public class UserApiDto {
 		public static Response from(UserDto userDto) {
 			return Response.builder()
 				.userId(userDto.getUserId())
+				.name(userDto.getName())
 				.rrn(userDto.getRrn())
 				.address(userDto.getAddress())
 				.walletAddress(userDto.getWalletAddress())
