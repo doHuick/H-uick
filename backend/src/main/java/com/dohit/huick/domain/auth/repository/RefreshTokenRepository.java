@@ -32,4 +32,10 @@ public class RefreshTokenRepository {
 		}
 		return Optional.of(refreshToken);
 	}
+
+	public void updateRefreshToken(Long userId, RefreshToken newRefreshToken) {
+		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+		valueOperations.set(String.valueOf(userId), newRefreshToken.getRefreshToken());
+		redisTemplate.expire(String.valueOf(userId), 7, TimeUnit.DAYS);
+	}
 }
