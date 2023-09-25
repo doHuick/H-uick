@@ -59,6 +59,7 @@ public class UserDto {
 	public static UserDto from(User user) {
 		return UserDto.builder()
 			.userId(user.getUserId())
+			.name(user.getName())
 			.rrn(user.getRrn())
 			.address(user.getAddress())
 			.walletAddress(user.getWalletAddress())
@@ -75,6 +76,7 @@ public class UserDto {
 	public static UserDto of(UserDto userDto, AccountDto accountDto) {
 		return UserDto.builder()
 			.userId(userDto.getUserId())
+			.name(userDto.getName())
 			.rrn(userDto.getRrn())
 			.address(userDto.getAddress())
 			.walletAddress(userDto.getWalletAddress())
