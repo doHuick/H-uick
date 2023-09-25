@@ -31,6 +31,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.kafka:spring-kafka'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.2'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.springframeworsk.boot:spring-boot-devtools'

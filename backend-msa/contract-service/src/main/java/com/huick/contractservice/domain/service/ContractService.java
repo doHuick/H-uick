@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.huick.contractservice.domain.constant.ContractStatus;
 import com.huick.contractservice.domain.dto.AutoTransferDto;
 import com.huick.contractservice.domain.dto.ContractDto;
+import com.huick.contractservice.domain.dto.TransactionDto;
 import com.huick.contractservice.domain.entity.Contract;
 import com.huick.contractservice.domain.repository.ContractRepository;
+import com.huick.contractservice.feign.banking.client.BankingServiceClient;
 import com.huick.contractservice.global.error.ErrorCode;
 import com.huick.contractservice.global.error.exception.ContractException;
 
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class ContractService {
 	private final ContractRepository contractRepository;
 	private final KafkaProducer kafkaProducer;
+	private final BankingServiceClient bankingServiceClient;
 	// private final AutoTransferService autoTransferService;	// 카프카 사용
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -47,7 +50,16 @@ public class ContractService {
 	public void updateContractStatus(Long contractId, ContractStatus contractStatus) {
 		Contract contract = contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
 			ErrorCode.NOT_EXIST_CONTRACT));
-		contract.updateStatus(contractStatus);
+
+		if(contractStatus == ContractStatus.EXECUTION_COMPLETED) {
+			// 송금 시도를 하고
+			String sender = bankingServiceClient.getAccountByUserId(contract.getLessorId()).getAccountNumber();
+			String receiver = bankingServiceClient.getAccountByUserId(contract.getLessorId()).getAccountNumber();
+			kafkaProducer.transferMoney("transfer-money", TransactionDto.of(sender, receiver, contract.getAmount()));
+			contract.updateStatus(contractStatus);
+		} else {
+			contract.updateStatus(contractStatus);
+		}
 	}
 
 	public List<ContractDto> getContractByLesseeId(Long lesseeId) {
