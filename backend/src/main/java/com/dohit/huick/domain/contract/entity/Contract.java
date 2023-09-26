@@ -31,10 +31,10 @@ public class Contract {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long contractId;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	Long lesseeId;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	Long lessorId;
 
 	@Column(nullable = false)
