@@ -21,6 +21,7 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final BankingServiceClient bankingServiceClient;
+	private final KafkaProducer kafkaProducer;
 	// private final RefreshTokenRepository refreshTokenRepository;
 	// private final AuthTokenProvider authTokenProvider;
 	// private final BankingService bankingService;
@@ -30,6 +31,8 @@ public class UserService {
 		User user = userRepository.findByUserId(userDto.getUserId())
 				.orElseThrow(() -> new BusinessException(ErrorCode.NOT_EXIST_USER));
 		user.signup(userDto);
+		System.out.println(userDto.getUserId());
+		kafkaProducer.createAccount("create-account", userDto.getUserId());
 	}
 
 	// @Transactional

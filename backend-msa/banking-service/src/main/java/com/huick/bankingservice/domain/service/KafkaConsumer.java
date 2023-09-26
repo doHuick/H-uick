@@ -1,5 +1,7 @@
 package com.huick.bankingservice.domain.service;
 
+import java.security.SecureRandom;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
@@ -77,5 +79,32 @@ public class KafkaConsumer {
 		// 트랜잭션 데이터를 생성함
 		transactionRepository.save(Transaction.from(transactionDto));
 		return;
+	}
+
+	@KafkaListener(topics = "create-account")
+	public void createAccount(String kafkaMessage) {
+		log.info("Consumer Kafka Message : " + kafkaMessage);
+
+		ObjectMapper mapper = new ObjectMapper();
+		Long userId = null;
+		try {
+			userId = mapper.readValue(kafkaMessage, Long.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		if(userId != null) {
+			SecureRandom secureRandom = new SecureRandom();
+
+			while (true) {
+				StringBuilder stringBuilder = new StringBuilder("110408");
+				stringBuilder.append(secureRandom.nextInt(900000) + 100000);
+				try {
+					accountRepository.save(Account.of(stringBuilder.toString(),userId,"001",0L));
+					return;
+				} catch (Exception ignored) {
+				}
+			}
+		}
 	}
 }
