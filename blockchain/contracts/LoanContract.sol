@@ -1,38 +1,40 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.21;
+pragma solidity >=0.4.22 <0.9.0;
 
-import "./ContractDTO.sol";
+import "./ContractData.sol";
 
-contract LoanContract {
-    event ConstructorCalled(address indexed sender, address huickService);
-    address public huickService;
+contract LoanContract is ContractData {
+    event ConstructorCalled(address indexed sender, address service);
+    address public service;
 
-    constructor() {
-        huickService = msg.sender;
-        emit ConstructorCalled(msg.sender, huickService);
+    constructor() public {
+        service = msg.sender;
+        emit ConstructorCalled(msg.sender, service);
     }
 
     modifier onlyService() {
-        require(msg.sender == huickService, "Only H-uick can call this function!");
+        require(msg.sender == service, "Only H-uick can call this function!");
         _;
     }
 
-    event ContractCreated(string hashOfDocs);
-    event ContractUpdated(string hashOfDocs, Status status);
+    event ContractCreated(bytes32 hashOfDocs);
+    event ContractUpdated(bytes32 hashOfDocs, Status status);
 
-    mapping (string => Contract) public contracts; // 해시값을 키로 계약 구조체를 매핑
+    mapping (bytes32 => Contract) public contracts; // 해시값을 키로 계약 구조체를 매핑
 
     // 새로운 계약 생성
     function createContract(string memory _hashOfDocs, address _lenderWallet, address _borrowerWallet, uint _principalAmount, uint _interestRate, uint _issueDate, uint256 _maturityDate) public onlyService {
-        Contract memory newContract = Contract(_hashOfDocs, Status.InProgress, _lenderWallet, _borrowerWallet, _principalAmount, _interestRate, _issueDate, _maturityDate);
-        contracts[_hashOfDocs] = newContract;
-        emit ContractCreated(_hashOfDocs);
+        bytes32 hash = keccak256(abi.encodePacked(_hashOfDocs));
+        Contract memory newContract = Contract(hash, Status.InProgress, _lenderWallet, _borrowerWallet, _principalAmount, _interestRate, _issueDate, _maturityDate);
+        contracts[hash] = newContract;
+        emit ContractCreated(hash);
     }
 
     // 계약 상태 변경
     function updateContractStatus(string memory _hashOfDocs, Status _status) public onlyService {
-        require(bytes(contracts[_hashOfDocs].hashOfDocs).length != 0, "Contract does not exist");
-        contracts[_hashOfDocs].status = _status;
-        emit ContractUpdated(_hashOfDocs, _status);
+        bytes32 hash = keccak256(abi.encodePacked(_hashOfDocs));
+        require(contracts[hash].hashOfDocs == hash, "Contract does not exist");
+        contracts[hash].status = _status;
+        emit ContractUpdated(hash, _status);
     }
 }
