@@ -76,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 			.antMatchers("*/auth/refresh").permitAll()
+			.antMatchers("*/health").permitAll()
 			.antMatchers("/api/**").hasAnyAuthority(Role.USER.getCode())
 			.antMatchers("/api/**/admin/**").hasAnyAuthority(Role.ADMIN.getCode())
 			.anyRequest().authenticated()
@@ -107,7 +108,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/auth/refresh");
+		web.ignoring().antMatchers("/auth/refresh", "/health");
 	}
 
 	/*
