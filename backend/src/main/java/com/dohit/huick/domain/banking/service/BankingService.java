@@ -2,6 +2,8 @@ package com.dohit.huick.domain.banking.service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.time.Year;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -68,7 +70,7 @@ public class BankingService {
 	public Long transferMoney(TransactionDto transactionDto) throws BankingException {
 		// from 계좌 가져옴
 		AccountDto senderAccountDto = accountService.getAccountByAccountNumber(transactionDto.getSenderAccountNumber());
-		if(senderAccountDto.getBalance() < transactionDto.getAmount()) {
+		if (senderAccountDto.getBalance() < transactionDto.getAmount()) {
 			throw new TransferException(ErrorCode.NOT_ENOUGH_MONEY);
 		}
 
@@ -76,7 +78,8 @@ public class BankingService {
 		accountService.updateBalance(senderAccountDto.getAccountNumber(), -transactionDto.getAmount());
 
 		// to 계좌  가져와서 돈을 넣음
-		AccountDto receiverAccountDto = accountService.getAccountByAccountNumber(transactionDto.getReceiverAccountNumber());
+		AccountDto receiverAccountDto = accountService.getAccountByAccountNumber(
+			transactionDto.getReceiverAccountNumber());
 		accountService.updateBalance(receiverAccountDto.getAccountNumber(), transactionDto.getAmount());
 
 		// 트랜잭션 데이터를 생성함
@@ -91,7 +94,7 @@ public class BankingService {
 	public List<AutoTransferDto> getAutoTransfersOfToday() {
 		return autoTransferService.getAutoTransfersOfToday();
 	}
-	
+
 	public void increaseUnpaidCount(Long autoTransferId) {
 		autoTransferService.increaseUnpaidCount(autoTransferId);
 	}
@@ -107,26 +110,42 @@ public class BankingService {
 
 	public Boolean isRepaymentDone(ContractDto contractDto) {
 		List<RepaymentDto> repaymentDtos = repaymentService.getRepaymentsByContractId(contractDto.getContractId());
-		Long totalRepaymentAmount = 0L;
-		for (RepaymentDto repaymentDto : repaymentDtos) {
-			totalRepaymentAmount += transactionService.getTransactionByTransactionId(repaymentDto.getTransactionId())
-				.getAmount();
+		Long totalRepaymentAmount = repaymentDtos.stream()
+			.mapToLong(repaymentDto -> transactionService.getTransactionByTransactionId(repaymentDto.getTransactionId())
+				.getAmount())
+			.sum();
+
+		Long totalAmount = 0L;
+		LocalDateTime startDate = contractDto.getStartDate();
+		LocalDateTime dueDate = contractDto.getDueDate();
+
+		while (!startDate.isEqual(dueDate)) {
+			LocalDateTime endDateOfYearOfStartDate = LocalDateTime.of(startDate.getYear() + 1, 0, 0, 0, 0);
+			if (endDateOfYearOfStartDate.isAfter(dueDate)) { // 이번년도에 계약 상환이 끝나야 함
+				endDateOfYearOfStartDate = dueDate;
+			}
+			totalAmount +=
+				(long)(contractDto.getAmount() * (1 + contractDto.getRate()) / (Year.of(startDate.getYear()).isLeap() ?
+					366 : 365) * ChronoUnit.DAYS.between(startDate, endDateOfYearOfStartDate));
+			startDate = endDateOfYearOfStartDate;
 		}
 
-		return Objects.equals(contractDto.getAmount(), totalRepaymentAmount);
+		return Objects.equals(totalAmount, totalRepaymentAmount);
 	}
 
-	public void updateNextTransferDate(Long autoTransferId, LocalDateTime nextTransferDate) {
-		autoTransferService.updateNextTransferDate(autoTransferId, nextTransferDate);
+	public void updateNextTransfer(Long autoTransferId, LocalDateTime nextTransferDate, Long amount) {
+		autoTransferService.updateNextTransfer(autoTransferId, nextTransferDate, amount);
 	}
 
 	public void repay(ContractDto contractDto, Long amount) {
 		// 이체시키고
-		Long transactionId = transferMoney(TransactionDto.of( getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(), getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
+		Long transactionId = transferMoney(
+			TransactionDto.of(getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(),
+				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
 		// 상환데이터 넣고
 		createRepayment(contractDto.getContractId(), transactionId);
 		// 상환 끝났는지 체크하기
-		if(isRepaymentDone(contractDto)) {
+		if (isRepaymentDone(contractDto)) {
 			contractService.updateContractStatus(contractDto.getContractId(), ContractStatus.REPAYMENT_COMPLETED);
 		}
 	}

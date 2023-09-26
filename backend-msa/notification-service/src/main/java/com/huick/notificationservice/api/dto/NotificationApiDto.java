@@ -1,4 +1,4 @@
-package com.huick.notificationservice.api.controller.dto;
+package com.huick.notificationservice.api.dto;
 
 import java.time.LocalDateTime;
 

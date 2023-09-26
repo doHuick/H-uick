@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -74,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 			.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+			.antMatchers("*/auth/refresh").permitAll()
 			.antMatchers("/api/**").hasAnyAuthority(Role.USER.getCode())
 			.antMatchers("/api/**/admin/**").hasAnyAuthority(Role.ADMIN.getCode())
 			.anyRequest().authenticated()
@@ -93,14 +95,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.failureHandler(oAuth2AuthenticationFailureHandler())
 			.and()
 			.logout()
-			.logoutUrl("/*/v1/user/logout")
+			.logoutUrl("/v1/user/logout")
+			.logoutSuccessUrl("/")
 			.clearAuthentication(true)
 			.deleteCookies(OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN)
 			.addLogoutHandler(logoutHandler)
-			.logoutSuccessUrl("/")
 			.permitAll();
 
 		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/auth/refresh");
 	}
 
 	/*

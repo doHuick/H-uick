@@ -2,16 +2,26 @@ package com.dohit.huick.domain.auth.service;
 
 import java.util.Date;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dohit.huick.domain.auth.constant.Role;
 import com.dohit.huick.domain.auth.entity.RefreshToken;
 import com.dohit.huick.domain.auth.repository.RefreshTokenRepository;
 import com.dohit.huick.global.error.ErrorCode;
+import com.dohit.huick.global.error.exception.AuthenticationException;
 import com.dohit.huick.global.error.exception.BusinessException;
+import com.dohit.huick.global.property.AppProperties;
 import com.dohit.huick.global.token.AuthToken;
 import com.dohit.huick.global.token.AuthTokenProvider;
+import com.dohit.huick.global.util.CookieUtil;
+import com.dohit.huick.global.util.HeaderUtil;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +33,10 @@ public class AuthService {
 
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final AuthTokenProvider authTokenProvider;
+	private final AppProperties appProperties;
+
+	private final static String REFRESH_TOKEN = "refresh_token";
+	private final static long THREE_DAYS_MSEC = 259200000;
 
 	public void logout(String accessToken) throws BusinessException {
 		AuthToken authToken = authTokenProvider.convertAuthToken(accessToken);
@@ -32,5 +46,77 @@ public class AuthService {
 		}
 		AuthToken refreshToken = authTokenProvider.createAuthToken(name, new Date(System.currentTimeMillis()));
 		refreshTokenRepository.save(RefreshToken.of(Long.valueOf(name), refreshToken.getToken()));
+	}
+
+	public String refreshToken(HttpServletRequest request, HttpServletResponse response) throws BusinessException {
+
+		// access token 확인
+		String accessToken = HeaderUtil.getAccessToken(request);
+		AuthToken authToken = authTokenProvider.convertAuthToken(accessToken);
+		if (!authToken.getTokenClaimsRegardlessOfExpire()) {
+			// return ApiResponse.invalidAccessToken();
+			throw new AuthenticationException(ErrorCode.NOT_VALID_TOKEN);
+		}
+
+		// expired access token 인지 확인
+		Claims claims = authToken.getExpiredTokenClaims();
+		if (claims == null) {
+			return null;
+		}
+
+		String userId = claims.getSubject();
+		Role role = Role.of(claims.get("role", String.class));
+
+		// refresh token
+		String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
+			.map(Cookie::getValue)
+			.orElse((null));
+		AuthToken authRefreshToken = authTokenProvider.convertAuthToken(refreshToken);
+		System.out.println(refreshToken);
+		if (!authRefreshToken.validate()) {
+			// return ApiResponse.invalidRefreshToken();
+			throw new AuthenticationException(ErrorCode.NOT_VALID_TOKEN);
+		}
+
+		// userId refresh token 으로 DB 확인
+		RefreshToken refreshTokenInRedis = refreshTokenRepository.findByUserId(Long.valueOf(userId))
+			.orElseThrow(() -> new AuthenticationException(
+				ErrorCode.NOT_VALID_TOKEN));
+		if (refreshTokenInRedis.getRefreshToken().equals(refreshToken)) {
+			// return ApiResponse.invalidRefreshToken();
+			System.out.println(refreshTokenInRedis.getRefreshToken());
+			System.out.println(refreshToken);
+			throw new AuthenticationException(ErrorCode.NOT_VALID_TOKEN);
+		}
+
+		Date now = new Date();
+		AuthToken newAccessToken = authTokenProvider.createAuthToken(
+			userId,
+			role.getCode(),
+			new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
+		);
+
+		long validTime = authRefreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
+
+		// refresh 토큰 기간이 3일 이하로 남은 경우, refresh 토큰 갱신
+		if (validTime <= THREE_DAYS_MSEC) {
+			// refresh 토큰 설정
+			long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
+
+			authRefreshToken = authTokenProvider.createAuthToken(
+				appProperties.getAuth().getTokenSecret(),
+				new Date(now.getTime() + refreshTokenExpiry)
+			);
+
+			// DB에 refresh 토큰 업데이트
+			refreshTokenInRedis.setRefreshToken(authRefreshToken.getToken());
+			refreshTokenRepository.save(refreshTokenInRedis);
+
+			int cookieMaxAge = (int)refreshTokenExpiry / 60;
+			CookieUtil.deleteCookie(request, response, REFRESH_TOKEN);
+			CookieUtil.addCookie(response, REFRESH_TOKEN, authRefreshToken.getToken(), cookieMaxAge);
+		}
+
+		return newAccessToken.getToken();
 	}
 }

@@ -13,7 +13,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.dohit.huick.domain.contract.constant.ContractStatus;
-import com.dohit.huick.domain.contract.constant.TermUnit;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 
 import lombok.AccessLevel;
@@ -42,17 +41,8 @@ public class Contract {
 	@Column(nullable = false)
 	LocalDateTime dueDate;
 
-	@Column(nullable = true)
-	Integer term;
-
-	@Column(nullable = true)
-	TermUnit termUnit;
-
 	@Column(nullable = false)
 	Long amount;
-
-	@Column(nullable = true)
-	Long repaymentAmountPerOnce;
 
 	@Column(nullable = true)
 	Float rate;
@@ -63,21 +53,22 @@ public class Contract {
 	@CreatedDate
 	LocalDateTime createdTime;
 
+	@Column(nullable = true) // 차후 false 로 변경
+	String pdfPath;
+
 	@Builder
 	private Contract(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-		Integer term, TermUnit termUnit, Long amount, Long repaymentAmountPerOnce,Float rate, ContractStatus status, LocalDateTime createdTime) {
+		Long amount, Float rate, ContractStatus status, LocalDateTime createdTime, String pdfPath) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
 		this.lessorId = lessorId;
 		this.startDate = startDate;
 		this.dueDate = dueDate;
-		this.term = term;
-		this.termUnit = termUnit;
 		this.amount = amount;
-		this.repaymentAmountPerOnce = repaymentAmountPerOnce;
 		this.rate = rate;
 		this.status = status;
 		this.createdTime = createdTime;
+		this.pdfPath = pdfPath;
 	}
 
 	public static Contract from(ContractDto contractDto) {
@@ -86,12 +77,10 @@ public class Contract {
 			.lessorId(contractDto.getLessorId())
 			.startDate(contractDto.getStartDate())
 			.dueDate(contractDto.getDueDate())
-			.term(contractDto.getTerm())
-			.termUnit(contractDto.getTermUnit())
 			.amount(contractDto.getAmount())
-			.repaymentAmountPerOnce(contractDto.getRepaymentAmountPerOnce())
 			.rate(contractDto.getRate())
 			.status(contractDto.getStatus())
+			.pdfPath(contractDto.getPdfPath())
 			.build();
 	}
 
