@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Main } from '../../style';
 import { TextBox } from '../../components/TextBox/TextBox';
@@ -9,8 +9,27 @@ import HeadBar from '../../components/HeadBar/HeadBar';
 import NavBar from '../../components/NavBar/NavBar';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
+import axios, { BASE_URL } from '../../api/apiController';
 
 export default function Welcomepage() {
+  const [name, setName] = useState<String>('');
+  const [accountNumber, setAccountNumber] = useState<String>('');
+  const [createdTime, setCreatedTime] = useState<String>('');
+  // 지갑 생성 되면 활성화
+  // const [wallet, setWallet] = useState<String>('');
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}/users/me`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    }).then((res) => {
+      console.log('res:data : ',res.data);
+      console.log('res.data.name : ', res.data.name);
+      setName(res.data.name);
+      setAccountNumber(res.data.account_info.accountNumber);
+      setCreatedTime(res.data.created_time);
+      // setWallet(res.data.wallet_address);
+    })
+  }, []);
   // [23-09-15] 계좌주소 받아서 연동시켜야 함
   const walletAdd = '2fW4MLoas49wX0z235pw1z3223k21dolqwl';
 
@@ -54,7 +73,7 @@ export default function Welcomepage() {
             고객명
           </TextBox>
           <TextBox fontSize="15.5px" fontWeight="500" color="var(--font-gray)">
-            김싸피
+            {name}
           </TextBox>
         </BetweenDiv>
         <BetweenDiv>
@@ -62,7 +81,7 @@ export default function Welcomepage() {
             계좌번호
           </TextBox>
           <TextBox fontSize="15.5px" fontWeight="500" color="var(--font-gray)">
-            110-400-88327
+            {accountNumber}
           </TextBox>
         </BetweenDiv>
         <BetweenDiv>
@@ -70,7 +89,7 @@ export default function Welcomepage() {
             개설일시
           </TextBox>
           <TextBox fontSize="15.5px" fontWeight="500" color="var(--font-gray)">
-            2023년 9월 5일 14:05
+            {createdTime}
           </TextBox>
         </BetweenDiv>
         <Bar />
