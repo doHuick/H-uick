@@ -78,10 +78,14 @@ public class User {
 	@Column
 	private LocalDateTime issueDate;
 
+	@Column(length = 11)
+	@Size(min = 10, max = 11)
+	private String phoneNumber;
+
 	@Builder
 	public User(String walletAddress, SocialType socialType, String socialId,
 		Role role, LocalDateTime withdrawalTime, String signatureUrl, String rrn,
-		String address, String name, LocalDateTime issueDate) {
+		String address, String name, String phoneNumber, LocalDateTime issueDate) {
 		this.walletAddress = walletAddress;
 		this.socialType = socialType;
 		this.socialId = socialId;
@@ -91,6 +95,7 @@ public class User {
 		this.rrn = rrn;
 		this.address = address;
 		this.name = name;
+		this.phoneNumber = phoneNumber;
 		this.issueDate = issueDate;
 	}
 
@@ -98,6 +103,7 @@ public class User {
 		this.address = userDto.getAddress();
 		this.name = userDto.getName();
 		this.rrn = userDto.getRrn();
+		this.phoneNumber = userDto.getPhoneNumber();
 	}
 
 	public void withdraw() {
@@ -106,6 +112,7 @@ public class User {
 		this.address = null;
 		this.name = null;
 		this.issueDate = null;
+		this.phoneNumber = null;
 		this.withdrawalTime = LocalDateTime.now().plusMonths(1);
 	}
 
