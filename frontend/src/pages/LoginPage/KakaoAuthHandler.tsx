@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Typewriter from '../../components/Loader/Loader';
@@ -22,9 +22,6 @@ const KakaoAuthHandler = () => {
     // Access Token이 생성되었으면,
     if (accessTokenParam) {
       // 로그인 성공
-      console.log('로그인 성공');
-
-      // [23-09-22] 로그인 및 회원가입 API 완료되면 테스트
       axios.get(`${BASE_URL}/users/me`, {
         headers: { Authorization: localStorage.getItem('access_token') },
       }).then((res) => {

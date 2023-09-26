@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { TextBox } from '../../components/TextBox/TextBox';
 import { Main } from '../../style';
@@ -8,16 +8,20 @@ import { ConfirmButton } from '../../components/Button/Button';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate } from 'react-router-dom';
 
+interface StyledInputProps {
+  value: string;
+}
+
 export default function SignUppage() {
-  const [name, setName] = useState<String>('');
-  const [idFront, setIdFront] = useState<Number | null>(null);
-  const [idBack, setIdBack] = useState<Number | null>(null);
-  const [address, setAddress] = useState<String>('');
+  const [name, setName] = useState<string>('');
+  const [idFront, setIdFront] = useState<string>('');
+  const [idBack, setIdBack] = useState<string>('');
+  const [address, setAddress] = useState<string>('');
   const navigate = useNavigate();
 
   const sendData = async () => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${BASE_URL}/users/rrn`,
         {
           name: `${name}`,
@@ -50,7 +54,7 @@ export default function SignUppage() {
         오기입된 정보는 수정해주시기 바랍니다.
       </TextBox>
       <TextBox
-        fontsize="18px"
+        fontSize="18px"
         fontWeight="700"
         margin="50px 0 17px 35px"
         color="var(--font-gray)"
@@ -64,7 +68,7 @@ export default function SignUppage() {
         onChange={(e) => setName(e.target.value)}
       />
       <TextBox
-        fontsize="18px"
+        fontSize="18px"
         fontWeight="700"
         margin="32px 0 17px 35px"
         color="var(--font-gray)"
@@ -74,20 +78,20 @@ export default function SignUppage() {
       <Id>
         {/* 주민등록번호 앞자리 입력 input */}
         <IdInput
-          type="number"
+          type="text"
           value={idFront}
           onChange={(e) => setIdFront(e.target.value)}
         />
         <Bar />
         {/* 주민등록번호 뒷자리 입력 input */}
         <IdInput
-          type="number"
+          type="text"
           value={idBack}
           onChange={(e) => setIdBack(e.target.value)}
         />
       </Id>
       <TextBox
-        fontsize="18px"
+        fontSize="18px"
         fontWeight="700"
         margin="32px 0 17px 35px"
         color="var(--font-gray)"
@@ -108,7 +112,7 @@ export default function SignUppage() {
   );
 }
 
-const StyledInput = styled.input`
+const StyledInput = styled.input<StyledInputProps>`
   width: 323px;
   height: 30px;
   background-color: var(--whtie);
