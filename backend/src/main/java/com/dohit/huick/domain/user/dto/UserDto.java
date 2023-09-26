@@ -25,12 +25,13 @@ public class UserDto {
 	private Role role;
 	private LocalDateTime withdrawalTime;
 	private String signatureUrl;
+	private String phoneNumber;
 	private LocalDateTime issueDate;
 	private AccountDto accountInfo;
 
 	@Builder
 	private UserDto(Long userId, String name, String rrn, String address, String walletAddress, SocialType socialType,
-		String socialId, LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl,
+		String socialId, LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl,String phoneNumber,
 		LocalDateTime issueDate, AccountDto accountInfo) {
 		this.userId = userId;
 		this.name = name;
@@ -41,6 +42,7 @@ public class UserDto {
 		this.socialId = socialId;
 		this.createdTime = createdTime;
 		this.role = role;
+		this.phoneNumber = phoneNumber;
 		this.withdrawalTime = withdrawalTime;
 		this.signatureUrl = signatureUrl;
 		this.issueDate = issueDate;
@@ -53,6 +55,7 @@ public class UserDto {
 			.name(request.getName())
 			.rrn(request.getRrn())
 			.address(request.getAddress())
+			.phoneNumber(request.getPhoneNumber())
 			.build();
 	}
 
@@ -70,6 +73,7 @@ public class UserDto {
 			.withdrawalTime(user.getWithdrawalTime())
 			.signatureUrl(user.getSignatureUrl())
 			.issueDate(user.getIssueDate())
+			.phoneNumber(user.getPhoneNumber())
 			.build();
 	}
 
@@ -87,6 +91,7 @@ public class UserDto {
 			.withdrawalTime(userDto.getWithdrawalTime())
 			.signatureUrl(userDto.getSignatureUrl())
 			.issueDate(userDto.getIssueDate())
+			.phoneNumber(userDto.getPhoneNumber())
 			.accountInfo(accountDto)
 			.build();
 	}
