@@ -38,6 +38,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.10.0'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.kafka:spring-kafka'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
