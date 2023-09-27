@@ -39,6 +39,7 @@ contract LoanContract is ContractData {
     function updateContractStatus(string memory _hashOfDocs, Status _status) public onlyService {
         bytes32 hash = computeHash(_hashOfDocs);
         require(contracts[hash].hashOfDocs == hash, "Contract does not exist");
+        require(contracts[hash].status != Status.Complete, "Contract already completed");
         contracts[hash].status = _status;
         emit ContractUpdated(hash, _status);
     }
