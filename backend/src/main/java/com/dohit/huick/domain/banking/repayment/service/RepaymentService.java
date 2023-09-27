@@ -119,4 +119,9 @@ public class RepaymentService {
 		}
 	}
 
+	public RepaymentDto findCurrentRepaymentByContractId(Long contractId) {
+		return RepaymentDto.from(
+			repaymentRepository.findFirstByContractIdAndRepaymentDateAfterOrderByRepaymentDateAsc(contractId,
+				LocalDateTime.now()));
+	}
 }
