@@ -1,5 +1,6 @@
 package com.dohit.huick.api.contract.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,8 @@ public class ContractController {
 
 	@PostMapping
 	public ResponseEntity<Void> createContract(@RequestBody ContractApiDto.Request request) {
+		// 체결 이전 계약서가 생성된다.
+		// 계약 정보와 만드는 사람의 정보가 필요하다.
 		contractService.createContract(ContractDto.from(request));
 		return ResponseEntity.ok().build();
 	}
@@ -37,6 +40,7 @@ public class ContractController {
 	}
 
 	@GetMapping("/lessee/me")
+	// 체결되지 않은 계약 처리해줘야함
 	public ResponseEntity<List<ContractApiDto.Response>> getContractByLesseeId(@UserInfo Long lesseeId) {
 		return ResponseEntity.ok().body(contractService.getContractByLesseeId(lesseeId).stream().map(
 			ContractApiDto.Response::from).collect(
@@ -54,5 +58,12 @@ public class ContractController {
 	public ResponseEntity<Void> updateContractStatus(@PathVariable Long contractId, @RequestBody ContractApiDto.Request request) {
 		contractService.updateContractStatus(contractId, request.getStatus());
 		return ResponseEntity.ok().build();
+	}
+
+	@PatchMapping("/{contractId}")
+	public ResponseEntity<ContractApiDto.Response> updateFinalContract(@PathVariable Long contractId, @RequestBody ContractApiDto.Request request) throws IOException {
+		ContractDto contractDto = contractService.updateFinalContract(contractId, ContractDto.from(request));
+		// 스마트 컨트랙트 생성을 위해서 계약 정보 리턴
+		return ResponseEntity.ok().body(ContractApiDto.Response.from(contractDto));
 	}
 }

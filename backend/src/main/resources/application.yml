@@ -63,3 +63,15 @@ app:
   oauth2:
     authorizedRedirectUris:
       - http://localhost:5173/oauth/redirect
+
+# S3 관련 설정
+cloud:
+  aws:
+    s3:
+      bucket: huick-bucket
+      urlPrefix: s3.ap-northeast-2.amazonaws.com
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      accessKey: AKIA2KY5DB7ADLKP7HFS
+      secretKey: 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
