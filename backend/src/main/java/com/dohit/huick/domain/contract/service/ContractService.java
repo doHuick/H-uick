@@ -43,7 +43,7 @@ public class ContractService {
 	private final UserRepository userRepository;
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	public void createContract(ContractDto contractDto) {
+	public ContractDto createContract(ContractDto contractDto) {
 		// 계약 만드는 사람에 따라 입력 정보 다름
 		// ex) Render가 작성한다면 계약서에는 계약정보와 Render 개인정보가 입력되어야함.
 
@@ -51,6 +51,8 @@ public class ContractService {
 		if (contractDto.getUseAutoTransfer().equals("Y")) {
 			autoTransferService.createAutoTransfer(AutoTransferDto.from(ContractDto.from(contract)));
 		}
+
+		return ContractDto.from(contract);
 	}
 
 	public ContractDto getContractByContractId(Long contractId) {

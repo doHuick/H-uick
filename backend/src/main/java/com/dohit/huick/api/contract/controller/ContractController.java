@@ -27,11 +27,11 @@ public class ContractController {
 	private final ContractService contractService;
 
 	@PostMapping
-	public ResponseEntity<Void> createContract(@RequestBody ContractApiDto.Request request) {
+	public ResponseEntity<ContractApiDto.Response> createContract(@RequestBody ContractApiDto.Request request) {
 		// 체결 이전 계약서가 생성된다.
 		// 계약 정보와 만드는 사람의 정보가 필요하다.
-		contractService.createContract(ContractDto.from(request));
-		return ResponseEntity.ok().build();
+		ContractDto contractDto = contractService.createContract(ContractDto.from(request));
+		return ResponseEntity.ok().body(ContractApiDto.Response.from(contractDto));
 	}
 
 	@GetMapping("/{contractId}")
