@@ -49,7 +49,7 @@ public class ContractService {
 
 		Contract contract = contractRepository.save(Contract.from(contractDto));
 		if (contractDto.getUseAutoTransfer().equals("Y")) {
-			autoTransferService.createAutoTransfer(AutoTransferDto.from(contractDto));
+			autoTransferService.createAutoTransfer(AutoTransferDto.from(ContractDto.from(contract)));
 		}
 	}
 
