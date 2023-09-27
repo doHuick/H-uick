@@ -2,8 +2,10 @@ package com.dohit.huick.api.contract.dto;
 
 import java.time.LocalDateTime;
 
+import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
+import com.dohit.huick.domain.user.dto.UserDto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -48,26 +50,38 @@ public class ContractApiDto {
 		Long contractId;
 		Long lesseeId;
 		Long lessorId;
+		String lesseeName;
+		String lessorName;
+		Integer totalRepaymentCount;
+		Integer currentRepaymentCount;
 		LocalDateTime startDate;
 		LocalDateTime dueDate;
+		LocalDateTime repaymentDate;
+		Long currentAmount;
 		Long amount;
 		Float rate;
 		ContractStatus status;
-		LocalDateTime createdTime;
 		String pdfPath;
 
 		@Builder
-		public Response(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-			Long amount, Float rate, ContractStatus status, LocalDateTime createdTime, String pdfPath) {
+		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lessorName,
+			Integer totalRepaymentCount, Integer currentRepaymentCount, LocalDateTime startDate, LocalDateTime dueDate,
+			LocalDateTime repaymentDate, Long currentAmount, Long amount, Float rate, ContractStatus status,
+			String pdfPath) {
 			this.contractId = contractId;
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
+			this.lesseeName = lesseeName;
+			this.lessorName = lessorName;
+			this.totalRepaymentCount = totalRepaymentCount;
+			this.currentRepaymentCount = currentRepaymentCount;
 			this.startDate = startDate;
 			this.dueDate = dueDate;
+			this.repaymentDate = repaymentDate;
+			this.currentAmount = currentAmount;
 			this.amount = amount;
 			this.rate = rate;
 			this.status = status;
-			this.createdTime = createdTime;
 			this.pdfPath = pdfPath;
 		}
 
@@ -81,7 +95,6 @@ public class ContractApiDto {
 				.amount(contractDto.getAmount())
 				.rate(contractDto.getRate())
 				.status(contractDto.getStatus())
-				.createdTime(contractDto.getCreatedTime())
 				.pdfPath(contractDto.getPdfPath())
 				.build();
 		}
