@@ -7,14 +7,11 @@ import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
 
-import com.dohit.huick.domain.user.entity.User;
-import com.dohit.huick.domain.user.repository.UserRepository;
-import com.dohit.huick.global.error.exception.AuthenticationException;
-import com.dohit.huick.infra.aws.S3Uploader;
-import com.itextpdf.html2pdf.HtmlConverter;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
 import com.dohit.huick.domain.banking.autotransfer.service.AutoTransferService;
@@ -22,13 +19,15 @@ import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.entity.Contract;
 import com.dohit.huick.domain.contract.repository.ContractRepository;
+import com.dohit.huick.domain.user.entity.User;
+import com.dohit.huick.domain.user.repository.UserRepository;
 import com.dohit.huick.global.error.ErrorCode;
+import com.dohit.huick.global.error.exception.AuthenticationException;
 import com.dohit.huick.global.error.exception.ContractException;
 import com.dohit.huick.infra.aws.S3Uploader;
+import com.itextpdf.html2pdf.HtmlConverter;
 
 import lombok.RequiredArgsConstructor;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 
 @Service
 @Transactional
@@ -77,16 +76,16 @@ public class ContractService {
 
 	public ContractDto updateFinalContract(Long contractId, ContractDto request) throws IOException {
 		Contract contract = contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
-				ErrorCode.NOT_EXIST_CONTRACT));
+			ErrorCode.NOT_EXIST_CONTRACT));
 
 		// request에 있는 정보들 모두 업데이트
 		contract.updateByRequest(request);
 
 		// 계약 정보를 HTML로 변환해주기
 		User lessee = userRepository.findByUserId(request.getLesseeId()).orElseThrow(() -> new AuthenticationException(
-				ErrorCode.NOT_EXIST_USER));
+			ErrorCode.NOT_EXIST_USER));
 		User lessor = userRepository.findByUserId(request.getLessorId()).orElseThrow(() -> new AuthenticationException(
-				ErrorCode.NOT_EXIST_USER));
+			ErrorCode.NOT_EXIST_USER));
 		String htmlContract = contract2html(contract, lessee, lessor);
 
 		// HTML문서를 PDF로 바꾸기
@@ -119,7 +118,6 @@ public class ContractService {
 		return templateEngine.process("contract", context);
 	}
 
-
 	private byte[] html2pdf(String htmlContract) {
 		try {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -129,5 +127,12 @@ public class ContractService {
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to convert HTML to PDF", e);
 		}
+	}
+
+	public List<ContractDto> getContractsByUserId(Long userId) {
+		return contractRepository.findContractsByLessorIdOrLesseeId(userId, userId)
+			.stream()
+			.map(ContractDto::from)
+			.collect(Collectors.toList());
 	}
 }

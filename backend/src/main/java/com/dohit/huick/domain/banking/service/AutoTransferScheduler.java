@@ -59,7 +59,7 @@ public class AutoTransferScheduler {
 				notificationService.sendNotification(notificationDto);
 
 				// Repayment Data 생성하기
-				bankingService.createRepayment(contractId, transactionId);
+				//                bankingService.createRepayment(contractId, transactionId);
 
 				if (bankingService.isRepaymentDone(contractDto)) {    // 상환이 끝났으면 계약 상태를 `상환 완료` 로 업데이트 한다
 					contractService.updateContractStatus(contractId, ContractStatus.REPAYMENT_COMPLETED);
