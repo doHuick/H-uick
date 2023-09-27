@@ -76,6 +76,7 @@ public class Contract {
 
 	public static Contract from(ContractDto contractDto) {
 		return Contract.builder()
+			.contractId(contractDto.getContractId())
 			.lesseeId(contractDto.getLesseeId())
 			.lessorId(contractDto.getLessorId())
 			.startDate(contractDto.getStartDate())
