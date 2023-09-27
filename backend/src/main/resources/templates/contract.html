@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Final Contract</title>
+    <link rel="stylesheet" th:href="@{/css/your-stylesheet.css}" /> <!-- 스타일시트 경로를 적절하게 수정하세요 -->
+</head>
+<body>
+<div class="chatbot-button">
+    <div class="contract-paper">
+        <br/><br/>
+        <div class="title">
+            <span>차&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;용&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;증</span>
+        </div>
+        <br/><br/><br/>
+        <div class="body">
+            &#8361;&nbsp;<span th:text="${contract.amount}"></span> &nbsp;( <span th:text="${contract.amountInKorean}"></span> 원 )
+        </div>
+        <br/>
+        <div class="body">
+            위 금액을 채무자가 채권자로부터 <span th:text="${contract.startDate}"></span>에 빌립니다.
+            이자는 연 <span th:text="${contract.rate}"></span>%로 하여
+            매달 <span th:text="${paymentDay}"></span>에 갚겠으며,
+            원금은 <span th:text="${contract.dueDate}"></span>까지 채권자에게 갚겠습니다.
+        </div>
+        <br/><br/>
+        <!-- 채무자 ContractTable -->
+        <div class="contract-table">
+            <div class="first-col">
+                <span>채무자</span>
+            </div>
+            <div class="second-col">
+                <span>이 름</span>
+                <span>주 소</span>
+                <span>주 민 등 록 번 호</span>
+                <span>전 화 번 호</span>
+            </div>
+            <div class="third-col">
+                <span>:</span><span>:</span><span>:</span><span>:</span>
+            </div>
+            <div class="fourth-col">
+                <span th:text="${lessee.name}"></span>
+                <span th:text="${lessee.address}"></span>
+                <span th:text="${lessee.rrn}"></span>
+                <span th:text="${lessee.phoneNumber}"></span>
+            </div>
+            <div class="fifth-col">
+                <span>( 서 명 )</span>
+                <img th:src="${lessee.SignatureURL}" />
+            </div>
+        </div>
+        <br/>
+
+        <!-- 채권자 ContractTable -->
+        <div class="contract-table">
+            <div class="first-col">
+                <span>채권자</span>
+            </div>
+            <div class="second-col">
+                <span>이 름</span>
+                <span>주 소</span>
+            </div>
+            <div class="third-col">
+                <span>:</span><span>:</span>
+            </div>
+            <div class="fourth-col">
+                <span th:text="${lessor.name}"></span>
+                <span th:text="${lessor.address}"></span>
+            </div>
+            <div class="fifth-col">
+                <span>( 서 명 )</span>
+                <img th:src="${lessor.SignatureURL}" />
+            </div>
+        </div>
+        <br/><br/>
+    </div>
+</div>
+<div class="chatbot-button-share">
+    <span th:text="${buttonText}"></span>&nbsp;&nbsp;&nbsp;&nbsp;<img th:src="@{/icons/right-arrow.svg}" />
+</div>
+</body>
+</html>

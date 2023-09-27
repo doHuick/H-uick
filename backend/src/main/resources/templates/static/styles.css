@@ -1,0 +1,173 @@
+/* CSS Variables */
+:root {
+    --white: #ffffff;
+    --black: #000000;
+    --huick-blue: #007bff; /* 이 값은 임의로 설정한 것이므로, 실제 색상 코드로 변경해야 합니다. */
+}
+
+/* ChatbotButton */
+.chatbot-button {
+    position: relative;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: var(--white);
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 11px;
+    margin-left: 12px;
+    margin-right: 12px;
+    line-height: 19px;
+    background-color: var(--huick-blue);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* ChatbotButtonShare */
+.chatbot-button-share {
+    position: relative;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    color: var(--black);
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 11px;
+    margin-left: 12px;
+    margin-right: 12px;
+    line-height: 19px;
+    background-color: #f2f2f7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    width: 40%;
+}
+
+/* ContractPaper */
+.contract-paper {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    background-color: var(--white);
+    color: black;
+    font-size: 10.5px;
+}
+
+/* Title */
+.title {
+    position: relative;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    height: auto;
+}
+
+/* Body */
+.body {
+}
+
+/* TextBold */
+.text-bold {
+    font-weight: bold;
+}
+
+/* ContractTable */
+.contract-table {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    line-height: 1.6;
+    font-size: 10px;
+}
+
+/* FirstCol */
+.first-col {
+    position: relative;
+    width: 16%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* SecondCol */
+.second-col {
+    position: relative;
+    width: 24%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* SecondColContext */
+.second-col-context {
+    position: relative;
+    width: 100%;
+    text-align: justify;
+    line-height: 0.45;
+}
+
+.second-col-context:before,
+.second-col-context:after {
+    content: "";
+    display: inline-block;
+    width: 100%;
+}
+
+/* ThirdCol */
+.third-col {
+    position: relative;
+    width: 5%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* FourthCol */
+.fourth-col {
+    position: relative;
+    width: 55%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* FourthColContext */
+.fourth-col-context {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* FifthCol */
+.fifth-col {
+    position: absolute;
+    width: 14%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    right: 0px;
+    top: 0px;
+}
+
+/* Signature */
+.signature {
+    position: absolute;
+    top: 2px;
+    width: 100%;
+}
