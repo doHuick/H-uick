@@ -91,7 +91,7 @@ public class ContractApiDto {
 				.contractId(contractDto.getContractId())
 				.lesseeId(contractDto.getLesseeId())
 				.lessorId(contractDto.getLessorId())
-				.lessorName(lesseeDto.getName())
+				.lesseeName(lesseeDto.getName())
 				.lessorName(lessorDto.getName())
 				.totalRepaymentCount(totalRepaymentCount)
 				.currentRepaymentCount(repaymentDto.getRepaymentCount())
