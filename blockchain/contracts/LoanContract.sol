@@ -22,9 +22,14 @@ contract LoanContract is ContractData {
 
     mapping (bytes32 => Contract) public contracts; // 해시값을 키로 계약 구조체를 매핑
 
+    // 해시 계산
+    function computeHash(string memory _data) internal pure returns (bytes32) {
+        return keccak256(abi.encodePacked(_data));
+    }
+
     // 새로운 계약 생성
-    function createContract(string memory _hashOfDocs, address _lenderWallet, address _borrowerWallet, uint _principalAmount, uint _interestRate, uint _issueDate, uint256 _maturityDate) public onlyService {
-        bytes32 hash = keccak256(abi.encodePacked(_hashOfDocs));
+    function createContract(string memory _hashOfDocs, address _lenderWallet, address _borrowerWallet, uint _principalAmount, uint _interestRate, uint _issueDate, uint _maturityDate) public onlyService {
+        bytes32 hash = computeHash(_hashOfDocs);
         Contract memory newContract = Contract(hash, Status.InProgress, _lenderWallet, _borrowerWallet, _principalAmount, _interestRate, _issueDate, _maturityDate);
         contracts[hash] = newContract;
         emit ContractCreated(hash);
@@ -32,8 +37,9 @@ contract LoanContract is ContractData {
 
     // 계약 상태 변경
     function updateContractStatus(string memory _hashOfDocs, Status _status) public onlyService {
-        bytes32 hash = keccak256(abi.encodePacked(_hashOfDocs));
+        bytes32 hash = computeHash(_hashOfDocs);
         require(contracts[hash].hashOfDocs == hash, "Contract does not exist");
+        require(contracts[hash].status != Status.Complete, "Contract already completed");
         contracts[hash].status = _status;
         emit ContractUpdated(hash, _status);
     }
