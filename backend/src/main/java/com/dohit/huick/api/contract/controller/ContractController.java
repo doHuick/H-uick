@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dohit.huick.api.contract.dto.ContractApiDto;
 import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.service.RepaymentService;
+import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.service.ContractService;
 import com.dohit.huick.domain.user.dto.UserDto;
@@ -123,7 +124,9 @@ public class ContractController {
 	public ResponseEntity<Void> updateContractStatus(@PathVariable Long contractId,
 		@RequestBody ContractApiDto.Request request) {
 		contractService.updateContractStatus(contractId, request.getStatus());
-		repaymentService.createAllRepayment(contractService.getContractByContractId(contractId));
+		if (request.getStatus().equals(ContractStatus.EXECUTION_COMPLETED)) {
+			repaymentService.createAllRepayment(contractService.getContractByContractId(contractId));
+		}
 		return ResponseEntity.ok().build();
 	}
 
