@@ -21,10 +21,10 @@ import lombok.RequiredArgsConstructor;
 public class RepaymentService {
 	private final RepaymentRepository repaymentRepository;
 
-	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	public void createRepayment(RepaymentDto repaymentDto) {
-		repaymentRepository.save(Repayment.from(repaymentDto));
-	}
+	// @Lock(LockModeType.PESSIMISTIC_WRITE)
+	// public void createRepayment(RepaymentDto repaymentDto) {
+	//     repaymentRepository.save(Repayment.from(repaymentDto));
+	// }
 
 	public List<RepaymentDto> getRepaymentsByContractId(Long contractId) {
 		return repaymentRepository.findByContractId(contractId).stream().map(RepaymentDto::from).collect(

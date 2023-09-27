@@ -103,10 +103,10 @@ public class BankingService {
 		autoTransferService.decreaseUnpaidCount(autoTransferId);
 	}
 
-	public void createRepayment(Long contractId, Long transactionId) {
-		Integer repaymentNumber = repaymentService.getRepaymentsByContractId(contractId).size() + 1;
-		repaymentService.createRepayment(RepaymentDto.of(contractId, transactionId, repaymentNumber));
-	}
+	//    public void createRepayment(Long contractId, Long transactionId) {
+	//        Integer repaymentNumber = repaymentService.getRepaymentsByContractId(contractId).size() + 1;
+	//        repaymentService.createRepayment(RepaymentDto.of(contractId, transactionId, repaymentNumber));
+	//    }
 
 	public Boolean isRepaymentDone(ContractDto contractDto) {
 		List<RepaymentDto> repaymentDtos = repaymentService.getRepaymentsByContractId(contractDto.getContractId());
@@ -143,7 +143,7 @@ public class BankingService {
 			TransactionDto.of(getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(),
 				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
 		// 상환데이터 넣고
-		createRepayment(contractDto.getContractId(), transactionId);
+		//        createRepayment(contractDto.getContractId(), transactionId);
 		// 상환 끝났는지 체크하기
 		if (isRepaymentDone(contractDto)) {
 			contractService.updateContractStatus(contractDto.getContractId(), ContractStatus.REPAYMENT_COMPLETED);
