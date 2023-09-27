@@ -2,6 +2,7 @@ package com.dohit.huick.api.contract.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,32 @@ public class ContractController {
 		return ResponseEntity.ok()
 			.body(ContractApiDto.Response.of(contractService.getContractByContractId(contractId),
 				lesseeDto, lessorDto, repaymentDto, totalRepaymentCount));
+	}
+
+	@GetMapping("/me")
+	public ResponseEntity<List<ContractApiDto.Response>> getContractByUserId(@UserInfo Long userId) {
+		System.out.println(userId);
+		UserDto userDto = userService.getUserByUserId(userId);
+		List<ContractApiDto.Response> response = contractService.getContractsByUserId(userId).stream()
+			.map(contractDto -> {
+				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
+					contractDto.getContractId());
+				int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
+					.size();
+
+				if (Objects.equals(contractDto.getLesseeId(), userId)) {
+					return ContractApiDto.Response.of(contractDto, userDto, userService.getUserByUserId(
+							contractDto.getLessorId()), repaymentDto,
+						totalRepaymentCount);
+				} else {
+					return ContractApiDto.Response.of(contractDto, userService.getUserByUserId(
+							contractDto.getLesseeId()), userDto, repaymentDto,
+						totalRepaymentCount);
+				}
+			})
+			.collect(Collectors.toList());
+
+		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/lessee/me")
