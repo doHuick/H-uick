@@ -4,6 +4,7 @@ import { createClientMessage } from 'react-chatbot-kit';
 var isLender = true
 localStorage.setItem("toSendLocal", '')
 localStorage.setItem("userKakaoCaptureURL", '')
+localStorage.setItem("isPWDCorrect", 'false')
 
 const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   // 처음으로
@@ -18,19 +19,24 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     }));
   };
 
-  const toFirst = () => {
-    const botMessage = createChatBotMessage(
-      "님 안녕하세요?\n궁금한게 있다면 '질문하기'를 보내보세요\n\n휙봇과 대화하며\n차용증을 작성할 수 있습니다.\n\n다시 시작하고 싶다면\n'처음으로'를 보내보세요\n\n다음의 항목들에 하나씩 답변해주세요!",
-    );
-    const botMessageSecond = createChatBotMessage('빌림 or 빌려줌', {
-      widget: 'lendborrowbutton',
-    });
+const toFirst = () => {
+  localStorage.setItem("toSendLocal", '')
+  localStorage.setItem("userKakaoCaptureURL", '')
+  localStorage.setItem("tempContractLocal", '')
+  localStorage.setItem("userButtonsLocal", '[]')
+  localStorage.setItem("isPWDCorrect", 'false')
+  const botMessage = createChatBotMessage(
+    "님 안녕하세요?\n궁금한게 있다면 '질문하기'를 보내보세요\n\n휙봇과 대화하며\n차용증을 작성할 수 있습니다.\n\n다시 시작하고 싶다면\n'처음으로'를 보내보세요\n\n다음의 항목들에 하나씩 답변해주세요!",
+  );
+  const botMessageSecond = createChatBotMessage('빌림 or 빌려줌', {
+    widget: 'lendborrowbutton',
+  });
 
-    setState((prev) => ({
-      ...prev,
-      messages: [...prev.messages, botMessage, botMessageSecond],
-    }));
-  };
+  setState((prev) => ({
+    ...prev,
+    messages: [...prev.messages, botMessage, botMessageSecond],
+  }));
+};
 
   // 빌려줌
   const handleILend = () => {
@@ -85,7 +91,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
       userButtons.push('createwithChat')
       localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
       const clientmessage = createClientMessage('휙봇과 대화로 작성');
-      const botMessage = createChatBotMessage('얼마를 빌려주시나요?', { delay: 900 }
+      const botMessage = createChatBotMessage('금액을 말씀해주세요', { delay: 900 }
         );
         // const botMessagesecond = createChatBotMessage('얼마를 빌려주시나요?', {
         //   delay: 900,
@@ -369,6 +375,16 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     }
   };
 
+  const handleShare = () => {
+      const botMessage = createChatBotMessage('작성이 완료되었습니다. 공유해서~', {});
+
+      setState((prev) => ({
+        ...prev,
+        messages: [...prev.messages, botMessage ],
+      }));
+
+  };
+
 
   const goToPage = () => {
     const navigate = useNavigate();
@@ -402,7 +418,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
             handlePriceEdit,
             handleDateEdit,
             handleRateEdit,
-            goToPage
+            handleShare,
           },
         });
       })}
