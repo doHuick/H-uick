@@ -44,9 +44,8 @@ public class S3Uploader {
 
     public String uploadPdf(byte[] pdfContract, String dirName, Long contractId)  throws IOException {
         String fileName = convertPdfName(dirName, contractId);
-        String pdfS3Url = uploadPdfToS3(fileName, pdfContract);
 
-        return pdfS3Url;
+        return uploadPdfToS3(fileName, pdfContract);
     }
 
     private String convertImageName(String dirName, String UUID, String name, String type) {
