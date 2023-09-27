@@ -11,6 +11,9 @@ import './chatbot.css';
 import HeadBar from '../../components/HeadBar/HeadBar';
 import NavBar from '../../components/NavBar/NavBar';
 
+const userButtons:string[] = [];
+localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
+
 export default function ChatbotPage() {
   return (
     <Main>
@@ -19,7 +22,7 @@ export default function ChatbotPage() {
         config={config}
         messageParser={MessageParser}
         actionProvider={ActionProvider}
-        placeholderText="'뻐큐'라고 해보세요"
+        placeholderText="휙봇에게 ~"
       />
 
       <NavBar />

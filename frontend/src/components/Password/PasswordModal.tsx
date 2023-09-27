@@ -7,6 +7,8 @@ import { ReactComponent as PasswordDelete } from '../../assets/icons/password-de
 
 interface PasswordModalProps {
   closePasswordModal: () => void;
+  shareClicked: () => void;
+
 }
 
 interface DarkBackgroundProps {
@@ -28,7 +30,7 @@ function generateUniqueRandomNumbers(count: number): number[] {
   return uniqueNumbers;
 }
 
-export default function PasswordModal({ closePasswordModal, }: PasswordModalProps) {
+export default function PasswordModal({ closePasswordModal, shareClicked }: PasswordModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [numList, setNumList] = useState<number[]>([]);
   const [selectedPassword, setSelectedPassword] = useState<string>('');
@@ -37,7 +39,6 @@ export default function PasswordModal({ closePasswordModal, }: PasswordModalProp
 
 
   const userPassword = '123456'
-
 
   useEffect(() => {
     // 모달이 열릴 때 랜덤한 숫자 배열 생성 (중복 없이)
@@ -58,6 +59,14 @@ export default function PasswordModal({ closePasswordModal, }: PasswordModalProp
     }, 310);
   };
 
+  const closeAndShare = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      closePasswordModal();
+      shareClicked();
+    }, 310);
+  };
+
   const handlePasswordClick = (password: string) => {
     if (!isPasswordComplete) {
       setSelectedPassword((prevPassword) => {
@@ -72,7 +81,8 @@ export default function PasswordModal({ closePasswordModal, }: PasswordModalProp
         // 비밀번호가 4자리인 경우 비교하여 일치하면 모달을 닫습니다.
         if (newCombinedPassword.length === 6) {
           if (newCombinedPassword === userPassword) {
-            closeAndAnimate();
+            localStorage.setItem("isPWDCorrect", 'true')
+            closeAndShare();
           } else {
             // 패스워드가 일치하지 않을 때 초기화
             setPasswordWrong(true);
@@ -80,7 +90,6 @@ export default function PasswordModal({ closePasswordModal, }: PasswordModalProp
               setSelectedPassword('');
               setPasswordWrong(false);
             }, 1200);
-            
           }
         }
   
@@ -165,14 +174,7 @@ export default function PasswordModal({ closePasswordModal, }: PasswordModalProp
 //   }
 // `;
 
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0; // 원하는 어두운 배경의 최종 투명도 설정
-  }
-`;
+
 
 const slideIn = keyframes`
   from {
@@ -197,16 +199,16 @@ const shakeAnimation = keyframes`
     transform: translateX(0);
   }
   25% {
-    transform: translateX(-5px);
+    transform: translateX(-2.5px);
   }
   50% {
-    transform: translateX(5px);
+    transform: translateX(2.5px);
   }
   75% {
-    transform: translateX(-5px);
+    transform: translateX(-2.5px);
   }
   100% {
-    transform: translateX(5px);
+    transform: translateX(2.5px);
   }
 `;
 
@@ -218,7 +220,6 @@ const DarkBackground = styled.div<DarkBackgroundProps>`
   height: 100%;
   background: rgba(0, 0, 0, 0.5); // 어두운 배경의 색상과 투명도 조절
   z-index: 2; // 모달 뒤에 위치하도록 설정
-  animation: ${({ isClosing }) => (isClosing ? fadeOut : '')} 0.32s ease-in-out;
 `;
 
 const ModalContainer = styled.div<ModalContainerProps>`
@@ -227,6 +228,7 @@ const ModalContainer = styled.div<ModalContainerProps>`
   width: 100%;
   height: 640px;
   bottom: 0;
+  left: 0;
   background-color: var(--white);
   border-radius: 30px 30px 0px 0px;
   box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.08);
@@ -278,7 +280,7 @@ const PasswordEllipseFrame = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 12px;
+  margin-top: 16px;
   margin-bottom: 20px;
 
 `

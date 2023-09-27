@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import { ReactComponent as ModalClose } from '../../assets/icons/close-button.svg'
 import { MiniConfirmButton } from '../Button/Button';
 
-interface TransferModalProps {
+interface LendModalProps {
   closeModal: () => void;
   transferClicked: () => void;
 }
@@ -17,9 +17,10 @@ interface ModalContainerProps {
   children: React.ReactNode;
 }
 
-export default function TransferModal({ closeModal, transferClicked }: TransferModalProps) {
+export default function LendModal({ closeModal, transferClicked }: LendModalProps) {
   const [isClosing, setIsClosing] = useState(false);
-
+  const contractDetail = JSON.parse(localStorage.getItem('toSendLocal') || '{}');
+  
   
   const handleDarkBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
@@ -36,6 +37,7 @@ export default function TransferModal({ closeModal, transferClicked }: TransferM
 
   const closeAndPWD = () => {
     setIsClosing(true);
+    localStorage.setItem("isPWDCorrect", 'false')
     setTimeout(() => {
       closeModal();
       transferClicked();
@@ -55,21 +57,20 @@ export default function TransferModal({ closeModal, transferClicked }: TransferM
             </TransferModalUpperButtons>
           </TransferModalUpperBar>
 
-        <TransferTextLine style={{ marginTop : '22px' }}>
-          <TransferTextBold>김싸피</TransferTextBold>
-          <TransferText>&nbsp;님께</TransferText>
+        <TransferTextLine style={{ marginTop : '32px' }}>
+          <TransferTextBold>
+            {contractDetail.loanAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+          </TransferTextBold>
+          <TransferText>원을 송금합니다</TransferText>
         </TransferTextLine>
         <TransferTextLine>
-          <TransferTextBold>2</TransferTextBold>
-          <TransferText>회차</TransferText>
-          <TransferTextBold>&nbsp;230,000</TransferTextBold>
-          <TransferText>원을</TransferText><br/>
+          <TransferText>계약이 체결되면 휙이 보내드릴게요</TransferText><br/>
         </TransferTextLine>
-        <TransferTextLine>
-          <TransferText>송금합니다</TransferText><br/>
-        </TransferTextLine>
-        
-        <TransferMoadlAccount>휙뱅크 110-400-888327</TransferMoadlAccount>
+    
+        {/* <TransferMoadlAccount>계약이 체결되면 휙이 보내드릴게요 </TransferMoadlAccount> */}
+        <TransferMoadlAccount>
+          잔액 &nbsp;2,000,000원
+        </TransferMoadlAccount>
 
         <TransferButtonFrame>
           <TransferButton onClick={closeAndPWD}>송금</TransferButton>
@@ -133,7 +134,8 @@ const ModalContainer = styled.div<ModalContainerProps>`
   position: fixed;
   z-index: 3;
   width: 100%;
-  height: 380px;
+  height: 352px;
+  left: 0;
   bottom: 0;
   background-color: var(--white);
   border-radius: 30px 30px 0px 0px;
@@ -177,19 +179,19 @@ const TransferTextLine = styled.div`
 `
 
 const TransferText = styled.span`
-  font-size: 24px;
+  font-size: 20px;
 
 `
 
 const TransferTextBold = styled.span`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 `
 
 const TransferMoadlAccount = styled.div`
   width: 100%;
   text-align: center;
-  margin-top: 24px;
+  margin-top: 40px;
   font-size: 14px;
   color: var(--font-gray)
 `

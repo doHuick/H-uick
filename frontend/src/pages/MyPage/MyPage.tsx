@@ -32,6 +32,8 @@ export default function MyPage() {
 
   const handleSave = (imageData: string) => {
     setSignatureImage(imageData);
+    localStorage.setItem("userSignature", imageData)
+
     closeModal();
     toast('서명이 등록되었습니다');
   };
