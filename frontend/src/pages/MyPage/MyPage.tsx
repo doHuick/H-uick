@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { ReactComponent as RightArrow } from '../../assets/icons/right-arrow.svg';
 import HeadBar from '../../components/HeadBar/HeadBar';
@@ -10,10 +10,25 @@ import { ConfirmButton } from '../../components/Button/Button';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
 import 'react-simple-toasts/dist/theme/light.css';
+import axios, { BASE_URL } from '../../api/apiController';
+
 
 export default function MyPage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [signatureImage, setSignatureImage] = useState<string | null>(null);
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}/users/me`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    }).then((res) => {
+      console.log('res:data : ',res.data);
+      console.log('res.data.name : ', res.data.name);
+      // setWallet(res.data.wallet_address);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }, []);
 
   const frameHeight = '380px'
 

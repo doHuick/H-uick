@@ -19,6 +19,7 @@ interface ModalContainerProps {
 
 export default function BorrowModal({ closeModal, transferClicked }: BorrowModalProps) {
   const [isClosing, setIsClosing] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   
   const handleDarkBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -36,11 +37,15 @@ export default function BorrowModal({ closeModal, transferClicked }: BorrowModal
 
   const closeAndPWD = () => {
     setIsClosing(true);
-    localStorage.setItem("isPWDCorrect", 'false')
+    localStorage.setItem("isAuto", `${isChecked}`)
     setTimeout(() => {
       closeModal();
       transferClicked();
     }, 310);
+  }
+
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
   }
   
   return (
@@ -65,7 +70,7 @@ export default function BorrowModal({ closeModal, transferClicked }: BorrowModal
 
         
         <TransferMoadlAccount>
-          <AutoInput type="checkbox" id="auto" name="auto" />
+          <AutoInput type="checkbox" id="auto" name="auto" checked={isChecked} onChange={handleCheckboxChange}/>
           <label htmlFor='auto'>&nbsp;동의합니다</label>
         </TransferMoadlAccount>
 

@@ -7,7 +7,7 @@ import { ReactComponent as PasswordDelete } from '../../assets/icons/password-de
 
 interface PasswordModalProps {
   closePasswordModal: () => void;
-  shareClicked: () => void;
+  passwordClicked: () => void;
 
 }
 
@@ -30,7 +30,7 @@ function generateUniqueRandomNumbers(count: number): number[] {
   return uniqueNumbers;
 }
 
-export default function PasswordModal({ closePasswordModal, shareClicked }: PasswordModalProps) {
+export default function PasswordModal({ closePasswordModal, passwordClicked }: PasswordModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [numList, setNumList] = useState<number[]>([]);
   const [selectedPassword, setSelectedPassword] = useState<string>('');
@@ -63,7 +63,7 @@ export default function PasswordModal({ closePasswordModal, shareClicked }: Pass
     setIsClosing(true);
     setTimeout(() => {
       closePasswordModal();
-      shareClicked();
+      passwordClicked();
     }, 310);
   };
 

@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { ReactComponent as RightArrow } from '../../assets/icons/right-arrow.svg';
 import { useNavigate } from 'react-router-dom';
+import axios, { BASE_URL } from '../../api/apiController';
 
 import LendModal from '../../components/TransferModal/LendModal';
 import BorrowModal from '../../components/TransferModal/BorrowModal';
@@ -11,6 +12,20 @@ import ShareModal from '../../components/ShareModal/ShareModal';
 const FinalContract = (props) => {
   const userButtons = JSON.parse(localStorage.getItem('userButtonsLocal'));
   const contractDetail = JSON.parse(localStorage.getItem('toSendLocal'));
+  const [userInfo, setUserInfo] = useState(null)
+  const [contractID, setContractID] = useState(null)
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}/users/me`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    }).then((res) => {
+      setUserInfo(res.data)
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }, []);
+
   const buttonText =
     userButtons[0] == 'iLend'
       ? '송금하고 공유하기'
@@ -31,7 +46,9 @@ const FinalContract = (props) => {
     due_date: '',
     amount: contractDetail.loanAmount,
     rate: contractDetail.interestRate,
+    use_auto_transfer: "N"
   };
+  var contract_id = 0
 
   function num2han(num) {
     num = parseInt((num + '').replace(/[^0-9]/g, ''), 10) + ''; // 숫자/문자/돈 을 숫자만 있는 문자열로 변환
@@ -99,23 +116,59 @@ const FinalContract = (props) => {
     )}T${hours}:${minutes}:${seconds}`;
     if (userButtons[0] == 'iLend') {
       withoutAuto.lessor_id = 2
-      withoutAuto.start_date = start_date
-      withoutAuto.due_date = due_date
+      withoutAuto.lesse_id = null
+
     } else {
       withoutAuto.lesse_id = 2
-      withoutAuto.start_date = start_date
-      withoutAuto.due_date = due_date
+      withoutAuto.lessor_id = null
+      const isAuto = localStorage.getItem('isAuto');
+      if (isAuto == 'true') {
+        withoutAuto.use_auto_transfer = "Y"
+      }
     }
-    console.log(withoutAuto)
 
-    
+    withoutAuto.start_date = start_date
+    withoutAuto.due_date = due_date
+
     setModalOpen(false);
     setPasswordModalOpen(true); // 패스워드 모달 열기
   };
 
-  const shareClicked = () => {
+  const sendTempContract = async () => {
+    try {
+      await axios.post(
+        `${BASE_URL}/contracts`,
+        {
+          lessee_id: withoutAuto.lesse_id,
+          lessor_id: withoutAuto.lessor_id,
+          start_date: withoutAuto.start_date,
+          due_date: withoutAuto.due_date,
+          amount : withoutAuto.amount,
+          rate : withoutAuto.rate,
+          status :"BEFORE_EXECUTION",
+          pdf_path : "asdf",
+          use_auto_transfer: withoutAuto.use_auto_transfer
+        }
+        ,
+        {
+          headers: { Authorization: localStorage.getItem('access_token') },
+        },
+      )
+      .then((res) => {
+        setContractID(res.data.contract_id)
+      })
+    } catch (error) {
+      console.error('서버 요청 실패:', error);
+    }
+  };
+
+
+  const passwordClicked = () => {
     setModalOpen(false);
+    transferClicked();
     setPasswordModalOpen(false);
+    sendTempContract();
+    console.log(withoutAuto)
     setShareModalOpen(true); // 패스워드 모달 열기
   };
 
@@ -124,9 +177,36 @@ const FinalContract = (props) => {
   };
 
   const closeShareModal = () => {
-    var isPWDCorrect = JSON.parse(localStorage.getItem('isPWDCorrect'));
     setShareModalOpen(false);
   };
+
+  
+  const shareKakao = () => {
+    
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '휙, 편리한 차용증 관리📝',
+        description: `${userInfo.name}님이 보낸 차용증이 도착했어요`,
+        imageUrl:
+        'http://k.kakaocdn.net/dn/Q2iNx/btqgeRgV54P/VLdBs9cvyn8BJXB3o7N8UK/kakaolink40_original.png',
+        link: {
+          // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
+          mobileWebUrl: `http://localhost:5173/share/${contractID}`,
+          webUrl: `http://localhost:5173/share/${contractID}`,
+        },
+      },
+    });
+    
+  };
+
+  const closeAndShare = () => {
+    var isPWDCorrect = JSON.parse(localStorage.getItem('isPWDCorrect'));
+    console.log(userInfo)
+    shareKakao();
+    setShareModalOpen(false);
+  };
+  
   return (
     <>
       <ChatbotButton>
@@ -263,11 +343,13 @@ const FinalContract = (props) => {
         {passwordModalOpen ? (
           <PasswordModal
             closePasswordModal={closePasswordModal}
-            shareClicked={shareClicked}
+            passwordClicked={passwordClicked}
           />
         ) : null}
         {shareModalOpen ? (
-          <ShareModal closeShareModal={closeShareModal} />
+          <ShareModal
+            closeShareModal={closeShareModal}
+            closeAndShare={closeAndShare}/>
         ) : null}
       </ChatbotButtonShare>
       {isPWDCorrect ? (
@@ -350,7 +432,6 @@ const Title = styled.div`
   display: flex;
   justify-content: center;
   height: auto;
-  margin-top: 4px;
 `;
 
 const Body = styled.div``;
@@ -458,7 +539,6 @@ const Today = styled.div`
   width: 100%;
   text-align: center;
   margin-top: 44px;
-  margin-bottom: 4px;
 `;
 
 const ToFirst = styled(ChatbotButton)`

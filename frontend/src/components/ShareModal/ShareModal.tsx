@@ -6,6 +6,7 @@ import { MiniConfirmButton } from '../Button/Button';
 
 interface ShareModalProps {
   closeShareModal: () => void;
+  closeAndShare: () => void;
 }
 
 interface DarkBackgroundProps {
@@ -17,7 +18,7 @@ interface ModalContainerProps {
 }
 
 
-export default function ShareModal({ closeShareModal }: ShareModalProps) {
+export default function ShareModal({ closeShareModal, closeAndShare }: ShareModalProps) {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleDarkBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -29,6 +30,15 @@ export default function ShareModal({ closeShareModal }: ShareModalProps) {
   const closeAndAnimate = () => {
     localStorage.setItem("isPWDCorrect", 'true')
     setIsClosing(true);
+    setTimeout(() => {
+      closeShareModal();
+    }, 310);
+  };
+
+  const closeAndKakao = () => {
+    localStorage.setItem("isPWDCorrect", 'true')
+    setIsClosing(true);
+    closeAndShare();
     setTimeout(() => {
       closeShareModal();
     }, 310);
@@ -58,7 +68,7 @@ export default function ShareModal({ closeShareModal }: ShareModalProps) {
         {/* <TransferMoadlAccount>계약이 체결되면 휙이 보내드릴게요 </TransferMoadlAccount> */}
 
         <TransferButtonFrame>
-          <TransferButton>공유하기</TransferButton>
+          <TransferButton onClick={closeAndKakao}>공유하기</TransferButton>
         </TransferButtonFrame>
 
       </ModalContainer>

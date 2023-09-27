@@ -17,6 +17,7 @@ export default function SignUppage() {
   const [idFront, setIdFront] = useState<string>('');
   const [idBack, setIdBack] = useState<string>('');
   const [address, setAddress] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const navigate = useNavigate();
 
   const sendData = async () => {
@@ -27,6 +28,7 @@ export default function SignUppage() {
           name: `${name}`,
           rrn: `${idFront}${idBack}`,
           address: `${address}`,
+          phone_number: `${phoneNumber}`,
         },
         {
           headers: { Authorization: localStorage.getItem('access_token') },
@@ -65,7 +67,7 @@ export default function SignUppage() {
       <StyledInput
         type="text"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
       />
       <TextBox
         fontSize="18px"
@@ -78,16 +80,18 @@ export default function SignUppage() {
       <Id>
         {/* 주민등록번호 앞자리 입력 input */}
         <IdInput
-          type="text"
+          type="number"
+          maxlength="6"
           value={idFront}
-          onChange={(e) => setIdFront(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdFront(e.target.value)}
         />
         <Bar />
         {/* 주민등록번호 뒷자리 입력 input */}
         <IdInput
-          type="text"
+          type="number"
+          maxlength="7"
           value={idBack}
-          onChange={(e) => setIdBack(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdBack(e.target.value)}
         />
       </Id>
       <TextBox
@@ -102,7 +106,22 @@ export default function SignUppage() {
       <StyledInput
         type="text"
         value={address}
-        onChange={(e) => setAddress(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
+      />
+      <TextBox
+        fontSize="18px"
+        fontWeight="700"
+        margin="32px 0 17px 35px"
+        color="var(--font-gray)"
+      >
+        전화번호
+      </TextBox>
+      {/* 전화번호 입력 input */}
+      <StyledInput
+        type="number"
+        maxlength="11"
+        value={phoneNumber}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
       />
       <CenterDiv>
         <ConfirmButton onClick={sendData}>확인</ConfirmButton>
@@ -127,6 +146,11 @@ const StyledInput = styled.input<StyledInputProps>`
   }
   &:active {
     border-color: var(--huick-blue);
+  }
+  &::-webkit-inner-spin-button,
+  ::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
   }
 `;
 
