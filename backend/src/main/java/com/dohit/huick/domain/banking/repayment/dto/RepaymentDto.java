@@ -50,4 +50,12 @@ public class RepaymentDto {
 			.status(repayment.getStatus())
 			.build();
 	}
+
+	public static RepaymentDto of(Long amount, Integer repaymentCount, LocalDateTime repaymentDate) {
+		return RepaymentDto.builder()
+			.amount(amount)
+			.repaymentCount(repaymentCount)
+			.repaymentDate(repaymentDate)
+			.build();
+	}
 }
