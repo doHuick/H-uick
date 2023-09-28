@@ -46,6 +46,7 @@ public class RepaymentService {
 		// 상환 횟수
 		int count = 1;
 		long sumOfAmount = 0L;
+		float rate = contractDto.getRate() / 100;
 
 		// 이번 상환 날짜가 최종 상환 날짜가 될 때까지 반복
 		while (!payday.isEqual(dueDate)) {
@@ -56,7 +57,8 @@ public class RepaymentService {
 			// ex) 1월 31일 -> 2월 28일 -> 3월 28일(X) 3월 31일(O)
 			if (nextPayday.getDayOfMonth() < contractDto.getStartDate().getDayOfMonth()) {
 				int day = nextPayday.getMonth().length(nextPayday.toLocalDate().isLeapYear());
-				nextPayday.withDayOfMonth(day);
+				nextPayday.withDayOfMonth(Math.min(nextPayday.getMonth().length(nextPayday.toLocalDate().isLeapYear()),
+					contractDto.getStartDate().getDayOfMonth()));
 			}
 
 			// 다음 상환 날짜가 최종 상환 날짜보다 나중이면 다음 상환 날짜를 최종 상환 날짜로 변경
@@ -82,7 +84,7 @@ public class RepaymentService {
 					}
 					// 총 갚아야 하는 금액에 이자 더하기
 					totalAmount += (long)(
-						contractDto.getAmount() * contractDto.getRate() / (Year.of(startDate.getYear()).isLeap() ?
+						contractDto.getAmount() * rate / (Year.of(startDate.getYear()).isLeap() ?
 							366 : 365) * ChronoUnit.DAYS.between(startDate, endDateOfYearOfStartDate));
 
 					//
@@ -100,15 +102,15 @@ public class RepaymentService {
 			boolean isStartDateLeapYear = Year.of(payday.getYear()).isLeap();
 			boolean isNextTransferDateLeapYear = Year.of(nextPayday.getYear()).isLeap();
 			long amount = (long)(
-				contractDto.getAmount() * contractDto.getRate() / (isStartDateLeapYear ? 366 : 365)
+				contractDto.getAmount() * rate / (isStartDateLeapYear ? 366 : 365)
 					* between);
 
 			if (payday.getYear() != nextPayday.getYear()) {
 				int nextTransferDateDayOfYear = nextPayday.getDayOfYear();
 				amount = (long)(
-					contractDto.getAmount() * contractDto.getRate() / (isStartDateLeapYear ? 366 : 365)
+					contractDto.getAmount() * rate / (isStartDateLeapYear ? 366 : 365)
 						* (between - nextTransferDateDayOfYear)
-						+ contractDto.getAmount() * contractDto.getRate() / (isNextTransferDateLeapYear ?
+						+ contractDto.getAmount() * rate / (isNextTransferDateLeapYear ?
 						366 : 365) * nextTransferDateDayOfYear);
 			}
 
