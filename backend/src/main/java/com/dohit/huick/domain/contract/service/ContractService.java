@@ -3,6 +3,7 @@ package com.dohit.huick.domain.contract.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
@@ -47,7 +48,7 @@ public class ContractService {
 		// ex) Render가 작성한다면 계약서에는 계약정보와 Render 개인정보가 입력되어야함.
 
 		Contract contract = contractRepository.save(Contract.from(contractDto));
-		if (contractDto.getUseAutoTransfer().equals("Y")) {
+		if (Objects.equals(contractDto.getUseAutoTransfer(),"Y")) {
 			autoTransferService.createAutoTransfer(AutoTransferDto.from(ContractDto.from(contract)));
 		}
 
