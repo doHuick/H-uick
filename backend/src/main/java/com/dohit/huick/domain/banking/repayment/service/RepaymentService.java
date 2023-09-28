@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
@@ -122,8 +123,7 @@ public class RepaymentService {
 	}
 
 	public RepaymentDto findCurrentRepaymentByContractId(Long contractId) {
-		return RepaymentDto.from(
-			repaymentRepository.findFirstByContractIdAndRepaymentDateAfterOrderByRepaymentDateAsc(contractId,
-				LocalDateTime.now()));
+		return repaymentRepository.findFirstByContractIdAndRepaymentDateAfterOrderByRepaymentDateAsc(contractId,
+			LocalDateTime.now()).map(RepaymentDto::from).orElse(null);
 	}
 }
