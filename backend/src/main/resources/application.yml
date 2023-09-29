@@ -8,7 +8,6 @@ spring:
     url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-
   jpa:
     hibernate:
       ddl-auto: create
@@ -16,6 +15,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  web:
+    resources:
+      static-locations: classpath:/static/
+  thymeleaf:
+    cache: false
   data:
     redis:
       host: localhost

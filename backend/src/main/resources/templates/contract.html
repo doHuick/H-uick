@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Final Contract</title>
-    <link rel="stylesheet" th:href="@{/css/your-stylesheet.css}" /> <!-- 스타일시트 경로를 적절하게 수정하세요 -->
+    <link rel="stylesheet" th:href="@{classpath:/static/styles.css}" />
 </head>
 <body>
 <div class="chatbot-button">
@@ -45,7 +45,7 @@
             </div>
             <div class="fifth-col">
                 <span>( 서 명 )</span>
-                <img th:src="${lessee.SignatureURL}" />
+                <img th:src="${lessee.signatureUrl}" />
             </div>
         </div>
         <br/>
@@ -68,14 +68,11 @@
             </div>
             <div class="fifth-col">
                 <span>( 서 명 )</span>
-                <img th:src="${lessor.SignatureURL}" />
+                <img th:src="${lessor.signatureUrl}" />
             </div>
         </div>
         <br/><br/>
     </div>
-</div>
-<div class="chatbot-button-share">
-    <span th:text="${buttonText}"></span>&nbsp;&nbsp;&nbsp;&nbsp;<img th:src="@{/icons/right-arrow.svg}" />
 </div>
 </body>
 </html>
