@@ -94,4 +94,9 @@ public class Repayment {
 			.status(RepaymentStatus.UNPAID)
 			.build();
 	}
+
+	public void updateStatusPAIDAndTransactionId(Long transactionId) {
+		this.status = RepaymentStatus.PAID;
+		this.transactionId = transactionId;
+	}
 }
