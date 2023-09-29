@@ -3,7 +3,6 @@ package com.dohit.huick.domain.contract.service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
@@ -14,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
-import com.dohit.huick.domain.banking.autotransfer.service.AutoTransferService;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.entity.Contract;
@@ -70,7 +67,7 @@ public class ContractService {
 		return contractRepository.findByLessorId(lessorId).stream().map(ContractDto::from).collect(Collectors.toList());
 	}
 
-	public ContractDto updateFinalContract(Long contractId, ContractDto request) throws IOException {
+	public ContractDto updateFinalContract(Long contractId, ContractDto request) {
 		Contract contract = contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
 			ErrorCode.NOT_EXIST_CONTRACT));
 
@@ -88,7 +85,12 @@ public class ContractService {
 		byte[] pdfContract = html2pdf(htmlContract);
 
 		// PDF S3에 저장하기
-		String pdfS3Url = s3Uploader.uploadPdf(pdfContract, CONTRACT_S3_DIRNAME, contractId);
+		String pdfS3Url = null;
+		try {
+			pdfS3Url = s3Uploader.uploadPdf(pdfContract, CONTRACT_S3_DIRNAME, contractId);
+		} catch (IOException e) {
+			throw new ContractException(ErrorCode.CANNOT_UPLOAD_PDF);
+		}
 
 		// PDF 저장 주소 contract에 저장해주기
 		contract.updatePdfPath(pdfS3Url);
