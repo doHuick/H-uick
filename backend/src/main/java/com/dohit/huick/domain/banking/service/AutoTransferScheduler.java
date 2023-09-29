@@ -58,41 +58,12 @@ public class AutoTransferScheduler {
 					NotificationDto.of(contractDto.getLesseeId(), contractId, NotificationType.TRANSFER_SUCCESS));
 				notificationService.sendNotification(notificationDto);
 
-				// Repayment Data 생성하기
-				//                bankingService.createRepayment(contractId, transactionId);
-
 				if (bankingService.isRepaymentDone(contractDto)) {    // 상환이 끝났으면 계약 상태를 `상환 완료` 로 업데이트 한다
 					contractService.updateContractStatus(contractId, ContractStatus.REPAYMENT_COMPLETED);
-				} else {    // 상환이 끝나지 않았으면 다음 상환날짜를 구해서 업데이트 한다
-					LocalDateTime today = autoTransferDto.getNextTransferDate();
-					LocalDateTime nextTransferDate = today.plusMonths(1L);
-					if (nextTransferDate.isAfter(contractDto.getDueDate())) { // 다음 자동이체일은 계약 기간 이후일 때
-						nextTransferDate = contractDto.getDueDate();
-					}
-					long between = ChronoUnit.DAYS.between(today, nextTransferDate);
-
-					boolean isStartDateLeapYear = Year.of(today.getYear()).isLeap();
-					boolean isNextTransferDateLeapYear = Year.of(nextTransferDate.getYear()).isLeap();
-					long amount = (long)(
-						contractDto.getAmount() * (1 + contractDto.getRate()) / (isStartDateLeapYear ? 366 : 365)
-							* between);
-					if (today.getYear() != nextTransferDate.getYear()) {
-						int nextTransferDateDayOfYear = nextTransferDate.getDayOfYear();
-						amount = (long)(
-							contractDto.getAmount() * (1 + contractDto.getRate()) / (isStartDateLeapYear ? 366 : 365)
-								* (between
-								- nextTransferDateDayOfYear)
-								+ contractDto.getAmount() * (1 + contractDto.getRate()) / (isNextTransferDateLeapYear ?
-								366 : 365)
-								* nextTransferDateDayOfYear);
-					}
-
-					bankingService.updateNextTransfer(contractId, nextTransferDate, amount);
 				}
 			}
 		} catch (TransferException b) {
 			// 실패하면 미납 횟수를 증가시킨다
-			bankingService.increaseUnpaidCount(autoTransferId);
 		} catch (FirebaseMessagingException ignore) {
 		}
 	}
