@@ -147,8 +147,11 @@ public class ContractController {
 
 	@PatchMapping("/{contractId}")
 	public ResponseEntity<ContractApiDto.Response> updateFinalContract(@PathVariable Long contractId,
-		@RequestBody ContractApiDto.Request request) throws IOException {
+		@RequestBody ContractApiDto.Request request) {
 		ContractDto contractDto = contractService.updateFinalContract(contractId, ContractDto.from(request));
+		if (request.getStatus().equals(ContractStatus.EXECUTION_COMPLETED)) {
+			repaymentService.createAllRepayment(contractService.getContractByContractId(contractId));
+		}
 		// 스마트 컨트랙트 생성을 위해서 계약 정보 리턴
 		return ResponseEntity.ok().body(ContractApiDto.Response.from(contractDto));
 	}
