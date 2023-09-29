@@ -98,11 +98,18 @@ public class BankingService {
 	}
 
 	public void repay(ContractDto contractDto, Long amount) {
+		RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(contractDto.getContractId());
+		if (!Objects.equals(amount, repaymentDto.getAmount())) {
+			throw new BankingException(ErrorCode.NOT_EQUAL_AMOUNT);
+		}
+
 		// 이체시키고
 		Long transactionId = transferMoney(
 			TransactionDto.of(getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(),
 				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
+
 		// 상환데이터 넣고
+		repaymentService.updateStatusPAIDAndTransactionId(repaymentDto.getRepaymentId(), transactionId);
 
 		// 상환 끝났는지 체크하기
 		if (isRepaymentDone(contractDto)) {
