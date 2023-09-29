@@ -1,10 +1,15 @@
 package com.dohit.huick.domain.user.service;
 
+import java.io.IOException;
 import java.util.Date;
 
+import com.dohit.huick.domain.user.util.Base64DecodedMultipartFile;
+import com.dohit.huick.global.vo.Image;
+import com.dohit.huick.infra.aws.S3Uploader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dohit.huick.domain.auth.entity.RefreshToken;
 import com.dohit.huick.domain.auth.repository.RefreshTokenRepository;
@@ -29,6 +34,10 @@ public class UserService {
 	private final AuthTokenProvider authTokenProvider;
 	private final BankingService bankingService;
 
+	private final S3Uploader s3Uploader;
+
+	private final String USER_S3_DIRNAME = "user";
+
 	@Transactional
 	public void signup(UserDto userDto) throws BusinessException {
 		User user = userRepository.findByUserId(userDto.getUserId())
@@ -52,12 +61,42 @@ public class UserService {
 	}
 
 	public UserDto getUserByUserId(Long userId) {
-
 		UserDto userDto = UserDto.from(userRepository.findByUserId(userId).orElseThrow(() -> new AuthenticationException(ErrorCode.NOT_EXIST_USER)));
-
 		bankingService.getAccountByUserId(userId);
 
 		return UserDto.of(userDto, bankingService.getAccountByUserId(userId));
 	}
 
+	public void updateSignature(Long userId, String signatureBase64) throws IOException {
+		byte[] signatureBytes = decodeBase64Image(signatureBase64);
+		MultipartFile signatureMultipart = new Base64DecodedMultipartFile(signatureBytes);
+		final Image image = s3Uploader.uploadSignature(signatureMultipart, USER_S3_DIRNAME);
+		User user = userRepository.findByUserId(userId).orElseThrow(() -> new AuthenticationException(ErrorCode.NOT_EXIST_USER));
+		user.updateSignatureUrl(image.getImageUrl());
+
+		userRepository.save(user);
+	}
+
+	public byte[] decodeBase64Image(String signatureBase64) {
+		if (signatureBase64 == null || signatureBase64.trim().isEmpty()) {
+			throw new IllegalArgumentException("Invalid Base64 string");
+		}
+
+		// 데이터 URI 스키마 제거
+		String base64EncodedData = signatureBase64.contains(",")
+				? signatureBase64.split(",")[1]
+				: signatureBase64;
+
+		// Whitespace 제거
+		base64EncodedData = base64EncodedData.replaceAll("\\s", "");
+
+		// Base64 디코딩
+		try {
+			return javax.xml.bind.DatatypeConverter.parseBase64Binary(base64EncodedData);
+		} catch (IllegalArgumentException e) {
+			// 로그 출력
+			System.err.println("Failed to decode Base64 string: " + base64EncodedData);
+			throw new IllegalArgumentException("Failed to decode Base64 string", e);
+		}
+	}
 }
