@@ -35,7 +35,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ContractService {
 	private final ContractRepository contractRepository;
-	private final AutoTransferService autoTransferService;
 	private final SpringTemplateEngine templateEngine;
 	private final S3Uploader s3Uploader;
 
@@ -46,11 +45,7 @@ public class ContractService {
 	public ContractDto createContract(ContractDto contractDto) {
 		// 계약 만드는 사람에 따라 입력 정보 다름
 		// ex) Render가 작성한다면 계약서에는 계약정보와 Render 개인정보가 입력되어야함.
-
 		Contract contract = contractRepository.save(Contract.from(contractDto));
-		if (Objects.equals(contractDto.getUseAutoTransfer(),"Y")) {
-			autoTransferService.createAutoTransfer(AutoTransferDto.from(ContractDto.from(contract)));
-		}
 
 		return ContractDto.from(contract);
 	}
