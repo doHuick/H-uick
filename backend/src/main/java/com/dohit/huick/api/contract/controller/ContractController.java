@@ -56,7 +56,7 @@ public class ContractController {
 		} else {
 			lessorDto = UserDto.from("", "", "", "");
 		}
-		RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(contractId);
+		RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(contractId);
 
 		if (repaymentDto == null)
 			repaymentDto = RepaymentDto.of(0L, 0, null);
@@ -75,7 +75,7 @@ public class ContractController {
 		List<ContractApiDto.Response> response = contractService.getContractsByUserId(userId).stream()
 			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
-				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
+				RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(
 					contractDto.getContractId());
 				int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 					.size();
@@ -103,7 +103,7 @@ public class ContractController {
 			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
 				UserDto lessorDto = userService.getUserByUserId(contractDto.getLessorId());
-				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
+				RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(
 					contractDto.getContractId());
 				int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 					.size();
@@ -123,7 +123,7 @@ public class ContractController {
 			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
 				UserDto lesseeDto = userService.getUserByUserId(contractDto.getLesseeId());
-				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
+				RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(
 					contractDto.getContractId());
 				int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 					.size();

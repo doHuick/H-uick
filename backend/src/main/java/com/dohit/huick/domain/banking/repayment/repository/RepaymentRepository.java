@@ -17,8 +17,7 @@ public interface RepaymentRepository extends JpaRepository<Repayment, Long> {
 	List<Repayment> findByContractId(Long contractId);
 
 	@Lock(LockModeType.PESSIMISTIC_READ)
-	Optional<Repayment> findFirstByContractIdAndRepaymentDateAfterOrderByRepaymentDateAsc(Long contractId,
-		LocalDateTime currentTime);
+	Optional<Repayment> findTopByContractIdAndStatusOrderByTimeAsc(Long contractId, RepaymentStatus status);
 
 	@Lock(LockModeType.PESSIMISTIC_READ)
 	int countRepaymentsByContractIdAndStatus(Long contractId, RepaymentStatus repaymentStatus);
