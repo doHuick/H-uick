@@ -2,6 +2,8 @@ package com.dohit.huick.domain.contract.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -87,7 +89,9 @@ public class ContractService {
 			ErrorCode.NOT_EXIST_USER));
 		User lessor = userRepository.findByUserId(request.getLessorId()).orElseThrow(() -> new AuthenticationException(
 			ErrorCode.NOT_EXIST_USER));
+
 		String htmlContract = contract2html(contract, lessee, lessor);
+		Files.write(Paths.get("output.html"), htmlContract.getBytes());
 
 		// HTML문서를 PDF로 바꾸기
 		byte[] pdfContract = html2pdf(htmlContract);
