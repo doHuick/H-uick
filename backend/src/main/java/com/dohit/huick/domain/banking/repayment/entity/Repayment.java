@@ -39,6 +39,9 @@ public class Repayment {
 	private Long amount;
 
 	@Column(nullable = false)
+	private Long balance;
+
+	@Column(nullable = false)
 	private LocalDateTime repaymentDate;
 
 	@Column(nullable = false)
@@ -49,13 +52,14 @@ public class Repayment {
 	private RepaymentStatus status;
 
 	@Builder
-	private Repayment(Long repaymentId, Long contractId, Long transactionId, Long amount,
+	private Repayment(Long repaymentId, Long contractId, Long transactionId, Long amount, Long balance,
 		LocalDateTime repaymentDate, Integer repaymentCount,
 		RepaymentStatus status) {
 		this.repaymentId = repaymentId;
 		this.contractId = contractId;
 		this.transactionId = transactionId;
 		this.amount = amount;
+		this.balance = balance;
 		this.repaymentDate = repaymentDate;
 		this.repaymentCount = repaymentCount;
 		this.status = status;
@@ -83,8 +87,8 @@ public class Repayment {
 	public static Repayment of(Long contractId, Long amount, LocalDateTime repaymentTime, Integer repaymentCount) {
 		return Repayment.builder()
 			.contractId(contractId)
-
 			.amount(amount)
+			.balance(amount)
 			.repaymentDate(repaymentTime)
 			.repaymentCount(repaymentCount)
 			.status(RepaymentStatus.UNPAID)
