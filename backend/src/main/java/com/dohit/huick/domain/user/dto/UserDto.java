@@ -95,4 +95,10 @@ public class UserDto {
 			.accountInfo(accountDto)
 			.build();
 	}
+
+	public static UserDto from(String name) {
+		return UserDto.builder()
+			.name(name)
+			.build();
+	}
 }

@@ -45,9 +45,23 @@ public class ContractController {
 	@GetMapping("/{contractId}")
 	public ResponseEntity<ContractApiDto.Response> getContractByContractId(@PathVariable Long contractId) {
 		ContractDto contractDto = contractService.getContractByContractId(contractId);
-		UserDto lesseeDto = userService.getUserByUserId(contractDto.getLesseeId());
-		UserDto lessorDto = userService.getUserByUserId(contractDto.getLessorId());
+		UserDto lesseeDto = null;
+		UserDto lessorDto = null;
+		if(contractDto.getLesseeId() != null) {
+			lesseeDto = userService.getUserByUserId(contractDto.getLesseeId());
+		} else {
+			lesseeDto = UserDto.from("");
+		}
+		if(contractDto.getLessorId() != null) {
+			lessorDto = userService.getUserByUserId(contractDto.getLessorId());
+		} else {
+			lessorDto = UserDto.from("");
+		}
 		RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(contractId);
+
+		if(repaymentDto == null)
+			repaymentDto = RepaymentDto.of(0L,0,null) ;
+
 		int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 			.size();
 
