@@ -1,6 +1,5 @@
 package com.dohit.huick.api.contract.controller;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -71,10 +70,10 @@ public class ContractController {
 	}
 
 	@GetMapping("/me")
-	public ResponseEntity<List<ContractApiDto.Response>> getContractByUserId(@UserInfo Long userId) {
-		System.out.println(userId);
+	public ResponseEntity<List<ContractApiDto.Response>> getContractsByUserId(@UserInfo Long userId) {
 		UserDto userDto = userService.getUserByUserId(userId);
 		List<ContractApiDto.Response> response = contractService.getContractsByUserId(userId).stream()
+			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
 				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
 					contractDto.getContractId());
@@ -98,9 +97,10 @@ public class ContractController {
 
 	@GetMapping("/lessee/me")
 	// 체결되지 않은 계약 처리해줘야함
-	public ResponseEntity<List<ContractApiDto.Response>> getContractByLesseeId(@UserInfo Long lesseeId) {
+	public ResponseEntity<List<ContractApiDto.Response>> getContractsByLesseeId(@UserInfo Long lesseeId) {
 		UserDto lesseeDto = userService.getUserByUserId(lesseeId);
 		List<ContractApiDto.Response> response = contractService.getContractByLesseeId(lesseeId).stream()
+			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
 				UserDto lessorDto = userService.getUserByUserId(contractDto.getLessorId());
 				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
@@ -117,9 +117,10 @@ public class ContractController {
 	}
 
 	@GetMapping("/lessor/me")
-	public ResponseEntity<List<ContractApiDto.Response>> getContractByLessorId(@UserInfo Long lessorId) {
+	public ResponseEntity<List<ContractApiDto.Response>> getContractsByLessorId(@UserInfo Long lessorId) {
 		UserDto lessorDto = userService.getUserByUserId(lessorId);
 		List<ContractApiDto.Response> response = contractService.getContractByLessorId(lessorId).stream()
+			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
 				UserDto lesseeDto = userService.getUserByUserId(contractDto.getLesseeId());
 				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
