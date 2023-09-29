@@ -31,7 +31,8 @@ public class UserDto {
 
 	@Builder
 	private UserDto(Long userId, String name, String rrn, String address, String walletAddress, SocialType socialType,
-		String socialId, LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl,String phoneNumber,
+		String socialId, LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl,
+		String phoneNumber,
 		LocalDateTime issueDate, AccountDto accountInfo) {
 		this.userId = userId;
 		this.name = name;
@@ -96,9 +97,19 @@ public class UserDto {
 			.build();
 	}
 
-	public static UserDto from(String name) {
+	public static UserDto from(String name, String address) {
 		return UserDto.builder()
 			.name(name)
+			.address(address)
+			.build();
+	}
+
+	public static UserDto from(String name, String address, String rrn, String phoneNumber) {
+		return UserDto.builder()
+			.name(name)
+			.address(address)
+			.rrn(rrn)
+			.phoneNumber(phoneNumber)
 			.build();
 	}
 }

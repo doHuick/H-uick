@@ -47,20 +47,20 @@ public class ContractController {
 		ContractDto contractDto = contractService.getContractByContractId(contractId);
 		UserDto lesseeDto = null;
 		UserDto lessorDto = null;
-		if(contractDto.getLesseeId() != null) {
+		if (contractDto.getLesseeId() != null) {
 			lesseeDto = userService.getUserByUserId(contractDto.getLesseeId());
 		} else {
-			lesseeDto = UserDto.from("");
+			lesseeDto = UserDto.from("", "");
 		}
-		if(contractDto.getLessorId() != null) {
+		if (contractDto.getLessorId() != null) {
 			lessorDto = userService.getUserByUserId(contractDto.getLessorId());
 		} else {
-			lessorDto = UserDto.from("");
+			lessorDto = UserDto.from("", "", "", "");
 		}
 		RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(contractId);
 
-		if(repaymentDto == null)
-			repaymentDto = RepaymentDto.of(0L,0,null) ;
+		if (repaymentDto == null)
+			repaymentDto = RepaymentDto.of(0L, 0, null);
 
 		int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 			.size();
