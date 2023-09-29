@@ -27,17 +27,17 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.urlPrefix}")
     private String s3UrlPrefix;
 
-    public Image uploadImage(MultipartFile file, String dirName) throws IOException {
+    public Image uploadSignature(MultipartFile file, String dirName) throws IOException {
         Image image = imageUtil.convertMultipartToImage(file);
-        String fileName = convertImageName(dirName, image.getImageUUID(), image.getImageName(), image.getImageType().toString());
-        image.setUrl(uploadImageToS3(fileName, file));
+        String fileName = convertSignatureName(dirName, image.getImageUUID(), image.getImageName(), image.getImageType().toString());
+        image.setUrl(uploadSignatureToS3(fileName, file));
 
         return image;
     }
 
-    public void deleteImage(Image image, String dirName) {
+    public void deleteSignature(Image image, String dirName) {
         if (image != null && image.getImageUUID() != null) {
-            String fileName = convertImageName(dirName, image.getImageUUID(), image.getImageName(), image.getImageType().toString());
+            String fileName = convertSignatureName(dirName, image.getImageUUID(), image.getImageName(), image.getImageType().toString());
             amazonS3.deleteObject(bucket, fileName);
         }
     }
@@ -48,7 +48,7 @@ public class S3Uploader {
         return uploadPdfToS3(fileName, pdfContract);
     }
 
-    private String convertImageName(String dirName, String UUID, String name, String type) {
+    private String convertSignatureName(String dirName, String UUID, String name, String type) {
         return dirName + "/" + UUID + "_" + name + "." + type;
     }
 
@@ -56,7 +56,7 @@ public class S3Uploader {
         return dirName + "/" + contractId.toString() + ".pdf";
     }
 
-    public String uploadImageToS3(String fileName, MultipartFile file) throws IOException {
+    public String uploadSignatureToS3(String fileName, MultipartFile file) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
