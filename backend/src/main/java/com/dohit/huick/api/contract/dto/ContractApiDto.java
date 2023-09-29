@@ -51,7 +51,11 @@ public class ContractApiDto {
 		Long lesseeId;
 		Long lessorId;
 		String lesseeName;
+		String lesseeAddress;
 		String lessorName;
+		String lessorAddress;
+		String lessorRrn;
+		String lessorPhoneNumber;
 		Integer totalRepaymentCount;
 		Integer currentRepaymentCount;
 		LocalDateTime startDate;
@@ -64,15 +68,20 @@ public class ContractApiDto {
 		String pdfPath;
 
 		@Builder
-		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lessorName,
-			Integer totalRepaymentCount, Integer currentRepaymentCount, LocalDateTime startDate, LocalDateTime dueDate,
-			LocalDateTime repaymentDate, Long currentAmount, Long amount, Float rate, ContractStatus status,
-			String pdfPath) {
+		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress,
+			String lessorName, String lessorAddress, String lessorRrn, String lessorPhoneNumber,
+			Integer totalRepaymentCount, Integer currentRepaymentCount, LocalDateTime startDate,
+			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount, Float rate,
+			ContractStatus status, String pdfPath) {
 			this.contractId = contractId;
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
 			this.lesseeName = lesseeName;
+			this.lesseeAddress = lesseeAddress;
 			this.lessorName = lessorName;
+			this.lessorAddress = lessorAddress;
+			this.lessorRrn = lessorRrn;
+			this.lessorPhoneNumber = lessorPhoneNumber;
 			this.totalRepaymentCount = totalRepaymentCount;
 			this.currentRepaymentCount = currentRepaymentCount;
 			this.startDate = startDate;
@@ -92,7 +101,11 @@ public class ContractApiDto {
 				.lesseeId(contractDto.getLesseeId())
 				.lessorId(contractDto.getLessorId())
 				.lesseeName(lesseeDto.getName())
+				.lesseeAddress(lesseeDto.getAddress())
 				.lessorName(lessorDto.getName())
+				.lessorAddress(lessorDto.getAddress())
+				.lessorRrn(lessorDto.getRrn())
+				.lessorPhoneNumber(lessorDto.getPhoneNumber())
 				.totalRepaymentCount(totalRepaymentCount)
 				.currentRepaymentCount(repaymentDto.getRepaymentCount())
 				.startDate(contractDto.getStartDate())
