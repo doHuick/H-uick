@@ -25,6 +25,9 @@ public interface RepaymentRepository extends JpaRepository<Repayment, Long> {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	List<Repayment> findByRepaymentDateBetween(LocalDateTime startOfDay, LocalDateTime endOfDay);
 
+	@Lock(LockModeType.PESSIMISTIC_READ)
+	List<Repayment> findByStatusAndRepaymentDateBefore(RepaymentStatus status, LocalDateTime today);
+
 	Optional<Repayment> getRepaymentByRepaymentId(Long repaymentId);
 
 	Optional<Repayment> getRepaymentsByRepaymentDateBeforeAndStatus(LocalDateTime today, RepaymentStatus status);

@@ -30,7 +30,7 @@ public class AutoTransferScheduler {
 	@Scheduled(cron = "0 0 9 * * ?", zone = "Asia/Seoul")
 	public void transferAutomatically() {
 		// 자동이체 테이블에서 이체일이 오늘인 것들의 데아터들을 불러옴
-		List<RepaymentDto> repaymentDtos = bankingService.getPaymentsOfToday();
+		List<RepaymentDto> repaymentDtos = bankingService.findUnpaidAutoRepaymentUntilToday();
 		Long repaymentId = 0L;
 
 		try {

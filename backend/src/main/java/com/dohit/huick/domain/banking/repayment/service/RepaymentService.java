@@ -132,11 +132,10 @@ public class RepaymentService {
 		return repaymentRepository.countRepaymentsByContractIdAndStatus(contractId, repaymentStatus);
 	}
 
-	public List<RepaymentDto> getRepaymentsOfToday() {
-		LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-		LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+	public List<RepaymentDto> findUnpaidAutoRepaymentUntilToday() {
+		LocalDateTime today = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-		return repaymentRepository.findByRepaymentDateBetween(startOfDay, endOfDay).stream().map(
+		return repaymentRepository.findByStatusAndRepaymentDateBefore(RepaymentStatus.AUTO, today).stream().map(
 			RepaymentDto::from).collect(
 			Collectors.toList());
 	}

@@ -2,6 +2,7 @@ package com.dohit.huick.domain.banking.service;
 
 import java.security.SecureRandom;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,8 +86,8 @@ public class BankingService {
 		return transactionService.getTransactionsByUserId(accountNumber);
 	}
 
-	public List<RepaymentDto> getPaymentsOfToday() {
-		return repaymentService.getRepaymentsOfToday();
+	public List<RepaymentDto> findUnpaidAutoRepaymentUntilToday() {
+		return repaymentService.findUnpaidAutoRepaymentUntilToday();
 	}
 
 	public Boolean isRepaymentDone(ContractDto contractDto) {
