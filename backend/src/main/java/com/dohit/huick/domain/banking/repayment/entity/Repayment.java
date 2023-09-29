@@ -65,33 +65,15 @@ public class Repayment {
 		this.status = status;
 	}
 
-	// public static Repayment from(RepaymentDto repaymentDto) {
-	// 	return Repayment.builder()
-	// 		.repaymentId(repaymentDto.getRepaymentId())
-	// 		.contractId(repaymentDto.getContractId())
-	// 		.transactionId(repaymentDto.getTransactionId())
-	// 		.amount(repaymentDto.getAmount())
-	// 		.repaymentTime()
-	//
-	// }
-
-	// public static Repayment from(RepaymentDto repaymentDto) {
-	// 	return Repayment.builder()
-	// 		.repaymentId(repaymentDto.getRepaymentId())
-	// 		.contractId(repaymentDto.getContractId())
-	// 		.transactionId(repaymentDto.getTransactionId())
-	// 		.repaymentNumber(repaymentDto.getRepaymentNumber())
-	// 		.build();
-	// }
-
-	public static Repayment of(Long contractId, Long amount, LocalDateTime repaymentTime, Integer repaymentCount) {
+	public static Repayment of(Long contractId, Long amount, LocalDateTime repaymentTime, Integer repaymentCount,
+		String useAutoTransfer) {
 		return Repayment.builder()
 			.contractId(contractId)
 			.amount(amount)
 			.balance(amount)
 			.repaymentDate(repaymentTime)
 			.repaymentCount(repaymentCount)
-			.status(RepaymentStatus.UNPAID)
+			.status(useAutoTransfer.equals("Y") ? RepaymentStatus.AUTO : RepaymentStatus.UNPAID)
 			.build();
 	}
 

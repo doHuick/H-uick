@@ -92,7 +92,8 @@ public class RepaymentService {
 				}
 
 				repaymentRepository.save(
-					Repayment.of(contractDto.getContractId(), totalAmount - sumOfAmount, dueDate, count++));
+					Repayment.of(contractDto.getContractId(), totalAmount - sumOfAmount, dueDate, count++,
+						contractDto.getUseAutoTransfer()));
 
 				payday = dueDate;
 				continue;
@@ -114,7 +115,8 @@ public class RepaymentService {
 						366 : 365) * nextTransferDateDayOfYear);
 			}
 
-			repaymentRepository.save(Repayment.of(contractDto.getContractId(), amount, nextPayday, count++));
+			repaymentRepository.save(Repayment.of(contractDto.getContractId(), amount, nextPayday, count++,
+				contractDto.getUseAutoTransfer()));
 
 			payday = nextPayday;
 			sumOfAmount += amount;
