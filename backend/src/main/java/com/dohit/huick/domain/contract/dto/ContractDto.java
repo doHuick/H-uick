@@ -17,6 +17,7 @@ public class ContractDto {
 	LocalDateTime startDate;
 	LocalDateTime dueDate;
 	Long amount;
+	String amountInKorean;
 	Float rate;
 	ContractStatus status;
 	LocalDateTime createdTime;
@@ -25,7 +26,7 @@ public class ContractDto {
 
 	@Builder
 	public ContractDto(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate,
-		LocalDateTime dueDate, Long amount, Float rate, ContractStatus status, LocalDateTime createdTime,
+		LocalDateTime dueDate, Long amount, String amountInKorean, Float rate, ContractStatus status, LocalDateTime createdTime,
 		String pdfPath, String useAutoTransfer) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
@@ -33,6 +34,7 @@ public class ContractDto {
 		this.startDate = startDate;
 		this.dueDate = dueDate;
 		this.amount = amount;
+		this.amountInKorean = amountInKorean;
 		this.rate = rate;
 		this.status = status;
 		this.createdTime = createdTime;
@@ -48,6 +50,7 @@ public class ContractDto {
 			.startDate(contract.getStartDate())
 			.dueDate(contract.getDueDate())
 			.amount(contract.getAmount())
+			.amountInKorean(contract.getAmountInKorean())
 			.rate(contract.getRate())
 			.status(contract.getStatus())
 			.createdTime(contract.getCreatedTime())
@@ -62,6 +65,7 @@ public class ContractDto {
 			.startDate(request.getStartDate())
 			.dueDate(request.getDueDate())
 			.amount(request.getAmount())
+			.amountInKorean(request.getAmountInKorean())
 			.rate(request.getRate())
 			.status(request.getStatus())
 			.pdfPath(request.getPdfPath())

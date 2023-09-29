@@ -24,19 +24,21 @@ public class ContractApiDto {
 		LocalDateTime startDate;
 		LocalDateTime dueDate;
 		Long amount;
+		String amountInKorean;
 		Float rate;
 		ContractStatus status;
 		String pdfPath;
 		String useAutoTransfer;
 
 		@Builder
-		private Request(Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate, Long amount,
+		private Request(Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate, Long amount, String amountInKorean,
 			Float rate, ContractStatus status, String pdfPath, String useAutoTransfer) {
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
 			this.startDate = startDate;
 			this.dueDate = dueDate;
 			this.amount = amount;
+			this.amountInKorean = amountInKorean;
 			this.rate = rate;
 			this.status = status;
 			this.pdfPath = pdfPath;
@@ -63,6 +65,7 @@ public class ContractApiDto {
 		LocalDateTime repaymentDate;
 		Long currentAmount;
 		Long amount;
+		String amountInKorean;
 		Float rate;
 		ContractStatus status;
 		String pdfPath;
@@ -71,7 +74,7 @@ public class ContractApiDto {
 		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress,
 			String lessorName, String lessorAddress, String lessorRrn, String lessorPhoneNumber,
 			Integer totalRepaymentCount, Integer currentRepaymentCount, LocalDateTime startDate,
-			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount, Float rate,
+			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount, String amountInKorean,Float rate,
 			ContractStatus status, String pdfPath) {
 			this.contractId = contractId;
 			this.lesseeId = lesseeId;
@@ -89,6 +92,7 @@ public class ContractApiDto {
 			this.repaymentDate = repaymentDate;
 			this.currentAmount = currentAmount;
 			this.amount = amount;
+			this.amountInKorean = amountInKorean;
 			this.rate = rate;
 			this.status = status;
 			this.pdfPath = pdfPath;
@@ -113,6 +117,7 @@ public class ContractApiDto {
 				.repaymentDate(repaymentDto.getRepaymentDate())
 				.currentAmount(repaymentDto.getAmount())
 				.amount(contractDto.getAmount())
+				.amountInKorean(contractDto.getAmountInKorean())
 				.rate(contractDto.getRate())
 				.status(contractDto.getStatus())
 				.pdfPath(contractDto.getPdfPath())
@@ -127,6 +132,7 @@ public class ContractApiDto {
 				.startDate(contractDto.getStartDate())
 				.dueDate(contractDto.getDueDate())
 				.amount(contractDto.getAmount())
+				.amountInKorean(contractDto.getAmountInKorean())
 				.rate(contractDto.getRate())
 				.status(contractDto.getStatus())
 				.pdfPath(contractDto.getPdfPath())
