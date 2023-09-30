@@ -20,4 +20,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	List<Contract> findByLessorId(Long lessorId);
+
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	List<Contract> findContractsByLessorIdOrLesseeId(Long userId1, Long userId2);
 }

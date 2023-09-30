@@ -2,8 +2,10 @@ package com.dohit.huick.api.contract.dto;
 
 import java.time.LocalDateTime;
 
+import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
+import com.dohit.huick.domain.user.dto.UserDto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -48,27 +50,73 @@ public class ContractApiDto {
 		Long contractId;
 		Long lesseeId;
 		Long lessorId;
+		String lesseeName;
+		String lesseeAddress;
+		String lessorName;
+		String lessorAddress;
+		String lessorRrn;
+		String lessorPhoneNumber;
+		Integer totalRepaymentCount;
+		Integer currentRepaymentCount;
 		LocalDateTime startDate;
 		LocalDateTime dueDate;
+		LocalDateTime repaymentDate;
+		Long currentAmount;
 		Long amount;
 		Float rate;
 		ContractStatus status;
-		LocalDateTime createdTime;
 		String pdfPath;
 
 		@Builder
-		public Response(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-			Long amount, Float rate, ContractStatus status, LocalDateTime createdTime, String pdfPath) {
+		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress,
+			String lessorName, String lessorAddress, String lessorRrn, String lessorPhoneNumber,
+			Integer totalRepaymentCount, Integer currentRepaymentCount, LocalDateTime startDate,
+			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount, Float rate,
+			ContractStatus status, String pdfPath) {
 			this.contractId = contractId;
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
+			this.lesseeName = lesseeName;
+			this.lesseeAddress = lesseeAddress;
+			this.lessorName = lessorName;
+			this.lessorAddress = lessorAddress;
+			this.lessorRrn = lessorRrn;
+			this.lessorPhoneNumber = lessorPhoneNumber;
+			this.totalRepaymentCount = totalRepaymentCount;
+			this.currentRepaymentCount = currentRepaymentCount;
 			this.startDate = startDate;
 			this.dueDate = dueDate;
+			this.repaymentDate = repaymentDate;
+			this.currentAmount = currentAmount;
 			this.amount = amount;
 			this.rate = rate;
 			this.status = status;
-			this.createdTime = createdTime;
 			this.pdfPath = pdfPath;
+		}
+
+		public static Response of(ContractDto contractDto, UserDto lesseeDto, UserDto lessorDto,
+			RepaymentDto repaymentDto, int totalRepaymentCount) {
+			return Response.builder()
+				.contractId(contractDto.getContractId())
+				.lesseeId(contractDto.getLesseeId())
+				.lessorId(contractDto.getLessorId())
+				.lesseeName(lesseeDto.getName())
+				.lesseeAddress(lesseeDto.getAddress())
+				.lessorName(lessorDto.getName())
+				.lessorAddress(lessorDto.getAddress())
+				.lessorRrn(lessorDto.getRrn())
+				.lessorPhoneNumber(lessorDto.getPhoneNumber())
+				.totalRepaymentCount(totalRepaymentCount)
+				.currentRepaymentCount(repaymentDto.getRepaymentCount())
+				.startDate(contractDto.getStartDate())
+				.dueDate(contractDto.getDueDate())
+				.repaymentDate(repaymentDto.getRepaymentDate())
+				.currentAmount(repaymentDto.getAmount())
+				.amount(contractDto.getAmount())
+				.rate(contractDto.getRate())
+				.status(contractDto.getStatus())
+				.pdfPath(contractDto.getPdfPath())
+				.build();
 		}
 
 		public static Response from(ContractDto contractDto) {
@@ -81,7 +129,6 @@ public class ContractApiDto {
 				.amount(contractDto.getAmount())
 				.rate(contractDto.getRate())
 				.status(contractDto.getStatus())
-				.createdTime(contractDto.getCreatedTime())
 				.pdfPath(contractDto.getPdfPath())
 				.build();
 		}

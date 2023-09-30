@@ -38,6 +38,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation group: 'com.itextpdf', name: 'html2pdf', version: '5.0.1'
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.103'
+    implementation 'commons-io:commons-io:2.11.0'
 }
 
 tasks.named('test') {

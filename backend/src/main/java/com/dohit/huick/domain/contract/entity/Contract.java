@@ -76,6 +76,7 @@ public class Contract {
 
 	public static Contract from(ContractDto contractDto) {
 		return Contract.builder()
+			.contractId(contractDto.getContractId())
 			.lesseeId(contractDto.getLesseeId())
 			.lessorId(contractDto.getLessorId())
 			.startDate(contractDto.getStartDate())
@@ -90,4 +91,34 @@ public class Contract {
 	public void updateStatus(ContractStatus status) {
 		this.status = status;
 	}
+	public void updatePdfPath(String pdfPath) {
+		this.pdfPath = pdfPath;
+	}
+	public void updateByRequest(ContractDto request) {
+		if (this.lesseeId == null && request.getLesseeId() != null) {
+			this.lesseeId = request.getLesseeId();
+		}
+		if (this.lessorId == null && request.getLessorId() != null) {
+			this.lessorId = request.getLessorId();
+		}
+		if (this.startDate == null && request.getStartDate() != null) {
+			this.startDate = request.getStartDate();
+		}
+		if (this.dueDate == null && request.getDueDate() != null) {
+			this.dueDate = request.getDueDate();
+		}
+		if (this.amount == null && request.getAmount() != null) {
+			this.amount = request.getAmount();
+		}
+		if (this.rate == null && request.getRate() != null) {
+			this.rate = request.getRate();
+		}
+		if (this.status == null && request.getStatus() != null) {
+			this.status = request.getStatus();
+		}
+		if (this.pdfPath == null && request.getPdfPath() != null) {
+			this.pdfPath = request.getPdfPath();
+		}
+	}
+
 }

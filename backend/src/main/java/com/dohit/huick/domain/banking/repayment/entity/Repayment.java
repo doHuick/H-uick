@@ -1,15 +1,19 @@
 package com.dohit.huick.domain.banking.repayment.entity;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
+import com.dohit.huick.domain.banking.repayment.constant.RepaymentStatus;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,26 +32,62 @@ public class Repayment {
 	@Column(nullable = false)
 	private Long contractId;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Long transactionId;
 
 	@Column(nullable = false)
-	private Integer repaymentNumber;
+	private Long amount;
+
+	@Column(nullable = false)
+	private LocalDateTime repaymentDate;
+
+	@Column(nullable = false)
+	private Integer repaymentCount;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private RepaymentStatus status;
 
 	@Builder
-	private Repayment(Long repaymentId, Long contractId, Long transactionId, Integer repaymentNumber) {
+	private Repayment(Long repaymentId, Long contractId, Long transactionId, Long amount,
+		LocalDateTime repaymentDate, Integer repaymentCount,
+		RepaymentStatus status) {
 		this.repaymentId = repaymentId;
 		this.contractId = contractId;
 		this.transactionId = transactionId;
-		this.repaymentNumber = repaymentNumber;
+		this.amount = amount;
+		this.repaymentDate = repaymentDate;
+		this.repaymentCount = repaymentCount;
+		this.status = status;
 	}
 
-	public static Repayment from (RepaymentDto repaymentDto) {
+	// public static Repayment from(RepaymentDto repaymentDto) {
+	// 	return Repayment.builder()
+	// 		.repaymentId(repaymentDto.getRepaymentId())
+	// 		.contractId(repaymentDto.getContractId())
+	// 		.transactionId(repaymentDto.getTransactionId())
+	// 		.amount(repaymentDto.getAmount())
+	// 		.repaymentTime()
+	//
+	// }
+
+	// public static Repayment from(RepaymentDto repaymentDto) {
+	// 	return Repayment.builder()
+	// 		.repaymentId(repaymentDto.getRepaymentId())
+	// 		.contractId(repaymentDto.getContractId())
+	// 		.transactionId(repaymentDto.getTransactionId())
+	// 		.repaymentNumber(repaymentDto.getRepaymentNumber())
+	// 		.build();
+	// }
+
+	public static Repayment of(Long contractId, Long amount, LocalDateTime repaymentTime, Integer repaymentCount) {
 		return Repayment.builder()
-			.repaymentId(repaymentDto.getRepaymentId())
-			.contractId(repaymentDto.getContractId())
-			.transactionId(repaymentDto.getTransactionId())
-			.repaymentNumber(repaymentDto.getRepaymentNumber())
+			.contractId(contractId)
+
+			.amount(amount)
+			.repaymentDate(repaymentTime)
+			.repaymentCount(repaymentCount)
+			.status(RepaymentStatus.UNPAID)
 			.build();
 	}
 }

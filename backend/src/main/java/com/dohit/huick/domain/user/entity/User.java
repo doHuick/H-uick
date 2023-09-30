@@ -115,5 +115,7 @@ public class User {
 		this.phoneNumber = null;
 		this.withdrawalTime = LocalDateTime.now().plusMonths(1);
 	}
-
+	public void updateSignatureUrl(String signatureUrl){
+		this.signatureUrl = signatureUrl;
+	}
 }
