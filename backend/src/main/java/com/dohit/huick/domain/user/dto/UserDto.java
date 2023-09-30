@@ -26,14 +26,14 @@ public class UserDto {
 	private LocalDateTime withdrawalTime;
 	private String signatureUrl;
 	private String phoneNumber;
+	private String password;
 	private LocalDateTime issueDate;
 	private AccountDto accountInfo;
 
 	@Builder
 	private UserDto(Long userId, String name, String rrn, String address, String walletAddress, SocialType socialType,
 		String socialId, LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl,
-		String phoneNumber,
-		LocalDateTime issueDate, AccountDto accountInfo) {
+		String phoneNumber, String password, LocalDateTime issueDate, AccountDto accountInfo) {
 		this.userId = userId;
 		this.name = name;
 		this.rrn = rrn;
@@ -44,6 +44,7 @@ public class UserDto {
 		this.createdTime = createdTime;
 		this.role = role;
 		this.phoneNumber = phoneNumber;
+		this.password = password;
 		this.withdrawalTime = withdrawalTime;
 		this.signatureUrl = signatureUrl;
 		this.issueDate = issueDate;
@@ -110,6 +111,13 @@ public class UserDto {
 			.address(address)
 			.rrn(rrn)
 			.phoneNumber(phoneNumber)
+			.build();
+	}
+
+	public static UserDto of(Long userId, UserApiDto.PasswordRequest request) {
+		return UserDto.builder()
+			.userId(userId)
+			.password(request.getPassword())
 			.build();
 	}
 }
