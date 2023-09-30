@@ -4,12 +4,13 @@ import Mainpage from '../pages/MainPage/Mainpage';
 import SignUppage from '../pages/SignUppage/SignUppage';
 import MyPage from '../pages/MyPage/MyPage';
 import ChatbotPage from '../pages/ChatbotPage/ChatbotPage';
-import TransferPage from '../pages/TransferPage/TransferPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import KakaoAuthHandler from '../pages/LoginPage/KakaoAuthHandler';
 import PrivateRoute from './PrivateRoute';
 import Welcomepage from '../pages/SignUppage/Welcomepage';
 import AuthenticatedRoute from './AuthenticatedRoute';
+import SharePage from '../pages/SharePage/SharePage';
+import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 
 export default function Router() {
   return (
@@ -21,13 +22,14 @@ export default function Router() {
         
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Mainpage />}></Route>
-          <Route element={<AuthenticatedRoute />}>
+          {/* <Route element={<AuthenticatedRoute />}> */}
             <Route path="/signup" element={<SignUppage />}></Route>
             <Route path="/welcome" element={<Welcomepage/>}></Route>
-          </Route>
+          {/* </Route> */}
           <Route path="/mypage" element={<MyPage />}></Route>
           <Route path="/chatbot" element={<ChatbotPage />}></Route>
-          <Route path="/transfer" element={<TransferPage />}></Route>
+          <Route path="/share/:contractId" element={<SharePage />}></Route>
+          <Route path="/404" element={<NotFoundPage />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

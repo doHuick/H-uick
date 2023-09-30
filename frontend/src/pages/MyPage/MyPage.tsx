@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { ReactComponent as RightArrow } from '../../assets/icons/right-arrow.svg';
 import HeadBar from '../../components/HeadBar/HeadBar';
@@ -10,17 +10,75 @@ import { ConfirmButton } from '../../components/Button/Button';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
 import 'react-simple-toasts/dist/theme/light.css';
+import axios, { BASE_URL } from '../../api/apiController';
+import { useNavigate } from 'react-router-dom';
+
+
+interface AccountProps{
+  accountId: number,
+  accountNumber: string,
+  balance: number,
+  bankCode: string,
+  bankName: string,
+  createdTime: string,
+}
+
+interface UserInfoProps{
+  account_info : AccountProps,
+  address: string,
+  created_time: string,
+  issue_date?: string,
+  name: string,
+  phone_number: string,
+  role: string,
+  rrn: string,
+  signature_url?: string,
+  social_id: string,
+  social_type: string,
+  user_id: number,
+  wallet_address?: string,
+  withdrawal_time? : string,
+}
 
 export default function MyPage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [signatureImage, setSignatureImage] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfoProps>()
 
-  const frameHeight = '380px'
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get(`${BASE_URL}/users/me`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    }).then((res) => {
+      setUserInfo(res.data)
+      console.log(res.data)
+      setSignatureImage(res.data.signature_url)
+    })
+    .catch((err) => {
+      navigate('/login');
+    })
+  }, []);
+
+  const logout = () => {
+    localStorage.clear()
+    navigate('/login')
+  }
+  
+  const signOut = () => {
+    axios.get(`${BASE_URL}/users/me`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    }).then((res) => {
+      console.log(res)
+    })
+    navigate('/login')
+  }
 
   toastConfig({
     theme: 'frosted-glass',
     position: 'top-center',
   });
+  
 
   const showModal = () => {
     setModalOpen(true);
@@ -32,7 +90,16 @@ export default function MyPage() {
 
   const handleSave = (imageData: string) => {
     setSignatureImage(imageData);
-    localStorage.setItem("userSignature", imageData)
+    axios.patch(
+      `${BASE_URL}/users/signature`,
+      {
+        signatureBase64: imageData
+      }
+      ,
+      {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      },
+    )
 
     closeModal();
     toast('서명이 등록되었습니다');
@@ -53,12 +120,13 @@ export default function MyPage() {
 
         <MenuBar>
           <MenuContextLeft>예금주</MenuContextLeft>
-          <MenuContextRight>임준수</MenuContextRight>
+          <MenuContextRight>{userInfo?.name}</MenuContextRight>
         </MenuBar>
 
         <MenuBar style={{ paddingBottom: '4px' }}>
           <MenuContextLeft>계좌번호</MenuContextLeft>
-          <MenuContextRight>110-400-888327</MenuContextRight>
+          <MenuContextRight>{`
+          ${userInfo?.account_info.accountNumber.slice(0,3)}-${userInfo?.account_info.accountNumber.slice(3,6)}-${userInfo?.account_info.accountNumber.slice(6,12)}`}</MenuContextRight>
         </MenuBar>
       </WhiteFrame>
       <WhiteFrame>
@@ -106,15 +174,27 @@ export default function MyPage() {
     
         // </Modal>
       )}{' '} */}
+
+      <WhiteFrame>
+        <MenuBar style={{ paddingTop: '8px', pointerEvents: 'none' }}>
+          <MenuTitle>계정</MenuTitle>
+        </MenuBar>
+
+        <MenuBar onClick={logout}>
+          <MenuContextLeft style={{color: 'var(--red)'}}>로그아웃</MenuContextLeft>
+        </MenuBar>
+
+        <MenuBar onClick={signOut}>
+          <MenuContextLeft>회원탈퇴</MenuContextLeft>
+        </MenuBar>
+      </WhiteFrame>
       {modalOpen? (
-        <SignModal closeModal={closeModal} onSave={handleSave} frameHeight={frameHeight} />
+        <SignModal closeModal={closeModal} onSave={handleSave} />
         // <ModalFrame closeModal={closeModal} >
         //   sdsadsadsadasdsa
         // </ModalFrame>
       ): null}
       <LogoutAndVer>
-        <LogOutButton>로그아웃</LogOutButton>
-        <SignOut>회원탈퇴</SignOut>
         <HuickVer>©️ H-uick v 1.0.0</HuickVer>
       </LogoutAndVer>
 

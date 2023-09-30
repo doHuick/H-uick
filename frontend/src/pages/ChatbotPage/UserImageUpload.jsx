@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios, { BASE_URL } from '../../api/apiController';
+
 // import './UserImageUpload.css'
 // import UploadIcon from '../../assets/icons/upload-image-icon.png'
 // import UploadIcon from '../../../public/upload-image-icon.png'
@@ -16,9 +18,22 @@ const UserImageUpload = (props) => {
   };
 
   const handleUploadClick = () => {
-    // Disable the elements when "업로드" is clicked
+    const url = localStorage.getItem('userKakaoCaptureURL')
     setDisableUpload(true);
-    // localStorage.setItem("userCaptureURL", JSON.stringify(userCapture))
+    axios.post(
+      `${BASE_URL}/contracts`,
+      {
+        user_id: 1,
+        contract_tmp_key: null,
+        file: url,
+      },
+      {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      },
+    )
+    .then((res) => {
+      console.log(res.data)
+    })
 
   };
 

@@ -1,7 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import './SignModal.css'
-import ModalBase from '../Modal/ModalBase'
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components'
 import SignatureCanvas from 'react-signature-canvas'
 import { ReactComponent as ModalClose } from '../../assets/icons/close-button.svg'
 import { MiniConfirmButton } from '../Button/Button';
@@ -12,11 +11,20 @@ import 'react-simple-toasts/dist/theme/light.css';
 interface SignModalProps {
   closeModal: () => void;
   onSave: (imageData: string) => void;
-  frameHeight: String;
+
 }
 
-export default function SignModal({ closeModal, onSave, frameHeight }: SignModalProps) {
+interface DarkBackgroundProps {
+  isClosing: boolean;
+}
 
+interface ModalContainerProps {
+  isClosing: boolean;
+}
+
+export default function ModalBase({ closeModal, onSave }: SignModalProps) {
+  const [isClosing, setIsClosing] = useState(false);
+  
   toastConfig({
     theme: 'frosted-glass',
     position: 'top-center',
@@ -24,8 +32,29 @@ export default function SignModal({ closeModal, onSave, frameHeight }: SignModal
     maxVisibleToasts: 1
   })
 
-  const handleSignModalCloseClick = () => {
-    closeModal(); // ModalBase.tsx에서 전달한 closeModal 함수 호출
+  
+  const handleDarkBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) {
+      closeAndAnimate();
+    }
+  };
+  
+  const isModalCloseClick = () => {
+    closeAndAnimate();
+
+  };
+
+  const closeAndAnimate = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      closeModal();
+    }, 260);
+  };
+
+  const signCanvas = useRef() as React.MutableRefObject<any>;
+  
+  const clear = () => {
+    signCanvas.current.clear();
   };
 
   const handleSaveClick = () => {
@@ -35,9 +64,10 @@ export default function SignModal({ closeModal, onSave, frameHeight }: SignModal
       toast("서명 그려!!!")
     } else {
 
-      // 여기서 POST
       const image = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
       onSave(image);
+
+      
 
       setTimeout(() => {
         closeModal();
@@ -45,21 +75,16 @@ export default function SignModal({ closeModal, onSave, frameHeight }: SignModal
 
     }
   };
-
-  const signCanvas = useRef() as React.MutableRefObject<any>;
-
-  const clear = () => {
-    signCanvas.current.clear();
-  };
-
-
+  
   return (
-    <ModalBase closeModal={closeModal} frameHeight={frameHeight}>
-              <SignModalUpperBar>
+  <>
+      <DarkBackground onClick={handleDarkBackgroundClick} isClosing={isClosing}/>
+      <ModalContainer isClosing={isClosing}>
+        <SignModalUpperBar>
           <SignModalTitle>서명등록</SignModalTitle>
           <SignModalUpperButtons>
             <SignModalEraseButton  onClick={clear} >&nbsp;&nbsp;재설정&nbsp;&nbsp;</SignModalEraseButton>
-            <SignModalCloseButton onClick={handleSignModalCloseClick}/>
+            <SignModalCloseButton onClick={isModalCloseClick}/>
           </SignModalUpperButtons>
         </SignModalUpperBar>
 
@@ -75,9 +100,71 @@ export default function SignModal({ closeModal, onSave, frameHeight }: SignModal
             저장
           </SignSaveButton>
         </SignSaveButtonFrame>
-    </ModalBase>
+      </ModalContainer>
+  </>
   )
 }
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1; // 원하는 어두운 배경의 최종 투명도 설정
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0; // 원하는 어두운 배경의 최종 투명도 설정
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+`;
+
+const DarkBackground = styled.div<DarkBackgroundProps>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); // 어두운 배경의 색상과 투명도 조절
+  z-index: 2; // 모달 뒤에 위치하도록 설정
+  animation: ${({ isClosing }) => (isClosing ? fadeOut : fadeIn)} 0.30s ease-in-out;
+`;
+
+const ModalContainer = styled.div<ModalContainerProps>`
+  position: fixed;
+  z-index: 3;
+  width: 100%;
+  height: 380px;
+  bottom: 0;
+  background-color: var(--white);
+  border-radius: 30px 30px 0px 0px;
+  box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  animation: ${({ isClosing }) => (isClosing ? slideOut : slideIn)} 0.35s ease-in-out;
+`;
 
 const SignModalUpperBar = styled.div`
   position: relative;
