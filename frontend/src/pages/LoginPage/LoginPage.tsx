@@ -38,4 +38,5 @@ const Image = styled.img`
   width: 350px;
   height: 155px;
   margin-top: 450px;
+  filter: drop-shadow(0px 0px 12px rgba(0,0,0,0.25))
 `;
