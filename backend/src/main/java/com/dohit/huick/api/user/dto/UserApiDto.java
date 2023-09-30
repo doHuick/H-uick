@@ -21,6 +21,11 @@ public class UserApiDto {
 		private String rrn;
 		private String address;
 		private String phoneNumber;
+	}
+
+	@Getter
+	@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+	public static class PasswordRequest {
 		private String password;
 	}
 

@@ -82,8 +82,8 @@ public class User {
 	@Size(min = 10, max = 11)
 	private String phoneNumber;
 
-	@Column(length = 4)
-	@Size(min = 4, max = 4)
+	@Column(length = 6)
+	@Size(min = 6, max = 6)
 	private String password;
 
 	@Builder
@@ -111,7 +111,6 @@ public class User {
 		this.name = userDto.getName();
 		this.rrn = userDto.getRrn();
 		this.phoneNumber = userDto.getPhoneNumber();
-		this.password = userDto.getPassword();
 	}
 
 	public void withdraw() {
@@ -126,5 +125,9 @@ public class User {
 
 	public void updateSignatureUrl(String signatureUrl) {
 		this.signatureUrl = signatureUrl;
+	}
+
+	public void updatePassword(String password) {
+		this.password = password;
 	}
 }

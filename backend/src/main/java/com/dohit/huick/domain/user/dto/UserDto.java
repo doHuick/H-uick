@@ -58,7 +58,6 @@ public class UserDto {
 			.rrn(request.getRrn())
 			.address(request.getAddress())
 			.phoneNumber(request.getPhoneNumber())
-			.password(request.getPassword())
 			.build();
 	}
 
@@ -112,6 +111,13 @@ public class UserDto {
 			.address(address)
 			.rrn(rrn)
 			.phoneNumber(phoneNumber)
+			.build();
+	}
+
+	public static UserDto of(Long userId, UserApiDto.PasswordRequest request) {
+		return UserDto.builder()
+			.userId(userId)
+			.password(request.getPassword())
 			.build();
 	}
 }
