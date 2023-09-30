@@ -59,7 +59,7 @@ app:
   auth:
     tokenSecret: ${TOKEN_SECRET}
     tokenExpiry: ${TOKEN_EXPIRY}
-    refreshTokenExpiry: ${REFRESH_TOKEN_EXPIRY}
+    refreshTokenExpiry: 604800000
   oauth2:
     authorizedRedirectUris:
       - http://localhost:5173/oauth/redirect
