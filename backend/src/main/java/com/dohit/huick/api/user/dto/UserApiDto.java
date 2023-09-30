@@ -21,6 +21,7 @@ public class UserApiDto {
 		private String rrn;
 		private String address;
 		private String phoneNumber;
+		private String password;
 	}
 
 	@Getter
