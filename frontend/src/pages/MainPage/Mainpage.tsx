@@ -3,7 +3,6 @@ import NavBar from '../../components/NavBar/NavBar';
 import { styled } from 'styled-components';
 import { Main } from '../../style';
 import { TextBox } from '../../components/TextBox/TextBox';
-import { ReactComponent as Dots } from '../../assets/icons/dots.svg';
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg';
 import { MainTab } from '../../components/TabBar/MainTab';
 import axios, { BASE_URL } from '../../api/apiController';
@@ -28,22 +27,20 @@ interface ContractProps {
 export default function Mainpage() {
   const [nowActive, setNowActive] = useState<string>('borrowing');
   const [feeds, setFeeds] = useState<ContractProps[]>([]);
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [nowBalance, setNowBalance] = useState<number>(0);
   const [accountNumber, setAccountNumber] = useState<number | null>(null);
   const [monthBorrow, setMonthBorrow] = useState<number | null>(null);
   const [monthRent, setMonthRent] = useState<number | null>(null);
 
-  // [Tab 관련 코드]
+  // [Tab 기능]
   const fetchFeedsForTab = (tab: string) => {
-    setLoading(true);
+    
     if (tab === 'borrowing') {
       axios
         .get(`${BASE_URL}/contracts/lessee/me`, {
           headers: { Authorization: localStorage.getItem('access_token') },
         })
         .then((res) => {
-          console.log('borrowing res: ', res.data);
           if (res.data === '') {
             setFeeds([]);
           } else {
@@ -57,9 +54,7 @@ export default function Mainpage() {
               rate: contractData.rate,
             }));
             setFeeds(myContracts);
-            setLoading(false);
           }
-          console.log('borrowing feed', feeds);
         });
     } else if (tab === 'rental') {
       axios
@@ -67,7 +62,6 @@ export default function Mainpage() {
         headers: { Authorization: localStorage.getItem('access_token') },
       })
       .then((res) => {
-        console.log('rental res: ', res.data);
         if (res.data === '') {
           setFeeds([]);
         } else {
@@ -81,9 +75,7 @@ export default function Mainpage() {
             rate: contractData.rate,
           }));
           setFeeds(myContracts);
-          setLoading(false);
         }
-        console.log('rental feed', feeds);
       });
     }
   };
@@ -102,7 +94,6 @@ export default function Mainpage() {
     axios.get(`${BASE_URL}/banking/accounts/me`, {
       headers: { Authorization: localStorage.getItem('access_token')},
     }).then((res) => {
-      console.log('res data : ', res.data)
       setAccountNumber(res.data.account_number);
       setNowBalance(res.data.balance.toLocaleString());
     })
@@ -142,8 +133,6 @@ export default function Mainpage() {
       toast('에러가 발생했습니다.');
     }
   };
-  
-
 
   return (
     <Main>
@@ -169,7 +158,6 @@ export default function Mainpage() {
               싸피우대통장
             </TextBox>
           </FlexDiv2>
-          <Dots style={{ marginBottom: '10px', cursor: 'pointer' }} />
         </FlexDiv>
 
         {/* 계좌 번호 */}
@@ -199,18 +187,23 @@ export default function Mainpage() {
         {/* 롤링 공지 */}
         <Rolling monthBorrow={monthBorrow} monthRent={monthRent} />
       </BlueBox>
+
+      {/* 탭 기능 */}
       <MainTab setNowActive={handleTabClick} />
       {feeds.length === 0 ? (
-       <TextBox
-       fontSize="15px"
-       fontWeight="500"
-       color="var(--black)"
-       textAlign="left"
-     >
-       아직 체결된 계약이 없습니다.
-     </TextBox>
+      <CenterDiv>
+        <PigImg src="/pig-head.png" />
+        <TextBox
+          fontSize="25px"
+          fontWeight="700"
+          color="var(--black)"
+          textAlign="center"
+        >
+          아직 체결된 계약이 없습니다.
+        </TextBox>
+      </CenterDiv>
       ) : (
-        feeds.map((feed, index) => (
+        feeds.map((feed) => (
           <WhiteBox key={feed.contract_id}>
             <FlexDiv margin="0px 30px 2px 30px">
               <TextBox
@@ -298,4 +291,17 @@ const FlexDiv = styled.div<FlexDivProps>`
 const FlexDiv2 = styled(FlexDiv)`
   justify-content: left;
   gap: 5px;
+`;
+
+const PigImg = styled.img`
+  width: 125px;
+  height: 125px;
+  margin: 80px 0 30px 0;
+`;
+
+const CenterDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 `;
