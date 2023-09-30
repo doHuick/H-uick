@@ -1,6 +1,8 @@
 .env
 .gradle
 build/
+**/src/main/resources/application.yml
+**/src/main/resources/application-dev.yml
 **/src/main/resources/develop/
 **/src/main/resources/firebase/
 !gradle/wrapper/gradle-wrapper.jar
