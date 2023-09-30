@@ -9,6 +9,8 @@ import KakaoAuthHandler from '../pages/LoginPage/KakaoAuthHandler';
 import PrivateRoute from './PrivateRoute';
 import Welcomepage from '../pages/SignUppage/Welcomepage';
 import AuthenticatedRoute from './AuthenticatedRoute';
+import SharePage from '../pages/SharePage/SharePage';
+import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 
 export default function Router() {
   return (
@@ -26,6 +28,8 @@ export default function Router() {
           {/* </Route> */}
           <Route path="/mypage" element={<MyPage />}></Route>
           <Route path="/chatbot" element={<ChatbotPage />}></Route>
+          <Route path="/share/:contractId" element={<SharePage />}></Route>
+          <Route path="/404" element={<NotFoundPage />}></Route>
         </Route>
       </Routes>
     </BrowserRouter>

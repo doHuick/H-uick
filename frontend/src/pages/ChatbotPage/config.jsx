@@ -20,7 +20,7 @@ const config = {
       <div
         style={{
           position: 'absolute',
-          marginTop: '-40px',
+          marginTop: '-33px',
           marginLeft: '14px',
           display: 'flex',
           alignItems: 'flex-end',
@@ -32,6 +32,9 @@ const config = {
           src="../../../pig-head.png"
           alt=""
         />
+        <div style={{marginLeft: '7px', marginBottom: '8px', fontSize: '14.5px'}}>
+          H-uick
+        </div>
       </div>
     ),
     // botChatMessage: (props) => <MyCustomChatMessage {...props} />,

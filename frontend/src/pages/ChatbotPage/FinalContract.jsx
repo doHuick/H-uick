@@ -115,11 +115,11 @@ const FinalContract = (props) => {
       8,
     )}T${hours}:${minutes}:${seconds}`;
     if (userButtons[0] == 'iLend') {
-      withoutAuto.lessor_id = 2
+      withoutAuto.lessor_id = userInfo.user_id
       withoutAuto.lesse_id = null
 
     } else {
-      withoutAuto.lesse_id = 2
+      withoutAuto.lesse_id = userInfo.user_id
       withoutAuto.lessor_id = null
       const isAuto = localStorage.getItem('isAuto');
       if (isAuto == 'true') {
@@ -135,6 +135,7 @@ const FinalContract = (props) => {
   };
 
   const sendTempContract = async () => {
+    console.log(withoutAuto)
     try {
       await axios.post(
         `${BASE_URL}/contracts`,
@@ -144,9 +145,10 @@ const FinalContract = (props) => {
           start_date: withoutAuto.start_date,
           due_date: withoutAuto.due_date,
           amount : withoutAuto.amount,
+          amount_in_korean: koreanNumber,
           rate : withoutAuto.rate,
           status :"BEFORE_EXECUTION",
-          pdf_path : "asdf",
+          pdf_path : "",
           use_auto_transfer: withoutAuto.use_auto_transfer
         }
         ,
@@ -156,6 +158,7 @@ const FinalContract = (props) => {
       )
       .then((res) => {
         setContractID(res.data.contract_id)
+        console.log(res.data)
       })
     } catch (error) {
       console.error('서버 요청 실패:', error);
@@ -168,7 +171,6 @@ const FinalContract = (props) => {
     transferClicked();
     setPasswordModalOpen(false);
     sendTempContract();
-    console.log(withoutAuto)
     setShareModalOpen(true); // 패스워드 모달 열기
   };
 
@@ -534,6 +536,7 @@ const Signature = styled.img`
   top: 2px;
   width: 100%;
 `;
+
 const Today = styled.div`
   position: relative;
   width: 100%;

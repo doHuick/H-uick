@@ -26,6 +26,14 @@ const MessageParser = ({ children, actions, props }) => {
       userChat.length = 0;
     }
 
+    if (message.includes('질문하기')) {
+      userChat.push('더미')
+      userChat.push('더미')
+      userChat.push('더미')
+      userChat.push('더미')
+      console.log(userChat)
+    }
+
     // 금액
     if (userChat.length == 1 && !userButtons[0] && userButtons.length < 3) {
       userChat.pop();
