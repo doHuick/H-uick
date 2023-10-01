@@ -92,6 +92,8 @@ public class ContractService {
 			ErrorCode.NOT_EXIST_USER));
 
 		String htmlContract = contract2html(contract, lessee, lessor);
+
+		// ########################### 추후 삭제예정 ###########################
 		Files.write(Paths.get("output.html"), htmlContract.getBytes());
 
 		// HTML문서를 PDF로 바꾸기
@@ -111,13 +113,13 @@ public class ContractService {
 	private String contract2html(Contract contract, User lessee, User lessor) {
 		// Thymeleaf를 사용하여 Contract 객체를 HTML 문자열로 변환
 		Context context = new Context();
+
 		// 계약정보
 		context.setVariable("contract", contract);
-		// 이자 갚을 날짜
-		int paymentDay = contract.getCreatedTime().getDayOfMonth();
-		context.setVariable("paymentDay", paymentDay);
+
 		// 빌리는 사람 개인정보
 		context.setVariable("lessee", lessee);
+
 		// 빌려주는 사람 개인정보
 		context.setVariable("lessor", lessor);
 
