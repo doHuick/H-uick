@@ -76,6 +76,7 @@ public class UserDto {
 			.signatureUrl(user.getSignatureUrl())
 			.issueDate(user.getIssueDate())
 			.phoneNumber(user.getPhoneNumber())
+			.password(user.getPassword())
 			.build();
 	}
 
@@ -94,6 +95,7 @@ public class UserDto {
 			.signatureUrl(userDto.getSignatureUrl())
 			.issueDate(userDto.getIssueDate())
 			.phoneNumber(userDto.getPhoneNumber())
+			.password(userDto.getPassword())
 			.accountInfo(accountDto)
 			.build();
 	}
