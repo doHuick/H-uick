@@ -83,6 +83,7 @@ public class ContractService {
 
 		// request에 있는 정보들 모두 업데이트
 		contract.updateByRequest(request);
+		contract.updateStatus(request.getStatus());
 
 		// 계약 정보를 HTML로 변환해주기
 		User lessee = userRepository.findByUserId(request.getLesseeId()).orElseThrow(() -> new AuthenticationException(

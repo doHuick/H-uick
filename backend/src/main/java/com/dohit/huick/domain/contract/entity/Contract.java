@@ -121,9 +121,5 @@ public class Contract {
 		if (this.rate == null && request.getRate() != null) {
 			this.rate = request.getRate();
 		}
-		if (this.status == null && request.getStatus() != null) {
-			this.status = request.getStatus();
-		}
 	}
-
 }
