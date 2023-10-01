@@ -7,9 +7,12 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.net.URL;
 
 import javax.persistence.LockModeType;
 
+import com.itextpdf.html2pdf.ConverterProperties;
+import com.itextpdf.layout.font.FontProvider;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,9 +49,6 @@ public class ContractService {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public ContractDto createContract(ContractDto contractDto) {
-		// 계약 만드는 사람에 따라 입력 정보 다름
-		// ex) Render가 작성한다면 계약서에는 계약정보와 Render 개인정보가 입력되어야함.
-
 		Contract contract = contractRepository.save(Contract.from(contractDto));
 		if (Objects.equals(contractDto.getUseAutoTransfer(),"Y")) {
 			autoTransferService.createAutoTransfer(AutoTransferDto.from(ContractDto.from(contract)));
@@ -124,10 +124,32 @@ public class ContractService {
 		return templateEngine.process("contract", context);
 	}
 
+
 	private byte[] html2pdf(String htmlContract) {
 		try {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			HtmlConverter.convertToPdf(htmlContract, outputStream);
+
+			// ConverterProperties 객체 생성
+			ConverterProperties converterProperties = new ConverterProperties();
+
+			// FontProvider 객체 생성
+			FontProvider fontProvider = new FontProvider();
+
+			// 클래스 로더를 사용하여 폰트 파일의 URL을 얻음
+			URL fontUrl = getClass().getClassLoader().getResource("fonts/NanumMyeongjo-Regular.ttf");
+
+			if (fontUrl != null) {
+				// FontProvider에 폰트 추가
+				fontProvider.addFont(fontUrl.getPath());
+			} else {
+				throw new RuntimeException("Font file not found");
+			}
+
+			// ConverterProperties에 FontProvider 설정
+			converterProperties.setFontProvider(fontProvider);
+
+			// HTML을 PDF로 변환
+			HtmlConverter.convertToPdf(htmlContract, outputStream, converterProperties);
 
 			return outputStream.toByteArray();
 		} catch (Exception e) {
