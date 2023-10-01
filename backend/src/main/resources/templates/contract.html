@@ -10,47 +10,6 @@
             --huick-blue: #007bff;
         }
 
-        /* ChatbotButton */
-        .chatbot-button {
-            position: relative;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            color: var(--white);
-            text-align: left;
-            padding-left: 10px;
-            padding-right: 11px;
-            margin-left: 12px;
-            margin-right: 12px;
-            line-height: 19px;
-            background-color: var(--huick-blue);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        /* ChatbotButtonShare */
-        .chatbot-button-share {
-            position: relative;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            color: var(--black);
-            text-align: left;
-            padding-left: 10px;
-            padding-right: 11px;
-            margin-left: 12px;
-            margin-right: 12px;
-            line-height: 19px;
-            background-color: #f2f2f7;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            width: 40%;
-        }
-
         /* ContractPaper */
         .contract-paper {
             position: relative;
@@ -64,17 +23,14 @@
 
         /* Title */
         .title {
-            position: relative;
-            width: 100%;
-            font-size: 18px;
-            font-weight: bold;
-            display: flex;
-            justify-content: center;
-            height: auto;
+            font-size: 20px; /* 제목 폰트 크기 조정 */
+            text-align: center; /* 제목 중앙 정렬 */
+            margin-bottom: 20px; /* 제목과 본문 사이의 여백 조정 */
         }
 
         /* Body */
         .body {
+            margin-bottom: 20px; /* 본문 여백 조정 */
         }
 
         /* TextBold */
@@ -176,10 +132,20 @@
             top: 2px;
             width: 100%;
         }
+
+        .a4-container {
+            width: 595px;
+            height: 842px;
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
     </style>
 </head>
 <body>
-<div class="chatbot-button">
+<div class="a4-container">
     <div class="contract-paper">
         <br/><br/>
         <div class="title">
@@ -191,10 +157,10 @@
         </div>
         <br/>
         <div class="body">
-            위 금액을 채무자가 채권자로부터 <span th:text="${contract.startDate}"></span>에 빌립니다.
-            이자는 연 <span th:text="${contract.rate}"></span>%로 하여
-            매달 <span th:text="${paymentDay}"></span>일에 갚겠으며,
-            원금은 <span th:text="${contract.dueDate}"></span>까지 채권자에게 갚겠습니다.
+            위 금액을 채무자가 채권자로부터 <span th:text="${#temporals.format(contract.startDate, 'yyyy년 M월 d일')}"></span>에 빌립니다.
+            이자는 연 <span th:text="${contract.rate}"></span> % 로 하여
+            매달 <span th:text="${paymentDay}"></span> 일 에 갚겠으며,
+            원금은 <span th:text="${#temporals.format(contract.dueDate, 'yyyy년 M월 d일')}"></span> 까지 채권자에게 갚겠습니다.
         </div>
         <br/><br/>
         <!-- 채무자 ContractTable -->
@@ -219,7 +185,7 @@
             </div>
             <div class="fifth-col">
                 <span>( 서 명 )</span>
-                <img th:src="${lessee.signatureUrl}" />
+                <img class="signature" th:src="${lessee.signatureUrl}" />
             </div>
         </div>
         <br/>
@@ -242,8 +208,12 @@
             </div>
             <div class="fifth-col">
                 <span>( 서 명 )</span>
-                <img th:src="${lessor.signatureUrl}" />
+                <img class="signature" th:src="${lessor.signatureUrl}" />
             </div>
+        </div>
+        <br/><br/>
+        <div>
+            <span th:text="${#temporals.format(contract.createdTime, 'yyyy년 M월 d일')}"></span></span>
         </div>
         <br/><br/>
     </div>
