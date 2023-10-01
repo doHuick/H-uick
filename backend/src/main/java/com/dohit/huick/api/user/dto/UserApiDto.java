@@ -25,6 +25,12 @@ public class UserApiDto {
 
 	@Getter
 	@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+	public static class PasswordRequest {
+		private String password;
+	}
+
+	@Getter
+	@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Response {
 		private Long userId;
 		private String name;
