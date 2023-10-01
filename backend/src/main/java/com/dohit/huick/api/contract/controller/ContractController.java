@@ -148,7 +148,15 @@ public class ContractController {
 	public ResponseEntity<ContractApiDto.Response> updateFinalContract(@PathVariable Long contractId,
 		@RequestBody ContractApiDto.Request request) throws IOException {
 		ContractDto contractDto = contractService.updateFinalContract(contractId, ContractDto.from(request));
+		ContractApiDto.Response response = ContractApiDto.Response.from(contractDto);
+
+		// 전자지갑 업데이트
+		String lesseeAddress = userService.getUserByUserId(contractDto.getLesseeId()).getWalletAddress();
+		String lessorAddress = userService.getUserByUserId(contractDto.getLessorId()).getWalletAddress();
+
+		response.updateWalletAddress(lesseeAddress, lessorAddress);
+
 		// 스마트 컨트랙트 생성을 위해서 계약 정보 리턴
-		return ResponseEntity.ok().body(ContractApiDto.Response.from(contractDto));
+		return ResponseEntity.ok().body(response);
 	}
 }

@@ -54,10 +54,12 @@ public class ContractApiDto {
 		Long lessorId;
 		String lesseeName;
 		String lesseeAddress;
+		String lesseeWalletAddress;
 		String lessorName;
 		String lessorAddress;
 		String lessorRrn;
 		String lessorPhoneNumber;
+		String lessorWalletAddress;
 		Integer totalRepaymentCount;
 		Integer currentRepaymentCount;
 		LocalDateTime startDate;
@@ -71,8 +73,8 @@ public class ContractApiDto {
 		String pdfPath;
 
 		@Builder
-		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress,
-			String lessorName, String lessorAddress, String lessorRrn, String lessorPhoneNumber,
+		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress, String lesseeWalletAddress,
+			String lessorName, String lessorAddress, String lessorRrn, String lessorPhoneNumber, String lessorWalletAddress,
 			Integer totalRepaymentCount, Integer currentRepaymentCount, LocalDateTime startDate,
 			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount, String amountInKorean,Float rate,
 			ContractStatus status, String pdfPath) {
@@ -81,10 +83,12 @@ public class ContractApiDto {
 			this.lessorId = lessorId;
 			this.lesseeName = lesseeName;
 			this.lesseeAddress = lesseeAddress;
+			this.lesseeWalletAddress = lesseeWalletAddress;
 			this.lessorName = lessorName;
 			this.lessorAddress = lessorAddress;
 			this.lessorRrn = lessorRrn;
 			this.lessorPhoneNumber = lessorPhoneNumber;
+			this.lessorWalletAddress = lessorWalletAddress;
 			this.totalRepaymentCount = totalRepaymentCount;
 			this.currentRepaymentCount = currentRepaymentCount;
 			this.startDate = startDate;
@@ -137,6 +141,12 @@ public class ContractApiDto {
 				.status(contractDto.getStatus())
 				.pdfPath(contractDto.getPdfPath())
 				.build();
+		}
+		public static Response updateWalletAddress(String lesseeWalletAddress, String lessorWalletAddress) {
+			return Response.builder()
+					.lesseeWalletAddress(lesseeWalletAddress)
+					.lessorWalletAddress(lessorWalletAddress)
+					.build();
 		}
 	}
 }
