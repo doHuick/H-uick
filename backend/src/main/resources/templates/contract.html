@@ -179,7 +179,7 @@
         </div>
         <br/><br/><br/>
         <div class="money">
-            &#8361;&nbsp;<span th:text="${contract.amount}"></span> &nbsp;( <span th:text="${contract.amountInKorean}"></span> 원 )
+            &#8361;&nbsp;<span th:text="${contract.amount}"></span> 원&nbsp;( <span th:text="${contract.amountInKorean}"></span>)
         </div>
         <br/>
         <div class="body">
@@ -207,10 +207,10 @@
                 <span class="text-big">:</span>
             </div>
             <div class="fourth-col">
-                <span th:text="${lessee.name}"></span>
-                <span th:text="${lessee.address}"></span>
-                <span th:text="${lessee.rrn}"></span>
-                <span th:text="${lessee.phoneNumber}"></span>
+                <span class="text-big"th:text="${lessee.name}"></span>
+                <span class="text-big"th:text="${lessee.address}"></span>
+                <span class="text-big"th:text="${lessee.rrn}"></span>
+                <span class="text-big"th:text="${lessee.phoneNumber}"></span>
             </div>
             <div class="fifth-col">
                 <span class="text-big">( 서 명 )</span>
@@ -233,17 +233,13 @@
                 <span class="text-big">:</span>
             </div>
             <div class="fourth-col">
-                <span th:text="${lessor.name}"></span>
-                <span th:text="${lessor.address}"></span>
+                <span class="text-big"th:text="${lessor.name}"></span>
+                <span class="text-big"th:text="${lessor.address}"></span>
             </div>
             <div class="fifth-col">
                 <span class="text-big">( 서 명 )</span>
                 <img class="signature" th:src="${lessor.signatureUrl}" />
             </div>
-        </div>
-        <br/><br/>
-        <div>
-            <span th:text="${#temporals.format(contract.createdTime, 'yyyy년 MM월 dd일')}"></span></span>
         </div>
         <br/><br/>
         <div class="date">
