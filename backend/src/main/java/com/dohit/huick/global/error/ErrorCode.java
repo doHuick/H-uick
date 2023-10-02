@@ -32,10 +32,12 @@ public enum ErrorCode {
 	NOT_EXIST_BANK(HttpStatus.BAD_REQUEST, "404014", "존재하지 않는 은행입니다."),
 	NOT_EXIST_AUTO_TRANSFER(HttpStatus.BAD_REQUEST, "404015", "존재하지 않는 자동이체입니다."),
 	NOT_EXIST_TRANSACTION(HttpStatus.BAD_REQUEST, "404016", "존재하지 않는 거래내역입니다."),
+	NOT_EXIST_REPAYMENT(HttpStatus.BAD_REQUEST, "404017", "존재하지 않는 상환입니다."),
+	NOT_EQUAL_AMOUNT(HttpStatus.BAD_REQUEST, "404018", "상환 금액이 다릅니다."),
 
 	// 계약
-	NOT_EXIST_CONTRACT(HttpStatus.BAD_REQUEST, "404021", "존재하지 않는 계약입니다.");
-
+	NOT_EXIST_CONTRACT(HttpStatus.BAD_REQUEST, "404021", "존재하지 않는 계약입니다."),
+	CANNOT_UPLOAD_PDF(HttpStatus.BAD_REQUEST, "404022", "PDF 업로드 실패입니다.");
 
 	ErrorCode(HttpStatus httpStatus, String errorCode, String message) {
 		this.httpStatus = httpStatus;

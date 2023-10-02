@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
+import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.service.BankingService;
 import com.dohit.huick.domain.contract.service.ContractService;
 import com.dohit.huick.domain.notification.constant.NotificationType;
@@ -27,11 +27,13 @@ public class NotificationScheduler {
 	@Scheduled(cron = "0 0 10 * * ?", zone = "Asia/Seoul")
 	public void sendNotification() {
 		// 이체 에정 3일전에 알림 보내기
-		List<AutoTransferDto> autoTransferAfter3Days = bankingService.getAutoTransfersAfter3Days();
+		List<RepaymentDto> repaymentsAfter3Days = bankingService.getRepaymentsAfter3Days();
 		// 이 알림에 대해 create 호출
 		List<NotificationDto> notificationDtos = new ArrayList<>();
-		autoTransferAfter3Days.forEach(a -> notificationDtos.add(notificationService.createNotification(NotificationDto.of(a.getContractId(), contractService.getContractByContractId(a.getContractId()).getLesseeId(),
-			NotificationType.UPCOMING_TRANSFER))));
+		repaymentsAfter3Days.forEach(repaymentDto -> notificationDtos.add(notificationService.createNotification(
+			NotificationDto.of(repaymentDto.getContractId(),
+				contractService.getContractByContractId(repaymentDto.getContractId()).getLesseeId(),
+				NotificationType.UPCOMING_TRANSFER))));
 		notificationDtos.forEach(n -> {
 			try {
 				notificationService.sendNotification(n);
@@ -42,9 +44,11 @@ public class NotificationScheduler {
 		notificationDtos.clear();
 
 		// 연체되었다면 매일매일
-		List<AutoTransferDto> overdueAutoTransfer = bankingService.getOverdueAutoTransfers();
-		autoTransferAfter3Days.forEach(a -> notificationDtos.add(notificationService.createNotification(NotificationDto.of(a.getContractId(), contractService.getContractByContractId(a.getContractId()).getLesseeId(),
-			NotificationType.OVERDUE))));
+		List<RepaymentDto> overdueRepayments = bankingService.getOverdueRepayments();
+		overdueRepayments.forEach(repaymentDto -> notificationDtos.add(notificationService.createNotification(
+			NotificationDto.of(repaymentDto.getContractId(),
+				contractService.getContractByContractId(repaymentDto.getContractId()).getLesseeId(),
+				NotificationType.OVERDUE))));
 		notificationDtos.forEach(n -> {
 			try {
 				notificationService.sendNotification(n);

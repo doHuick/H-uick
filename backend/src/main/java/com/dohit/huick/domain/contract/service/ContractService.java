@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
-import com.dohit.huick.domain.banking.autotransfer.service.AutoTransferService;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.entity.Contract;
@@ -42,7 +40,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ContractService {
 	private final ContractRepository contractRepository;
-	private final AutoTransferService autoTransferService;
 	private final SpringTemplateEngine templateEngine;
 	private final S3Uploader s3Uploader;
 	private final ResourceLoader resourceLoader;
@@ -53,9 +50,6 @@ public class ContractService {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public ContractDto createContract(ContractDto contractDto) {
 		Contract contract = contractRepository.save(Contract.from(contractDto));
-		if (Objects.equals(contractDto.getUseAutoTransfer(), "Y")) {
-			autoTransferService.createAutoTransfer(AutoTransferDto.from(ContractDto.from(contract)));
-		}
 
 		return ContractDto.from(contract);
 	}
@@ -103,7 +97,12 @@ public class ContractService {
 		byte[] pdfContract = html2pdf(htmlContract);
 
 		// PDF S3에 저장하기
-		String pdfS3Url = s3Uploader.uploadPdf(pdfContract, CONTRACT_S3_DIRNAME, contractId);
+		String pdfS3Url = null;
+		try {
+			pdfS3Url = s3Uploader.uploadPdf(pdfContract, CONTRACT_S3_DIRNAME, contractId);
+		} catch (IOException e) {
+			throw new ContractException(ErrorCode.CANNOT_UPLOAD_PDF);
+		}
 
 		// PDF 저장 주소 contract에 저장해주기
 		contract.updatePdfPath(pdfS3Url);

@@ -1,9 +1,6 @@
 package com.dohit.huick.domain.banking.service;
 
 import java.security.SecureRandom;
-import java.time.LocalDateTime;
-import java.time.Year;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,9 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dohit.huick.domain.banking.account.dto.AccountDto;
 import com.dohit.huick.domain.banking.account.service.AccountService;
-import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
-import com.dohit.huick.domain.banking.autotransfer.service.AutoTransferService;
 import com.dohit.huick.domain.banking.bank.service.BankService;
+import com.dohit.huick.domain.banking.repayment.constant.RepaymentStatus;
 import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.service.RepaymentService;
 import com.dohit.huick.domain.banking.transaction.dto.TransactionDto;
@@ -36,7 +32,6 @@ public class BankingService {
 	private final AccountService accountService;
 	private final TransactionService transactionService;
 	private final BankService bankService;
-	private final AutoTransferService autoTransferService;
 	private final RepaymentService repaymentService;
 
 	private final ContractService contractService;
@@ -63,8 +58,8 @@ public class BankingService {
 	}
 
 	public AccountDto getAccountByUserId(Long userId) {
-		AccountDto account = accountService.getAccountsByUserId(userId).get(0);
-		return AccountDto.of(account, bankService.getBankByBankCode(account.getBankCode()));
+		AccountDto accountDto = accountService.getAccountsByUserId(userId).get(0);
+		return AccountDto.of(accountDto, bankService.getBankByBankCode(accountDto.getBankCode()));
 	}
 
 	public Long transferMoney(TransactionDto transactionDto) throws BankingException {
@@ -91,70 +86,46 @@ public class BankingService {
 		return transactionService.getTransactionsByUserId(accountNumber);
 	}
 
-	public List<AutoTransferDto> getAutoTransfersOfToday() {
-		return autoTransferService.getAutoTransfersOfToday();
+	public List<RepaymentDto> findUnpaidAutoRepaymentUntilToday() {
+		return repaymentService.findUnpaidAutoRepaymentUntilToday();
 	}
-
-	public void increaseUnpaidCount(Long autoTransferId) {
-		autoTransferService.increaseUnpaidCount(autoTransferId);
-	}
-
-	public void decreaseUnpaidCount(Long autoTransferId) {
-		autoTransferService.decreaseUnpaidCount(autoTransferId);
-	}
-
-	//    public void createRepayment(Long contractId, Long transactionId) {
-	//        Integer repaymentNumber = repaymentService.getRepaymentsByContractId(contractId).size() + 1;
-	//        repaymentService.createRepayment(RepaymentDto.of(contractId, transactionId, repaymentNumber));
-	//    }
 
 	public Boolean isRepaymentDone(ContractDto contractDto) {
-		List<RepaymentDto> repaymentDtos = repaymentService.getRepaymentsByContractId(contractDto.getContractId());
-		Long totalRepaymentAmount = repaymentDtos.stream()
-			.mapToLong(repaymentDto -> transactionService.getTransactionByTransactionId(repaymentDto.getTransactionId())
-				.getAmount())
-			.sum();
+		int unpaidCount = repaymentService.countRepaymentsByContractIdAndStatus(contractDto.getContractId(),
+			RepaymentStatus.UNPAID);
 
-		Long totalAmount = 0L;
-		LocalDateTime startDate = contractDto.getStartDate();
-		LocalDateTime dueDate = contractDto.getDueDate();
-
-		while (!startDate.isEqual(dueDate)) {
-			LocalDateTime endDateOfYearOfStartDate = LocalDateTime.of(startDate.getYear() + 1, 0, 0, 0, 0);
-			if (endDateOfYearOfStartDate.isAfter(dueDate)) { // 이번년도에 계약 상환이 끝나야 함
-				endDateOfYearOfStartDate = dueDate;
-			}
-			totalAmount +=
-				(long)(contractDto.getAmount() * (1 + contractDto.getRate()) / (Year.of(startDate.getYear()).isLeap() ?
-					366 : 365) * ChronoUnit.DAYS.between(startDate, endDateOfYearOfStartDate));
-			startDate = endDateOfYearOfStartDate;
-		}
-
-		return Objects.equals(totalAmount, totalRepaymentAmount);
-	}
-
-	public void updateNextTransfer(Long autoTransferId, LocalDateTime nextTransferDate, Long amount) {
-		autoTransferService.updateNextTransfer(autoTransferId, nextTransferDate, amount);
+		return unpaidCount == 0;
 	}
 
 	public void repay(ContractDto contractDto, Long amount) {
+		RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(contractDto.getContractId());
+		if (!Objects.equals(amount, repaymentDto.getAmount())) {
+			throw new BankingException(ErrorCode.NOT_EQUAL_AMOUNT);
+		}
+
 		// 이체시키고
 		Long transactionId = transferMoney(
 			TransactionDto.of(getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(),
 				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
+
 		// 상환데이터 넣고
-		//        createRepayment(contractDto.getContractId(), transactionId);
+		repaymentService.updateStatusPAIDAndTransactionId(repaymentDto.getRepaymentId(), transactionId);
+
 		// 상환 끝났는지 체크하기
 		if (isRepaymentDone(contractDto)) {
 			contractService.updateContractStatus(contractDto.getContractId(), ContractStatus.REPAYMENT_COMPLETED);
 		}
 	}
 
-	public List<AutoTransferDto> getAutoTransfersAfter3Days() {
-		return autoTransferService.getAutoTransfersAfter3Days();
+	public void updateStatusPAIDAndTransactionId(Long repaymentId, Long transactionId) {
+		repaymentService.updateStatusPAIDAndTransactionId(repaymentId, transactionId);
 	}
 
-	public List<AutoTransferDto> getOverdueAutoTransfers() {
-		return autoTransferService.getOverdueAutoTransfers();
+	public List<RepaymentDto> getRepaymentsAfter3Days() {
+		return repaymentService.getRepaymentsAfter3Days();
+	}
+
+	public List<RepaymentDto> getOverdueRepayments() {
+		return repaymentService.getOverdueRepayments();
 	}
 }
