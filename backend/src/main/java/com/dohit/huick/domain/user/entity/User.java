@@ -82,21 +82,28 @@ public class User {
 	@Size(min = 10, max = 11)
 	private String phoneNumber;
 
+	@Column(length = 6)
+	@Size(min = 6, max = 6)
+	private String password;
+
 	@Builder
-	public User(String walletAddress, SocialType socialType, String socialId,
-		Role role, LocalDateTime withdrawalTime, String signatureUrl, String rrn,
-		String address, String name, String phoneNumber, LocalDateTime issueDate) {
+	public User(Long userId, String walletAddress, SocialType socialType, String socialId,
+		LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl, String rrn,
+		String address, String name, LocalDateTime issueDate, String phoneNumber, String password) {
+		this.userId = userId;
 		this.walletAddress = walletAddress;
 		this.socialType = socialType;
 		this.socialId = socialId;
+		this.createdTime = createdTime;
 		this.role = role;
 		this.withdrawalTime = withdrawalTime;
 		this.signatureUrl = signatureUrl;
 		this.rrn = rrn;
 		this.address = address;
 		this.name = name;
-		this.phoneNumber = phoneNumber;
 		this.issueDate = issueDate;
+		this.phoneNumber = phoneNumber;
+		this.password = password;
 	}
 
 	public void signup(UserDto userDto) {
@@ -116,4 +123,11 @@ public class User {
 		this.withdrawalTime = LocalDateTime.now().plusMonths(1);
 	}
 
+	public void updateSignatureUrl(String signatureUrl) {
+		this.signatureUrl = signatureUrl;
+	}
+
+	public void updatePassword(String password) {
+		this.password = password;
+	}
 }
