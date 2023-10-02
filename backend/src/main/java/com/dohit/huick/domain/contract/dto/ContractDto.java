@@ -1,6 +1,7 @@
 package com.dohit.huick.domain.contract.dto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import com.dohit.huick.api.contract.dto.ContractApiDto;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
@@ -71,7 +72,7 @@ public class ContractDto {
 			.rate(request.getRate())
 			.status(request.getStatus())
 			.pdfPath(request.getPdfPath())
-			.useAutoTransfer(request.getUseAutoTransfer())
+			.useAutoTransfer(Objects.equals(request.getUseAutoTransfer(), "Y") ? "Y" : "N")
 			.build();
 	}
 
