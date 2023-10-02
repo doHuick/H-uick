@@ -1,18 +1,15 @@
-import { Navigate, Outlet, useNavigate } from 'react-router-dom';
-import axios, { BASE_URL } from '../api/apiController';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useUserInfo } from '../hooks/useUserInfo';
 
 export default function AuthenticatedRoute() {
-  const navigate = useNavigate();
-  axios
-    .get(`${BASE_URL}/users/me`, {
-      headers: { Authorization: localStorage.getItem('access_token') },
-    })
-    .then((res) => {
-      const data = res.data;
-      if (!data.address) {
-        console.log('이사람 가입 안한사람임!!');
-        return <Outlet />;
-      }
-    });
-  return <Navigate replace to="/" />;
+  const isUserInfo = useUserInfo();
+
+  if (isUserInfo) {
+    // 회원 추가정보를 모두 입력했으면 메인으로
+    console.log('가입 완료 확인');
+    return <Navigate replace to="/" />;
+  }
+
+  // 회원 추가정보를 모두 입력하지 않았으면 signup 렌더링
+  return <Outlet />;
 }
