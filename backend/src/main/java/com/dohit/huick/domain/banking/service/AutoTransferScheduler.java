@@ -39,6 +39,10 @@ public class AutoTransferScheduler {
 				Long contractId = repaymentDto.getContractId();
 
 				ContractDto contractDto = contractService.getContractByContractId(contractId);
+				if (contractDto.getUseAutoTransfer().equals("N")) {
+					continue;
+				}
+
 				String senderAccountNumber = bankingService.getAccountByUserId(contractDto.getLesseeId())
 					.getAccountNumber();
 				String receiverAccountNumber = bankingService.getAccountByUserId(contractDto.getLessorId())
