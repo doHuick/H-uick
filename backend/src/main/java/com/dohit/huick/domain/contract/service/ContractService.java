@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,7 @@ public class ContractService {
 	private final AutoTransferService autoTransferService;
 	private final SpringTemplateEngine templateEngine;
 	private final S3Uploader s3Uploader;
+	private final ResourceLoader resourceLoader;
 
 	private static final String CONTRACT_S3_DIRNAME = "contract";
 	private final UserRepository userRepository;
@@ -136,12 +139,11 @@ public class ContractService {
 			// FontProvider 객체 생성
 			FontProvider fontProvider = new FontProvider();
 
-			// 클래스 로더를 사용하여 폰트 파일의 URL을 얻음
-			URL fontUrl = getClass().getClassLoader().getResource("classpath:fonts/NanumMyeongjo-Regular.ttf");
+			Resource resource = resourceLoader.getResource("classpath:fonts/NanumMyeongjo-Regular.ttf");
 
-			if (fontUrl != null) {
+			if (resource.exists()) {
 				// FontProvider에 폰트 추가
-				fontProvider.addFont(fontUrl.getPath());
+				fontProvider.addFont(resource.getURL().getPath());
 			} else {
 				throw new RuntimeException("Font file not found");
 			}
@@ -154,7 +156,7 @@ public class ContractService {
 
 			return outputStream.toByteArray();
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to convert HTML to PDF", e);
+						throw new RuntimeException("Failed to convert HTML to PDF", e);
 		}
 	}
 
