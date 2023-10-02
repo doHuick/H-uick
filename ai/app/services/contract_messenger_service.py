@@ -1,4 +1,4 @@
-from ai.app.models.contract_info import ContractInfo
+from ..models.contract_info import ContractInfo
 from decouple import config
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
