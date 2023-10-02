@@ -2,17 +2,15 @@ package com.dohit.huick.domain.contract.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.net.URL;
 
 import javax.persistence.LockModeType;
 
-import com.itextpdf.html2pdf.ConverterProperties;
-import com.itextpdf.layout.font.FontProvider;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +29,9 @@ import com.dohit.huick.global.error.ErrorCode;
 import com.dohit.huick.global.error.exception.AuthenticationException;
 import com.dohit.huick.global.error.exception.ContractException;
 import com.dohit.huick.infra.aws.S3Uploader;
+import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.layout.font.FontProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,7 +50,7 @@ public class ContractService {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public ContractDto createContract(ContractDto contractDto) {
 		Contract contract = contractRepository.save(Contract.from(contractDto));
-		if (Objects.equals(contractDto.getUseAutoTransfer(),"Y")) {
+		if (Objects.equals(contractDto.getUseAutoTransfer(), "Y")) {
 			autoTransferService.createAutoTransfer(AutoTransferDto.from(ContractDto.from(contract)));
 		}
 
@@ -126,7 +126,6 @@ public class ContractService {
 		return templateEngine.process("contract", context);
 	}
 
-
 	private byte[] html2pdf(String htmlContract) {
 		try {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -138,7 +137,7 @@ public class ContractService {
 			FontProvider fontProvider = new FontProvider();
 
 			// 클래스 로더를 사용하여 폰트 파일의 URL을 얻음
-			URL fontUrl = getClass().getClassLoader().getResource("fonts/NanumMyeongjo-Regular.ttf");
+			URL fontUrl = getClass().getClassLoader().getResource("classpath:fonts/NanumMyeongjo-Regular.ttf");
 
 			if (fontUrl != null) {
 				// FontProvider에 폰트 추가
