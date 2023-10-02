@@ -124,7 +124,7 @@ public class RepaymentService {
 	}
 
 	public RepaymentDto findTopUnpaidRepaymentByContractId(Long contractId) {
-		return repaymentRepository.findTopByContractIdAndStatusOrderByTimeAsc(contractId,
+		return repaymentRepository.findTopByContractIdAndStatusOrderByRepaymentDateAsc(contractId,
 			RepaymentStatus.UNPAID).map(RepaymentDto::from).orElse(null);
 	}
 

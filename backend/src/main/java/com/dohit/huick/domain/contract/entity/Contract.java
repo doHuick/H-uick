@@ -62,9 +62,13 @@ public class Contract {
 	@Column(nullable = true) // 차후 false 로 변경
 	String pdfPath;
 
+	@Column(nullable = true) // 차후 false 로 변경
+	String useAutoTransfer;
+
 	@Builder
 	private Contract(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-		Long amount, String amountInKorean, Float rate, ContractStatus status, LocalDateTime createdTime, String pdfPath) {
+		Long amount, String amountInKorean, Float rate, ContractStatus status, LocalDateTime createdTime, String pdfPath
+		, String useAutoTransfer) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
 		this.lessorId = lessorId;
@@ -76,6 +80,7 @@ public class Contract {
 		this.status = status;
 		this.createdTime = createdTime;
 		this.pdfPath = pdfPath;
+		this.useAutoTransfer = useAutoTransfer;
 	}
 
 	public static Contract from(ContractDto contractDto) {
@@ -90,15 +95,18 @@ public class Contract {
 			.rate(contractDto.getRate())
 			.status(contractDto.getStatus())
 			.pdfPath(contractDto.getPdfPath())
+			.useAutoTransfer(contractDto.getUseAutoTransfer())
 			.build();
 	}
 
 	public void updateStatus(ContractStatus status) {
 		this.status = status;
 	}
+
 	public void updatePdfPath(String pdfPath) {
 		this.pdfPath = pdfPath;
 	}
+
 	public void updateByRequest(ContractDto request) {
 		if (this.lesseeId == null && request.getLesseeId() != null) {
 			this.lesseeId = request.getLesseeId();
