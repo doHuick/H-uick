@@ -1,5 +1,6 @@
 package com.dohit.huick.api.contract.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -147,7 +148,7 @@ public class ContractController {
 
 	@PatchMapping("/{contractId}")
 	public ResponseEntity<ContractApiDto.Response> updateFinalContract(@PathVariable Long contractId,
-		@RequestBody ContractApiDto.Request request) {
+		@RequestBody ContractApiDto.Request request) throws IOException {
 		ContractDto contractDto = contractService.updateFinalContract(contractId, ContractDto.from(request));
 		if (request.getStatus().equals(ContractStatus.EXECUTION_COMPLETED)) {
 			repaymentService.createAllRepayment(contractService.getContractByContractId(contractId));
