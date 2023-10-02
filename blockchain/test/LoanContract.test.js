@@ -61,5 +61,21 @@ contract("LoanContract", accounts => {
   
     assert.equal(updatedContract.status.toNumber(), 1, "Status is not updated"); // 업데이트된 상태 확인
   });
+
+  it("should retrieve contracts for a lender", async () => {
+    const lenderWallet = accounts[1];
+    const contractHashes = await loanContract.getLenderContracts(lenderWallet);
+    
+    assert.equal(contractHashes.length, 1, "There should be one contract for the lender");
+    assert.equal(contractHashes[0], web3.utils.keccak256("document_hash"), "Contract hash is incorrect for the lender");
+  });
+  
+  it("should retrieve contracts for a borrower", async () => {
+    const borrowerWallet = accounts[2];
+    const contractHashes = await loanContract.getBorrowerContracts(borrowerWallet);
+    
+    assert.equal(contractHashes.length, 1, "There should be one contract for the borrower");
+    assert.equal(contractHashes[0], web3.utils.keccak256("document_hash"), "Contract hash is incorrect for the borrower");
+  });
   
 });

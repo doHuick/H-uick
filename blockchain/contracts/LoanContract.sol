@@ -20,6 +20,8 @@ contract LoanContract is ContractData {
     event ContractCreated(bytes32 hashOfDocs);
     event ContractUpdated(bytes32 hashOfDocs, Status status);
 
+    mapping (address => bytes32[]) public lenderContracts;
+    mapping (address => bytes32[]) public borrowerContracts;
     mapping (bytes32 => Contract) public contracts; // 해시값을 키로 계약 구조체를 매핑
 
     // 해시 계산
@@ -32,6 +34,8 @@ contract LoanContract is ContractData {
         bytes32 hash = computeHash(_hashOfDocs);
         Contract memory newContract = Contract(hash, Status.InProgress, _lenderWallet, _borrowerWallet, _principalAmount, _interestRate, _issueDate, _maturityDate);
         contracts[hash] = newContract;
+        lenderContracts[_lenderWallet].push(hash);
+        borrowerContracts[_borrowerWallet].push(hash);
         emit ContractCreated(hash);
     }
 
@@ -42,5 +46,14 @@ contract LoanContract is ContractData {
         require(contracts[hash].status != Status.Complete, "Contract already completed");
         contracts[hash].status = _status;
         emit ContractUpdated(hash, _status);
+    }
+
+    //계약 조회
+    function getLenderContracts(address _lender) public view returns (bytes32[] memory) {
+        return lenderContracts[_lender];
+    }
+
+    function getBorrowerContracts(address _borrower) public view returns (bytes32[] memory) {
+        return borrowerContracts[_borrower];
     }
 }
