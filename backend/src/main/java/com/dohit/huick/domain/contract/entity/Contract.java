@@ -46,6 +46,9 @@ public class Contract {
 	@Column(nullable = false)
 	Long amount;
 
+	@Column(nullable = false)
+	String amountInKorean;
+
 	@Column(nullable = true)
 	Float rate;
 
@@ -61,13 +64,14 @@ public class Contract {
 
 	@Builder
 	private Contract(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate,
-		Long amount, Float rate, ContractStatus status, LocalDateTime createdTime, String pdfPath) {
+		Long amount, String amountInKorean, Float rate, ContractStatus status, LocalDateTime createdTime, String pdfPath) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
 		this.lessorId = lessorId;
 		this.startDate = startDate;
 		this.dueDate = dueDate;
 		this.amount = amount;
+		this.amountInKorean = amountInKorean;
 		this.rate = rate;
 		this.status = status;
 		this.createdTime = createdTime;
@@ -82,6 +86,7 @@ public class Contract {
 			.startDate(contractDto.getStartDate())
 			.dueDate(contractDto.getDueDate())
 			.amount(contractDto.getAmount())
+			.amountInKorean(contractDto.getAmountInKorean())
 			.rate(contractDto.getRate())
 			.status(contractDto.getStatus())
 			.pdfPath(contractDto.getPdfPath())
@@ -110,15 +115,11 @@ public class Contract {
 		if (this.amount == null && request.getAmount() != null) {
 			this.amount = request.getAmount();
 		}
+		if (this.amountInKorean == null && request.getAmountInKorean() != null) {
+			this.amountInKorean = request.getAmountInKorean();
+		}
 		if (this.rate == null && request.getRate() != null) {
 			this.rate = request.getRate();
 		}
-		if (this.status == null && request.getStatus() != null) {
-			this.status = request.getStatus();
-		}
-		if (this.pdfPath == null && request.getPdfPath() != null) {
-			this.pdfPath = request.getPdfPath();
-		}
 	}
-
 }
