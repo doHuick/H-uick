@@ -26,7 +26,8 @@ public class ContractDto {
 
 	@Builder
 	public ContractDto(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate,
-		LocalDateTime dueDate, Long amount, String amountInKorean, Float rate, ContractStatus status, LocalDateTime createdTime,
+		LocalDateTime dueDate, Long amount, String amountInKorean, Float rate, ContractStatus status,
+		LocalDateTime createdTime,
 		String pdfPath, String useAutoTransfer) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
@@ -55,6 +56,7 @@ public class ContractDto {
 			.status(contract.getStatus())
 			.createdTime(contract.getCreatedTime())
 			.pdfPath(contract.getPdfPath())
+			.useAutoTransfer(contract.getUseAutoTransfer())
 			.build();
 	}
 
