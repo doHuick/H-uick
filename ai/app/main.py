@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, HTTPException
-from .services import contract_assist_service, contract_messenger_service
+from ai.app.services import contract_assist_service, contract_messenger_service
 from ai.app.models.contract_info import ContractInfo
 
 app = FastAPI()
