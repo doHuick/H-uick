@@ -3,13 +3,9 @@ import styled, { keyframes } from 'styled-components'
 import { ReactComponent as ModalClose } from '../../assets/icons/close-button.svg'
 import { ReactComponent as PasswordDelete } from '../../assets/icons/password-delete.svg'
 
-
-
-interface PasswordModalProps {
+interface SignupPasswordModalProps {
   closePasswordModal: () => void;
-  passwordClicked: () => void;
-  userPassword: string;
-
+  handlePassword: (userPassword: string) => void;
 }
 
 interface DarkBackgroundProps {
@@ -31,12 +27,11 @@ function generateUniqueRandomNumbers(count: number): number[] {
   return uniqueNumbers;
 }
 
-export default function PasswordModal({ closePasswordModal, passwordClicked, userPassword }: PasswordModalProps) {
+export default function SignupPasswordModal({ closePasswordModal, handlePassword }: SignupPasswordModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [numList, setNumList] = useState<number[]>([]);
   const [selectedPassword, setSelectedPassword] = useState<string>('');
   const [isPasswordComplete, setIsPasswordComplete] = useState(false); // 비밀번호가 완료되었는지 여부
-  const [passwordWrong, setPasswordWrong] = useState(false); // 비밀번호 일치 여부 상태 변수 추가
 
 
   useEffect(() => {
@@ -44,25 +39,12 @@ export default function PasswordModal({ closePasswordModal, passwordClicked, use
     const randomNumList = generateUniqueRandomNumbers(10);
     setNumList(randomNumList);
   }, []);
-  
-  const handleDarkBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      closeAndAnimate();
-    }
-  };
 
-  const closeAndAnimate = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      closePasswordModal();
-    }, 310);
-  };
 
   const closeAndShare = () => {
     setIsClosing(true);
     setTimeout(() => {
       closePasswordModal();
-      passwordClicked();
     }, 310);
   };
 
@@ -73,25 +55,12 @@ export default function PasswordModal({ closePasswordModal, passwordClicked, use
         const newCombinedPassword = prevPassword + password;
   
         // 만약 비밀번호가 4자리를 초과하면 비밀번호를 리셋하고 완료 플래그를 설정합니다.
-        if (newCombinedPassword.length > 6) {
-          return '';
+        if (newCombinedPassword.length == 6) {
+          // console.log(newCombinedPassword)
+          handlePassword(newCombinedPassword)
+          closeAndShare();
         }
-  
-        // 비밀번호가 4자리인 경우 비교하여 일치하면 모달을 닫습니다.
-        if (newCombinedPassword.length === 6) {
-          if (newCombinedPassword === userPassword) {
-            localStorage.setItem("isPWDCorrect", 'true')
-            closeAndShare();
-          } else {
-            // 패스워드가 일치하지 않을 때 초기화
-            setPasswordWrong(true);
-            setTimeout(() => {
-              setSelectedPassword('');
-              setPasswordWrong(false);
-            }, 1200);
-          }
-        }
-  
+
         return newCombinedPassword;
       });
     }
@@ -106,13 +75,12 @@ export default function PasswordModal({ closePasswordModal, passwordClicked, use
 
   return (
     <>
-      <DarkBackground onClick={handleDarkBackgroundClick} isClosing={isClosing}/>
+      <DarkBackground isClosing={isClosing}/>
       <ModalContainer isClosing={isClosing}>
       
         <TransferModalModalUpperBar>
           <TransferModalModalTitle></TransferModalModalTitle>
           <TransferModalModalUpperButtons>
-            <TransferModalModalCloseButton onClick={closeAndAnimate} />
           </TransferModalModalUpperButtons>
         </TransferModalModalUpperBar>
 
@@ -130,15 +98,6 @@ export default function PasswordModal({ closePasswordModal, passwordClicked, use
           ))}
         </PasswordEllipseFrame>
       </PasswordFrame>
-
-      {/* 비밀번호 불일치 메시지를 표시하는 부분 */}
-      {passwordWrong && (
-    <PasswordWrongMessage className={passwordWrong ? 'shake-animation' : ''}>
-    비밀번호가 일치하지 않습니다.
-  </PasswordWrongMessage>      )}
-        {/* {selectedPassword}<br/>
-        {selectedPassword.length}
-        {userPassword} */}
         
         <PasswordPadFrame>
           <PasswordNumPad style={{ marginTop: '6px'}}>
@@ -173,7 +132,14 @@ export default function PasswordModal({ closePasswordModal, passwordClicked, use
 //   }
 // `;
 
-
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0; // 원하는 어두운 배경의 최종 투명도 설정
+  }
+`;
 
 const slideIn = keyframes`
   from {
@@ -219,6 +185,8 @@ const DarkBackground = styled.div<DarkBackgroundProps>`
   height: 100%;
   background: rgba(0, 0, 0, 0.5); // 어두운 배경의 색상과 투명도 조절
   z-index: 2; // 모달 뒤에 위치하도록 설정
+  animation: ${({ isClosing }) => (isClosing ? fadeOut : '' )} 0.32s ease-in-out;
+
 `;
 
 const ModalContainer = styled.div<ModalContainerProps>`

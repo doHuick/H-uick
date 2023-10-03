@@ -11,6 +11,8 @@ import Welcomepage from '../pages/SignUppage/Welcomepage';
 import AuthenticatedRoute from './AuthenticatedRoute';
 import SharePage from '../pages/SharePage/SharePage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
+import IOUDetailPage from '../pages/IOUPage/IOUDetailPage';
+import PDFPage from '../pages/IOUPage/PDFPage';
 
 export default function Router() {
   return (
@@ -29,6 +31,8 @@ export default function Router() {
           <Route path="/mypage" element={<MyPage />}></Route>
           <Route path="/chatbot" element={<ChatbotPage />}></Route>
           <Route path="/share/:contractId" element={<SharePage />}></Route>
+          <Route path="/detail/:contractId" element={<IOUDetailPage />}></Route>
+          <Route path="/pdf/:contractId" element={<PDFPage />}></Route>
           <Route path="/404" element={<NotFoundPage />}></Route>
         </Route>
       </Routes>

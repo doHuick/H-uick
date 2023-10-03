@@ -10,7 +10,7 @@ import FinalConfirmButton from './FinalContract';
 const config = {
   initialMessages: [
     createChatBotMessage(
-      "님 안녕하세요?\n궁금한게 있다면 '질문하기'를 보내보세요\n\n휙봇과 대화하며\n차용증을 작성할 수 있습니다.\n\n다시 시작하고 싶다면\n'처음으로'를 보내보세요\n\n다음의 항목들에 하나씩 답변해주세요!",
+      `안녕하세요?\n궁금한게 있다면 '질문하기'를 보내보세요\n\n휙봇과 대화하며\n차용증을 작성할 수 있습니다.\n\n다시 시작하고 싶다면\n'처음으로'를 보내보세요\n\n다음의 항목들에 하나씩 답변해주세요!`,
     ),
     createChatBotMessage('빌림 or 빌려줌', { widget: 'lendborrowbutton' }),
   ],
@@ -32,7 +32,7 @@ const config = {
           src="../../../pig-head.png"
           alt=""
         />
-        <div style={{marginLeft: '7px', marginBottom: '8px', fontSize: '14.5px'}}>
+        <div style={{marginLeft: '7px', marginBottom: '8px', fontSize: '14.5px', color: 'var(--font-gray'}}>
           H-uick
         </div>
       </div>

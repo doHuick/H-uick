@@ -7,7 +7,8 @@ import HeadBar from '../../components/HeadBar/HeadBar';
 import NavBar from '../../components/NavBar/NavBar';
 // import { ConfirmButton } from '../../components/Button/Button';
 import { MiniConfirmButton } from '../../components/Button/Button';
-
+import BorrowModal from '../../components/TransferModal/BorrowModal';
+import SharePasswordModal from '../../components/Password/SharePasswordModal';
 
 interface AccountProps{
   accountId: number,
@@ -24,6 +25,7 @@ interface UserInfoProps{
   created_time: string,
   issue_date?: string,
   name: string,
+  password: string,
   phone_number: string,
   role: string,
   rrn: string,
@@ -54,7 +56,8 @@ interface ContractInfoProps {
   repayment_data?: string,
   start_date: string,
   status: string,
-  total_repayment_count: number
+  total_repayment_count: number,
+  amount_in_korean: string,
 }
 
 export default function SharePage() {
@@ -65,104 +68,139 @@ export default function SharePage() {
 
   const [contractInfo, setContractInfo] = useState<ContractInfoProps>()
   const [userInfo, setUserInfo] = useState<UserInfoProps>()
-    
+  const [modalOpen, setModalOpen] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const transferClicked = () => {
+    setModalOpen(false);
+    setPasswordModalOpen(true); // 패스워드 모달 열기
+  }
+
+  
+  
+  
   useEffect(() => {
     axios.get(`${BASE_URL}/users/me`, {
       headers: { Authorization: localStorage.getItem('access_token') },
     }).then((res) => {
       setUserInfo(res.data)
-      console.log(res.data)
+      // console.log(res.data)
     })
     .catch((err) => {
       navigate('/login');
     })
   }, []);
-
+  
   useEffect(() => {
     axios.get(`${BASE_URL}/contracts/${contractId}`, {
       headers: { Authorization: localStorage.getItem('access_token') },
     }).then((res) => {
       setContractInfo(res.data)
-      console.log(res.data)
+      // console.log(res.data)
     })
     .catch((err) => {
       console.log(err);
       navigate('/404')
     })
   }, []);
-
-
-  const testFunction = () => {
-    axios.post(
-      `${BASE_URL}/contracts/assist`,
-      {
-        user_id: 1,
-        contract_tmp_key: "sessio_storage_key",
-        contract_info : {
-          loanAmount: 1000000,
-          AmountInKorean: '일백만원',
-          interestRate: 3.5,
-          maturityDate: 20240101
-        },
-        chat: '적절한 이자율은 몇% 인가요?'
-      },
-      {
-        headers: { Authorization: localStorage.getItem('access_token') },
-      },
-    )
-    .then((res) => {
-      console.log(res.data)
-    })
-  }
-
+  
+  // 차용증 완성시키기
   const executeContract = () => {
     console.log(contractId)
+    console.log(contractInfo?.lessee_id)
     console.log(userInfo?.user_id)
-    axios.patch(
-      `${BASE_URL}/contracts/${contractId}`,
-      {
-        lessee_id : userInfo?.user_id,
-        lessor_id : null,
-        start_date: null,
-        due_date: null,
-        amount: null,
-        amountInKorean: null,
-        rate: null,
-        status: "EXECUTION_COMPLETED",
-        pdf_path: null,
-        use_auto_transfer: null
-
-      }
-      ,
-      {
-        headers: { Authorization: localStorage.getItem('access_token') },
-      },
-    )
-
-
-  };
-
-  const terminateContract = async () => {
-    try {
-      await axios.patch(
-        `${BASE_URL}/contracts/status/${contractId}`,
-
+    // 지금 유저가 빌려주는사람
+    if (contractInfo?.lessor_id == null) {
+      axios.patch(
+        `${BASE_URL}/contracts/${contractId}`,
+        {
+          lessee_id: contractInfo?.lessee_id,
+          lessor_id: userInfo?.user_id,
+          start_date: null,
+          due_date: null,
+          amount: null,
+          amount_in_korean: null,
+          rate: null,
+          status: "EXECUTION_COMPLETED",
+          pdf_path: null,
+          use_auto_transfer: null
+        }
+        ,
         {
           headers: { Authorization: localStorage.getItem('access_token') },
-          status: "TERMINATION"
         },
-      )
-      .then((res) => {
-        console.log(res)
-        location.reload();
-      })
-    } catch (error) {
-      console.error('서버 요청 실패:', error);
-    }
-  };
+        )
+        .then((res) => {
+          console.log(res)
+          location.reload();
+        })
+      } else if (contractInfo?.lessee_id == null) {
+        setModalOpen(true);
+      }
+      
+      
+    };
+    
+    const terminateContract = async () => {
+      try {
+        await axios.patch(
+          `${BASE_URL}/contracts/status/${contractId}`,
+          
+          {
+            headers: { Authorization: localStorage.getItem('access_token') },
+            status: "TERMINATION"
+          },
+          )
+          .then((res) => {
+            console.log(res)
+            location.reload();
+          })
+        } catch (error) {
+          console.error('서버 요청 실패:', error);
+        }
+      };
+      
+      const closePasswordModal = () => {
+        setPasswordModalOpen(false);
+        const isAuto = localStorage.getItem('isAuto');
+        var auto_transfer = "N"
+        if (isAuto == 'true') {
+          auto_transfer = "Y"
+        }
+        console.log(auto_transfer)
+        // 지금 유저가 빌리는 사람
+        axios.patch(
+          `${BASE_URL}/contracts/${contractId}`,
+          {
+            lessee_id: userInfo?.user_id,
+            lessor_id: contractInfo?.lessor_id,
+            start_date: null,
+            due_date: null,
+            amount: null,
+            amount_in_korean: null,
+            rate: null,
+            status: "EXECUTION_COMPLETED",
+            pdf_path: null,
+            use_auto_transfer: auto_transfer
+          }
+          ,
+          {
+            headers: { Authorization: localStorage.getItem('access_token') },
+          },
+        )
+        .then((res) => {
+          console.log(res)
+          location.reload();
+        })
+      };
 
-  return (
-    <Main>
+      return (
+        <Main>
       <HeadBar pageName={'계약 완료하기'} />
       <TextFrame>
         <TextBoxBold>
@@ -173,9 +211,6 @@ export default function SharePage() {
         </TextBox>
         <TextBox>
           계약 파기 후 재작성 해주세요
-          <button onClick={testFunction}>
-            테스트버튼
-          </button>
         </TextBox>
       </TextFrame>
   
@@ -193,26 +228,26 @@ export default function SharePage() {
           <br />
           <Body>
             &#8361;&nbsp;
-            {contractInfo ? contractInfo.amount
+            {contractInfo?.amount
               .toString()
-              .replace(/\B(?=(\d{3})+(?!\d))/g, ',') : null}{' '}
-            &nbsp;(  원 )
+              .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
+            &nbsp;(  {contractInfo?.amount_in_korean} 원 )
           </Body>
           <br />
           <Body>
             위 금액을 채무자가 채권자로부터{' '}
             <TextBold>
-              {contractInfo? contractInfo.start_date.slice(0, 4):null}년{' '}
-              {contractInfo? contractInfo.start_date.slice(5, 7):null}월{' '}
-              {contractInfo? contractInfo.start_date.slice(8, 10):null}일
+              {contractInfo?.start_date.slice(0, 4)}년{' '}
+              {contractInfo?.start_date.slice(5, 7)}월{' '}
+              {contractInfo?.start_date.slice(8, 10)}일
             </TextBold>
             에 빌립니다. 이자는{' '}
-            <TextBold>연 {contractInfo? contractInfo.rate:null}%</TextBold>로 하여 매달{' '}
-            <TextBold>{contractInfo? contractInfo.start_date.slice(8, 10):null}일</TextBold>에 갚겠으며, 원금은{' '}
+            <TextBold>연 {contractInfo?.rate}%</TextBold>로 하여 매달{' '}
+            <TextBold>{contractInfo?.start_date.slice(8, 10)}일</TextBold>에 갚겠으며, 원금은{' '}
             <TextBold>
-              {contractInfo? contractInfo.due_date.slice(0, 4):null}년{' '}
-              {contractInfo? contractInfo.due_date.slice(5, 7):null}월{' '}
-              {contractInfo? contractInfo.due_date.slice(8, 10):null}일
+              {contractInfo?.due_date.slice(0, 4)}년{' '}
+              {contractInfo?.due_date.slice(5, 7)}월{' '}
+              {contractInfo?.due_date.slice(8, 10)}일
             </TextBold>
             까지 채권자에게 갚겠습니다.
           </Body>
@@ -327,7 +362,7 @@ export default function SharePage() {
         </ButtonFrame>
       )}
 
-      {contractInfo?.lessor_id == userInfo?.user_id && (
+      {contractInfo?.lessor_id == userInfo?.user_id && contractInfo?.status === "BEFORE_EXECUTION" && (
         <ButtonFrame>
           <NoButton>
             다른사람에게 공유해보세요
@@ -335,7 +370,7 @@ export default function SharePage() {
         </ButtonFrame>
       )}
 
-      {contractInfo?.lessee_id == userInfo?.user_id && (
+      {contractInfo?.lessee_id == userInfo?.user_id &&  contractInfo?.status === "BEFORE_EXECUTION" &&(
         <ButtonFrame>
           <NoButton>
             다른사람에게 공유해보세요
@@ -343,6 +378,19 @@ export default function SharePage() {
         </ButtonFrame>
       )}
 
+      {modalOpen ? (
+          <BorrowModal
+            closeModal={closeModal}
+            transferClicked={transferClicked}
+          />
+        ) : null}
+
+      {passwordModalOpen ? (
+          <SharePasswordModal
+            closePasswordModal={closePasswordModal}
+            userPassword={userInfo?.password}
+          />
+        ) : null}
     </Main>
   );
 }
@@ -362,7 +410,7 @@ const TextFrame = styled.div`
   position: relative;
   width: 100%;
   margin-top: 124px;
-  margin-left: 24px;
+  margin-left: 28px;
 
 `
 const TextBox = styled.div`
@@ -522,7 +570,7 @@ const CancelContract = styled.div`
   font-size: 14px;
   color: var(--font-gray);
   text-decoration: underline;
-  margin-top: 34px;
+  margin-top: 20px;
 `
 
 const ButtonFrame = styled.div`

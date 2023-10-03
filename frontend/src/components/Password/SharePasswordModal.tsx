@@ -5,11 +5,10 @@ import { ReactComponent as PasswordDelete } from '../../assets/icons/password-de
 
 
 
-interface PasswordModalProps {
+interface SharePasswordModalProps {
   closePasswordModal: () => void;
-  passwordClicked: () => void;
   userPassword: string;
-
+  passwordCorrect: () => void;
 }
 
 interface DarkBackgroundProps {
@@ -31,7 +30,7 @@ function generateUniqueRandomNumbers(count: number): number[] {
   return uniqueNumbers;
 }
 
-export default function PasswordModal({ closePasswordModal, passwordClicked, userPassword }: PasswordModalProps) {
+export default function SharePasswordModal({ closePasswordModal, passwordCorrect, userPassword }: SharePasswordModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [numList, setNumList] = useState<number[]>([]);
   const [selectedPassword, setSelectedPassword] = useState<string>('');
@@ -58,13 +57,6 @@ export default function PasswordModal({ closePasswordModal, passwordClicked, use
     }, 310);
   };
 
-  const closeAndShare = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      closePasswordModal();
-      passwordClicked();
-    }, 310);
-  };
 
   const handlePasswordClick = (password: string) => {
     if (!isPasswordComplete) {
@@ -81,7 +73,8 @@ export default function PasswordModal({ closePasswordModal, passwordClicked, use
         if (newCombinedPassword.length === 6) {
           if (newCombinedPassword === userPassword) {
             localStorage.setItem("isPWDCorrect", 'true')
-            closeAndShare();
+            passwordCorrect();
+            closeAndAnimate();
           } else {
             // 패스워드가 일치하지 않을 때 초기화
             setPasswordWrong(true);
