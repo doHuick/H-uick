@@ -73,7 +73,7 @@ public class Repayment {
 			.balance(amount)
 			.repaymentDate(repaymentTime)
 			.repaymentCount(repaymentCount)
-			.status(useAutoTransfer.equals("Y") ? RepaymentStatus.AUTO : RepaymentStatus.UNPAID)
+			.status(RepaymentStatus.UNPAID)
 			.build();
 	}
 

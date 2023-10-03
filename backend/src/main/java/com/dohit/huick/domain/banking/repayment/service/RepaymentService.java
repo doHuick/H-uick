@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Year;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +20,11 @@ import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.entity.Repayment;
 import com.dohit.huick.domain.banking.repayment.repository.RepaymentRepository;
 import com.dohit.huick.domain.contract.dto.ContractDto;
+import com.dohit.huick.domain.contract.entity.Contract;
+import com.dohit.huick.domain.contract.repository.ContractRepository;
 import com.dohit.huick.global.error.ErrorCode;
 import com.dohit.huick.global.error.exception.BankingException;
+import com.dohit.huick.global.error.exception.ContractException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RepaymentService {
 	private final RepaymentRepository repaymentRepository;
+	private final ContractRepository contractRepository;
 
 	public List<RepaymentDto> getRepaymentsByContractId(Long contractId) {
 		return repaymentRepository.findByContractId(contractId).stream().map(RepaymentDto::from).collect(
@@ -135,9 +140,16 @@ public class RepaymentService {
 	public List<RepaymentDto> findUnpaidAutoRepaymentUntilToday() {
 		LocalDateTime today = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-		return repaymentRepository.findByStatusAndRepaymentDateBefore(RepaymentStatus.AUTO, today).stream().map(
-			RepaymentDto::from).collect(
-			Collectors.toList());
+		List<Repayment> repayments = repaymentRepository.findByStatusAndRepaymentDateBefore(RepaymentStatus.UNPAID, today);
+		List<RepaymentDto> repaymentDtos = new ArrayList<>();
+
+		for (Repayment r: repayments) {
+			Contract c = contractRepository.findByContractId(r.getContractId()).orElseThrow(() -> new ContractException(ErrorCode.NOT_EXIST_CONTRACT));
+			if(c.getUseAutoTransfer().equals("Y"))
+				repaymentDtos.add(RepaymentDto.from(r));
+		}
+
+		return repaymentDtos;
 	}
 
 	public void updateStatusPAIDAndTransactionId(Long repaymentId, Long transactionId) {
