@@ -20,7 +20,7 @@ interface ContractProps {
   total_repayment_count: number,
   current_repayment_count: number,
   repayment_date: Date,
-  amount: number,
+  current_amount: number,
   rate: number,
 }
 
@@ -28,19 +28,19 @@ export default function Mainpage() {
   const [nowActive, setNowActive] = useState<string>('borrowing');
   const [feeds, setFeeds] = useState<ContractProps[]>([]);
   const [nowBalance, setNowBalance] = useState<number>(0);
-  const [accountNumber, setAccountNumber] = useState<number | null>(null);
+  const [accountNumber, setAccountNumber] = useState<string>('');
   const [monthBorrow, setMonthBorrow] = useState<number | null>(null);
   const [monthRent, setMonthRent] = useState<number | null>(null);
 
   // [Tab 기능]
   const fetchFeedsForTab = (tab: string) => {
-    
     if (tab === 'borrowing') {
       axios
         .get(`${BASE_URL}/contracts/lessee/me`, {
           headers: { Authorization: localStorage.getItem('access_token') },
         })
         .then((res) => {
+          console.log('lessee/me data : ', res.data);
           if (res.data === '') {
             setFeeds([]);
           } else {
@@ -50,7 +50,7 @@ export default function Mainpage() {
               total_repayment_count: contractData.total_repayment_count,
               current_repayment_count: contractData.current_repayment_count,
               repayment_date: new Date(contractData.repayment_date),
-              amount: contractData.amount,
+              current_amount: contractData.current_amount,
               rate: contractData.rate,
             }));
             setFeeds(myContracts);
@@ -62,6 +62,7 @@ export default function Mainpage() {
         headers: { Authorization: localStorage.getItem('access_token') },
       })
       .then((res) => {
+        console.log('lessor/me data : ', res.data);
         if (res.data === '') {
           setFeeds([]);
         } else {
@@ -71,7 +72,7 @@ export default function Mainpage() {
             total_repayment_count: contractData.total_repayment_count,
             current_repayment_count: contractData.current_repayment_count,
             repayment_date: new Date(contractData.repayment_date),
-            amount: contractData.amount,
+            current_amount: contractData.current_amount,
             rate: contractData.rate,
           }));
           setFeeds(myContracts);
@@ -168,7 +169,7 @@ export default function Mainpage() {
             color="var(--white)"
             textAlign="left"
           >
-            싸피 {accountNumber}
+            싸피 {`${accountNumber.slice(0,3)}-${accountNumber.slice(3,6)}-${accountNumber.slice(6,12)}`}
           </TextBox>
           <Copy style={{ cursor: 'pointer' }} onClick={() => handleCopyClick(`${accountNumber}`)}/>
         </FlexDiv2>
@@ -241,7 +242,7 @@ export default function Mainpage() {
                 color="var(--black)"
                 textAlign="left"
               >
-                {feed.amount.toLocaleString()}원
+                {feed.current_amount.toLocaleString()}원
               </TextBox>
               <TextBox
                 fontSize="14px"
@@ -279,6 +280,9 @@ const WhiteBox = styled.div`
   margin: 9px 14px;
   padding: 14px 0px;
   padding-bottom: 18px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const FlexDiv = styled.div<FlexDivProps>`
