@@ -14,14 +14,14 @@ type FlexDivProps = {
 };
 
 interface ContractProps {
-  contract_id?: number,
-  lessee_name?: string,
-  lessor_name?: string,
-  total_repayment_count: number,
-  current_repayment_count: number,
-  repayment_date: Date,
-  current_amount: number,
-  rate: number,
+  contract_id?: number;
+  lessee_name?: string;
+  lessor_name?: string;
+  total_repayment_count: number;
+  current_repayment_count: number;
+  repayment_date: Date;
+  current_amount: number;
+  rate: number;
 }
 
 export default function Mainpage() {
@@ -58,26 +58,26 @@ export default function Mainpage() {
         });
     } else if (tab === 'rental') {
       axios
-      .get(`${BASE_URL}/contracts/lessor/me`, {
-        headers: { Authorization: localStorage.getItem('access_token') },
-      })
-      .then((res) => {
-        console.log('lessor/me data : ', res.data);
-        if (res.data === '') {
-          setFeeds([]);
-        } else {
-          const myContracts = res.data.map((contractData: ContractProps) => ({
-            contract_id: contractData.contract_id,
-            lessee_name: contractData.lessee_name,
-            total_repayment_count: contractData.total_repayment_count,
-            current_repayment_count: contractData.current_repayment_count,
-            repayment_date: new Date(contractData.repayment_date),
-            current_amount: contractData.current_amount,
-            rate: contractData.rate,
-          }));
-          setFeeds(myContracts);
-        }
-      });
+        .get(`${BASE_URL}/contracts/lessor/me`, {
+          headers: { Authorization: localStorage.getItem('access_token') },
+        })
+        .then((res) => {
+          console.log('lessor/me data : ', res.data);
+          if (res.data === '') {
+            setFeeds([]);
+          } else {
+            const myContracts = res.data.map((contractData: ContractProps) => ({
+              contract_id: contractData.contract_id,
+              lessee_name: contractData.lessee_name,
+              total_repayment_count: contractData.total_repayment_count,
+              current_repayment_count: contractData.current_repayment_count,
+              repayment_date: new Date(contractData.repayment_date),
+              current_amount: contractData.current_amount,
+              rate: contractData.rate,
+            }));
+            setFeeds(myContracts);
+          }
+        });
     }
   };
 
@@ -92,31 +92,43 @@ export default function Mainpage() {
 
   useEffect(() => {
     // [계좌 정보 API]
-    axios.get(`${BASE_URL}/banking/accounts/me`, {
-      headers: { Authorization: localStorage.getItem('access_token')},
-    }).then((res) => {
-      setAccountNumber(res.data.account_number);
-      setNowBalance(res.data.balance.toLocaleString());
-    })
+    axios
+      .get(`${BASE_URL}/banking/accounts/me`, {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+      .then((res) => {
+        setAccountNumber(res.data.account_number);
+        setNowBalance(res.data.balance.toLocaleString());
+      });
 
     // [롤링 공지용 이번달 입금, 출금 예정금액 API]
-    axios.get(`${BASE_URL}/contracts/lessee/me`, {
-      headers: { Authorization: localStorage.getItem('access_token')}
-    }).then((res) => {
-      const totalCurrentAmount = res.data.reduce((accumulator: number, item: any) => {
-        return accumulator + item.current_amount;
-      }, 0);
-      setMonthBorrow(totalCurrentAmount.toLocaleString());
-    });
-  
-    axios.get(`${BASE_URL}/contracts/lessor/me`, {
-      headers: { Authorization: localStorage.getItem('access_token')}
-    }).then((res) => {
-      const totalCurrentAmount = res.data.reduce((accumulator: number, item: any) => {
-        return accumulator + item.current_amount;
-      }, 0);
-      setMonthRent(totalCurrentAmount.toLocaleString());
-    });
+    axios
+      .get(`${BASE_URL}/contracts/lessee/me`, {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+      .then((res) => {
+        const totalCurrentAmount = res.data.reduce(
+          (accumulator: number, item: any) => {
+            return accumulator + item.current_amount;
+          },
+          0,
+        );
+        setMonthBorrow(totalCurrentAmount.toLocaleString());
+      });
+
+    axios
+      .get(`${BASE_URL}/contracts/lessor/me`, {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+      .then((res) => {
+        const totalCurrentAmount = res.data.reduce(
+          (accumulator: number, item: any) => {
+            return accumulator + item.current_amount;
+          },
+          0,
+        );
+        setMonthRent(totalCurrentAmount.toLocaleString());
+      });
   }, []);
 
   // [계좌 복사 클릭 시 toast 메시지]
@@ -136,7 +148,7 @@ export default function Mainpage() {
   };
 
   return (
-    <Main>
+    <StyledMain>
       {/* 계좌 박스 */}
       <BlueBox>
         {/* 계좌 정보 */}
@@ -169,9 +181,16 @@ export default function Mainpage() {
             color="var(--white)"
             textAlign="left"
           >
-            싸피 {`${accountNumber.slice(0,3)}-${accountNumber.slice(3,6)}-${accountNumber.slice(6,12)}`}
+            싸피{' '}
+            {`${accountNumber.slice(0, 3)}-${accountNumber.slice(
+              3,
+              6,
+            )}-${accountNumber.slice(6, 12)}`}
           </TextBox>
-          <Copy style={{ cursor: 'pointer' }} onClick={() => handleCopyClick(`${accountNumber}`)}/>
+          <Copy
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleCopyClick(`${accountNumber}`)}
+          />
         </FlexDiv2>
 
         {/* 잔액 */}
@@ -192,72 +211,74 @@ export default function Mainpage() {
       {/* 탭 기능 */}
       <MainTab setNowActive={handleTabClick} />
       {feeds.length === 0 ? (
-      <CenterDiv>
-        <PigImg src="/pig-head.png" />
-        <TextBox
-          fontSize="25px"
-          fontWeight="700"
-          color="var(--black)"
-          textAlign="center"
-        >
-          아직 체결된 계약이 없습니다.
-        </TextBox>
-      </CenterDiv>
+        <CenterDiv>
+          <PigImg src="/pig-head.png" />
+          <TextBox
+            fontSize="25px"
+            fontWeight="700"
+            color="var(--black)"
+            textAlign="center"
+          >
+            아직 체결된 계약이 없습니다.
+          </TextBox>
+        </CenterDiv>
       ) : (
-        feeds.map((feed) => (
-          <WhiteBox key={feed.contract_id}>
-            <FlexDiv margin="0px 30px 2px 30px">
-              <TextBox
-                fontSize="15px"
-                fontWeight="500"
-                color="var(--black)"
-                textAlign="left"
-              >
-                {feed.lessee_name}
-                
-              </TextBox>
-              <TextBox
-                fontSize="20px"
-                fontWeight="700"
-                color="var(--huick-blue)"
-                textAlign="left"
-              >
-                {feed.rate}%
-              </TextBox>
-            </FlexDiv>
-            <FlexDiv margin="0px 30px 9px 30px">
-              <TextBox
-                fontSize="12px"
-                fontWeight="500"
-                color="var(--gray)"
-                textAlign="left"
-              >
-                {feed.total_repayment_count}회 중 {feed.current_repayment_count}회 납부 완료
-              </TextBox>
-            </FlexDiv>
-            <FlexDiv margin="0px 30px">
-              <TextBox
-                fontSize="24px"
-                fontWeight="700"
-                color="var(--black)"
-                textAlign="left"
-              >
-                {feed.current_amount.toLocaleString()}원
-              </TextBox>
-              <TextBox
-                fontSize="14px"
-                fontWeight="500"
-                color="var(--black)"
-                textAlign="left"
-              >
-                {feed.repayment_date.getDate().toString()}일 납부
-              </TextBox>
-            </FlexDiv>
+        <ContractsDiv>
+          {feeds.map((feed) => (
+            <WhiteBox key={feed.contract_id}>
+              <FlexDiv margin="0px 30px 2px 30px">
+                <TextBox
+                  fontSize="15px"
+                  fontWeight="500"
+                  color="var(--black)"
+                  textAlign="left"
+                >
+                  {feed.lessee_name}
+                </TextBox>
+                <TextBox
+                  fontSize="20px"
+                  fontWeight="700"
+                  color="var(--huick-blue)"
+                  textAlign="left"
+                >
+                  {feed.rate}%
+                </TextBox>
+              </FlexDiv>
+              <FlexDiv margin="0px 30px 9px 30px">
+                <TextBox
+                  fontSize="12px"
+                  fontWeight="500"
+                  color="var(--gray)"
+                  textAlign="left"
+                >
+                  {feed.total_repayment_count}회 중{' '}
+                  {feed.current_repayment_count}회 납부 완료
+                </TextBox>
+              </FlexDiv>
+              <FlexDiv margin="0px 30px">
+                <TextBox
+                  fontSize="24px"
+                  fontWeight="700"
+                  color="var(--black)"
+                  textAlign="left"
+                >
+                  {feed.current_amount.toLocaleString()}원
+                </TextBox>
+                <TextBox
+                  fontSize="14px"
+                  fontWeight="500"
+                  color="var(--black)"
+                  textAlign="left"
+                >
+                  {feed.repayment_date.getDate().toString()}일 납부
+                </TextBox>
+              </FlexDiv>
             </WhiteBox>
-          ))
+          ))}
+        </ContractsDiv>
       )}
       <NavBar />
-    </Main>
+    </StyledMain>
   );
 }
 
@@ -267,7 +288,7 @@ const BlueBox = styled.div`
   height: 160px;
   border-radius: 10px;
   box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.04);
-  margin: 6.5px 14px;
+  margin: 64px 14px 6.5px 14px;
   padding: 20px 0px;
 `;
 
@@ -300,7 +321,7 @@ const FlexDiv2 = styled(FlexDiv)`
 const PigImg = styled.img`
   width: 125px;
   height: 125px;
-  margin: 80px 0 30px 0;
+  margin: 120px 0 30px 0;
 `;
 
 const CenterDiv = styled.div`
@@ -308,4 +329,14 @@ const CenterDiv = styled.div`
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+`;
+
+const StyledMain = styled(Main)`
+  overflow-y: hidden;
+`;
+
+const ContractsDiv = styled.div`
+  overflow-y: scroll;
+  height: 451px;
+  max-height: 100%;
 `;
