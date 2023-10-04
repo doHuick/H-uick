@@ -20,7 +20,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+@app.get("/health")
 async def test_connection():
     try:
         response = "Hello, jisungguridangdang"
