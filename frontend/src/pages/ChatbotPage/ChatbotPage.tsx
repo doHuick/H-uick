@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import Chatbot from 'react-chatbot-kit';
 
@@ -18,7 +17,9 @@ export default function ChatbotPage() {
   return (
     <Main>
       <HeadBar pageName="차용증 작성" />
+      
       <Chatbot
+        // @ts-ignore
         config={config}
         messageParser={MessageParser}
         actionProvider={ActionProvider}

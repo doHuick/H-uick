@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components'
-import { ReactComponent as ModalClose } from '../../assets/icons/close-button.svg'
 import { ReactComponent as PasswordDelete } from '../../assets/icons/password-delete.svg'
 
 interface SignupPasswordModalProps {
@@ -159,24 +158,6 @@ const slideOut = keyframes`
   }
 `;
 
-const shakeAnimation = keyframes`
-  0% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-2.5px);
-  }
-  50% {
-    transform: translateX(2.5px);
-  }
-  75% {
-    transform: translateX(-2.5px);
-  }
-  100% {
-    transform: translateX(2.5px);
-  }
-`;
-
 const DarkBackground = styled.div<DarkBackgroundProps>`
   position: fixed;
   top: 0;
@@ -229,10 +210,6 @@ const TransferModalModalUpperButtons = styled.div`
   
 `
 
-const TransferModalModalCloseButton = styled(ModalClose)`
-  width: 16px;
-`;
-
 const PasswordFrame = styled.div`
   width: 100%;
   text-align: center;
@@ -273,16 +250,6 @@ const FilledEllipse = styled.div`
   margin-right: 6px;
 
 `
-
-const PasswordWrongMessage = styled.div`
-  width: 100%;
-  text-align: center;
-  color: red;
-  font-size: 16px;
-  margin-top: 12px;
-  &.shake-animation {
-    animation: ${shakeAnimation} 0.3s ease-in-out;
-  }`;
 
 const PasswordPadFrame = styled.div`
   position: absolute;

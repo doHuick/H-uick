@@ -3,3 +3,5 @@
 interface Window {
     Kakao: any;
 }
+
+declare module 'react-read-pdf';

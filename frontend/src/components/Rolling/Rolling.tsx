@@ -40,7 +40,7 @@ export default function Rolling({monthBorrow, monthRent}: RollingProps) {
       <RollingDiv>
         <NoticeUl>
           <NoticeContainer style={{ transform: `translateY(${-30 * idx}px)` }}>
-            {notice.map((item, index) => (
+            {notice.map((item) => (
               <NoticeContent key={item.no}>
                 <TextBox fontSize="12px">
                   <Bulb />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components'
 import { ReactComponent as ModalClose } from '../../assets/icons/close-button.svg'
 import { MiniConfirmButton } from '../Button/Button';

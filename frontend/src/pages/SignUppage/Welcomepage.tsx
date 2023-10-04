@@ -51,7 +51,7 @@ export default function Welcomepage() {
 
   return (
     <Main>
-      <HeadBar pageName="회원가입" bgcolor="var(--background)" />
+      <HeadBar pageName="회원가입" color="var(--background)" />
       <CheckDiv>
         <Check />
       </CheckDiv>

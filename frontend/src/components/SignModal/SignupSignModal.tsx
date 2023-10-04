@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import './SignModal.css'
 import styled, { keyframes } from 'styled-components'
 import SignatureCanvas from 'react-signature-canvas'
-import { ReactComponent as ModalClose } from '../../assets/icons/close-button.svg'
 import { MiniConfirmButton } from '../Button/Button';
 import toast, { toastConfig } from 'react-simple-toasts'
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
@@ -166,11 +165,6 @@ const SignModalEraseButton = styled.div`
   padding: 7px 3px;
   color: var(--gray);
 `
-
-const SignModalCloseButton = styled(ModalClose)`
-  width: 16px;
-`;
-
 const SignatureArea = styled.div`
   position: relative;
   margin-top: 22px;

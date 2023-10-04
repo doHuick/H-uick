@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import HeadBar from '../../components/HeadBar/HeadBar';
-import NavBar from '../../components/NavBar/NavBar';
 // import { ConfirmButton } from '../../components/Button/Button';
 import { MiniConfirmButton } from '../../components/Button/Button';
 import BorrowModal from '../../components/TransferModal/BorrowModal';
@@ -91,7 +90,7 @@ export default function SharePage() {
       setUserInfo(res.data)
       // console.log(res.data)
     })
-    .catch((err) => {
+    .catch(() => {
       navigate('/login');
     })
   }, []);
@@ -389,6 +388,7 @@ export default function SharePage() {
           <SharePasswordModal
             closePasswordModal={closePasswordModal}
             userPassword={userInfo?.password}
+            passwordCorrect={closeModal}
           />
         ) : null}
     </Main>

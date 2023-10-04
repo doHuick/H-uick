@@ -6,9 +6,9 @@ import { MiniConfirmButton } from '../Button/Button';
 interface LesseeTransferModalProps {
   closeModal: () => void;
   transferClicked: () => void;
-  paymentCount: number;
-  lessorName: string;
-  balance: number;
+  paymentCount?: number;
+  lessorName?: string;
+  balance?: number;
 
 }
 
@@ -68,7 +68,7 @@ export default function LeseeTransferModal({ closeModal, transferClicked, paymen
         </TransferTextLine>
 
         <TransferTextLine>
-          <TransferTextBold>{paymentCount+1}</TransferTextBold>
+          <TransferTextBold>{paymentCount? paymentCount + 1 : null}</TransferTextBold>
           <TransferText>회차&nbsp;</TransferText>
           <TransferTextBold>230,000</TransferTextBold>
           <TransferText>원을</TransferText>
@@ -80,7 +80,7 @@ export default function LeseeTransferModal({ closeModal, transferClicked, paymen
     
         {/* <TransferMoadlAccount>계약이 체결되면 휙이 보내드릴게요 </TransferMoadlAccount> */}
         <TransferMoadlAccount>
-          잔액: {balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
+          잔액: {balance?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
         </TransferMoadlAccount>
 
         <TransferButtonFrame>

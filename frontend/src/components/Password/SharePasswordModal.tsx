@@ -7,7 +7,7 @@ import { ReactComponent as PasswordDelete } from '../../assets/icons/password-de
 
 interface SharePasswordModalProps {
   closePasswordModal: () => void;
-  userPassword: string;
+  userPassword?: string;
   passwordCorrect: () => void;
 }
 
