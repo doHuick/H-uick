@@ -20,6 +20,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.post("/")
+async def test_connection() -> str:
+    try:
+        response = "Hello, jisungguridangdang"
+
+        return {"answer": response}
+    
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/contracts/assist")
 async def create_assist_chat(assist_request: AssistRequest) -> str:
     try:
