@@ -4,7 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +21,10 @@ public class AuthController {
 
 	private final AuthService authService;
 
-	@GetMapping("/refresh")
-	public ResponseEntity<AuthApiDto.Response> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-		String token = authService.refreshToken(request, response);
+	@PostMapping("/refresh")
+	public ResponseEntity<AuthApiDto.Response> refreshToken(HttpServletRequest request, HttpServletResponse response,
+		@RequestBody AuthApiDto.Request requestBody) {
+		String token = authService.refreshToken(request, response, requestBody.getRefreshToken());
 
 		return ResponseEntity.ok().body(AuthApiDto.Response.from(token));
 	}
