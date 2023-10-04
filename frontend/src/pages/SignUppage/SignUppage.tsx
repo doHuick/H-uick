@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { TextBox } from '../../components/TextBox/TextBox';
 import { Main } from '../../style';
@@ -7,15 +7,9 @@ import { ReactComponent as Bar } from '../../assets/icons/bar.svg';
 import { ConfirmButton } from '../../components/Button/Button';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate } from 'react-router-dom';
-import toast, { toastConfig } from 'react-simple-toasts';
 
 interface StyledInputProps {
   value: string;
-}
-
-interface DataProps {
-  address: string;
-  // 다른 필드들도 정의 가능
 }
 
 export default function SignUppage() {
@@ -42,38 +36,9 @@ export default function SignUppage() {
       );
       navigate('/welcome');
     } catch (error) {
-      toast('모든 정보를 빠짐없이 정확히 입력해주세요.');
+      console.error('서버 요청 실패:', error);
     }
   };
-  
-  const wrapRef = useRef<HTMLDivElement | null>(null);
-
-  const setAddr = () => {
-    // wrapRef를 사용하여 요소를 보이게 합니다.
-    if (wrapRef.current) {
-      wrapRef.current.style.display = 'block';
-    }
-    // @ts-ignore
-    new daum.Postcode({
-      width: '100%',
-      oncomplete: function (data: DataProps) {
-        // 주소를 입력 input에 설정합니다.
-        console.log('data : ', data);
-        setAddress(data.address);
-
-        // 검색이 완료되면 wrapRef를 사용하여 요소를 숨깁니다.
-        if (wrapRef.current) {
-          wrapRef.current.style.display = 'none';
-        }
-      },
-    }).embed(wrapRef.current);
-  };
-
-  toastConfig({
-    theme: 'frosted-glass',
-    position: 'top-center',
-    maxVisibleToasts: 1,
-  });
 
   return (
     <Main>
@@ -115,16 +80,16 @@ export default function SignUppage() {
       <Id>
         {/* 주민등록번호 앞자리 입력 input */}
         <IdInput
-          type="string"
-          maxLength={6}
+          type="number"
+          maxlength="6"
           value={idFront}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdFront(e.target.value)}
         />
         <Bar />
         {/* 주민등록번호 뒷자리 입력 input */}
         <IdInput
-          type="string"
-          maxLength={7}
+          type="number"
+          maxlength="7"
           value={idBack}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdBack(e.target.value)}
         />
@@ -139,13 +104,10 @@ export default function SignUppage() {
       </TextBox>
       {/* 주소 입력 input */}
       <StyledInput
-        id="addr"
-        type="string"
+        type="text"
         value={address}
-        onClick={setAddr}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
       />
-      <div ref={wrapRef} style={{ display: 'none', position: 'relative' }} />
       <TextBox
         fontSize="18px"
         fontWeight="700"
@@ -156,8 +118,8 @@ export default function SignUppage() {
       </TextBox>
       {/* 전화번호 입력 input */}
       <StyledInput
-        type="string"
-        maxLength={11}
+        type="number"
+        maxlength="11"
         value={phoneNumber}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
       />
