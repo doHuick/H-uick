@@ -2,7 +2,6 @@ package com.dohit.huick.domain.auth.service;
 
 import java.util.Date;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,7 +47,8 @@ public class AuthService {
 		refreshTokenRepository.save(RefreshToken.of(Long.valueOf(name), refreshToken.getToken()));
 	}
 
-	public String refreshToken(HttpServletRequest request, HttpServletResponse response) throws BusinessException {
+	public String refreshToken(HttpServletRequest request, HttpServletResponse response, String refreshToken) throws
+		BusinessException {
 
 		// access token을 헤더에서 가져오기
 		String accessToken = HeaderUtil.getAccessToken(request);
@@ -70,12 +70,8 @@ public class AuthService {
 		String userId = claims.getSubject();
 		Role role = Role.of(claims.get("role", String.class));
 
-		// refresh token
-		String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
-			.map(Cookie::getValue)
-			.orElse((null));
 		AuthToken authRefreshToken = authTokenProvider.convertAuthToken(refreshToken);
-		System.out.println(refreshToken);
+		
 		if (!authRefreshToken.getTokenClaimsRegardlessOfExpire()) {
 			throw new AuthenticationException(ErrorCode.NOT_VALID_TOKEN);
 		}
