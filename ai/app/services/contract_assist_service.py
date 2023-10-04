@@ -27,7 +27,7 @@ assist_sys = SystemMessage(content="""
 
 # 계약보조 챗봇
 # 나중에 user_id 토큰에서 가져오기
-def create_assist_chat_response(user_id: int, tmp_contract_key: str, contract_info: ContractInfo, chat: str) -> str:
+def create_assist_chat_response(user_id: int, tmp_contract_key: str, contract_info: ContractInfo, chat: str):
     chat_template = create_contract_info_template(contract_info)
     chat_template += create_chat_template(contract_info, chat)
 
