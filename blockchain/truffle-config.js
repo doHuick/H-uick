@@ -41,10 +41,10 @@
  * https://trufflesuite.com/docs/truffle/getting-started/using-the-truffle-dashboard/
  */
 
-// require('dotenv').config();
-// const { MNEMONIC, PROJECT_ID } = process.env;
+require('dotenv').config();
+const { MNEMONIC, INFURA_API_KEY } = process.env;
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
   /**
@@ -68,6 +68,13 @@ module.exports = {
       host: "127.0.0.1",     // Localhost (default: none)
       port: 8545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
+    },
+    sepolia: {
+      provider: () => new HDWalletProvider(MNEMONIC, `https://sepolia.infura.io/v3/${INFURA_API_KEY}`),
+      network_id: 11155111,            // Sepolia의 네트워크 ID
+      // gas: 8000000,                  // 가스 한도
+      // gasPrice: 20000000000,        // 가스 가격
+      // skipDryRun: true              // 건너뛰기 설정
     },
     //
     // An additional network, but with some advanced options…
