@@ -23,7 +23,7 @@ messenger_sys = SystemMessage(content="""
                               두 사람이 돈을 빌려주겠다는 약속을 하는 내용인데, 차용 계약서에 필요한 정보를 추출하는게 목표야.
 
                               대화내용에는 빌려주는 금액(loanAmount), 이자율(interestRate), 받을 날짜(maturityDate)가 포함될거야.
-                              답변해줄 때는 {"contract_info": {"loanAmount: 1000, interestRate: 3, maturityDate: 20210201"}}과 같은 형태로 답변해줘
+                              답변해줄 때는 {"contract_info": {"loanAmount: 1000(int), interestRate: 3(float), maturityDate: 20210201(str)"}}과 같은 형태로 답변해줘
                               이외의 내용은 포함하지 말아줘.
                               """)
 
