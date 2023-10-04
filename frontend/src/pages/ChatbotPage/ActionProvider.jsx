@@ -10,7 +10,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
   // 처음으로
   const startAfterButton = () => {
     const botMessage = createChatBotMessage(
-      "빌림인지 빌려줌인지? 먼저 해야됨", { widget: 'lendborrowbutton'}
+      "다음 항목을 먼저 선택해주세요", { widget: 'lendborrowbutton'}
     );
 
     setState((prev) => ({

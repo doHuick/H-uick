@@ -8,10 +8,8 @@ import toast, { toastConfig } from 'react-simple-toasts'
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
 import 'react-simple-toasts/dist/theme/light.css';
 
-interface SignModalProps {
-  closeModal: () => void;
+interface SignupSignModalProps {
   onSave: (imageData: string) => void;
-
 }
 
 interface DarkBackgroundProps {
@@ -22,7 +20,7 @@ interface ModalContainerProps {
   isClosing: boolean;
 }
 
-export default function SignModal({ closeModal, onSave }: SignModalProps) {
+export default function SignupSignModal({ onSave }: SignupSignModalProps) {
   const [isClosing, setIsClosing] = useState(false);
   
   toastConfig({
@@ -32,23 +30,9 @@ export default function SignModal({ closeModal, onSave }: SignModalProps) {
     maxVisibleToasts: 1
   })
 
-  
-  const handleDarkBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (event.target === event.currentTarget) {
-      closeAndAnimate();
-    }
-  };
-  
-  const isModalCloseClick = () => {
-    closeAndAnimate();
-
-  };
 
   const closeAndAnimate = () => {
     setIsClosing(true);
-    setTimeout(() => {
-      closeModal();
-    }, 260);
   };
 
   const signCanvas = useRef() as React.MutableRefObject<any>;
@@ -61,7 +45,7 @@ export default function SignModal({ closeModal, onSave }: SignModalProps) {
     // const image = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
     // onSave(image);
     if (signCanvas.current.isEmpty()) {
-      toast("서명을 그려주세요")
+      toast("서명 그려!!!")
     } else {
       
       const image = signCanvas.current.getTrimmedCanvas().toDataURL('image/png');
@@ -72,13 +56,12 @@ export default function SignModal({ closeModal, onSave }: SignModalProps) {
   
   return (
   <>
-      <DarkBackground onClick={handleDarkBackgroundClick} isClosing={isClosing}/>
+      <DarkBackground isClosing={isClosing}/>
       <ModalContainer isClosing={isClosing}>
         <SignModalUpperBar>
-          <SignModalTitle>서명수정</SignModalTitle>
+          <SignModalTitle>서명등록</SignModalTitle>
           <SignModalUpperButtons>
             <SignModalEraseButton  onClick={clear} >&nbsp;&nbsp;재설정&nbsp;&nbsp;</SignModalEraseButton>
-            <SignModalCloseButton onClick={isModalCloseClick}/>
           </SignModalUpperButtons>
         </SignModalUpperBar>
 
@@ -108,15 +91,6 @@ const fadeIn = keyframes`
   }
 `;
 
-const fadeOut = keyframes`
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0; // 원하는 어두운 배경의 최종 투명도 설정
-  }
-`;
-
 const slideIn = keyframes`
   from {
     transform: translateY(100%);
@@ -143,7 +117,7 @@ const DarkBackground = styled.div<DarkBackgroundProps>`
   height: 100%;
   background: rgba(0, 0, 0, 0.5); // 어두운 배경의 색상과 투명도 조절
   z-index: 2; // 모달 뒤에 위치하도록 설정
-  animation: ${({ isClosing }) => (isClosing ? fadeOut : fadeIn)} 0.30s ease-in-out;
+  animation: ${({ isClosing }) => (isClosing ? '' : fadeIn)} 0.30s ease-in-out;
 `;
 
 const ModalContainer = styled.div<ModalContainerProps>`
@@ -191,7 +165,6 @@ const SignModalEraseButton = styled.div`
   padding-bottom: 5px; */
   padding: 7px 3px;
   color: var(--gray);
-  margin-right: 22px;
 `
 
 const SignModalCloseButton = styled(ModalClose)`

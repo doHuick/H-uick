@@ -29,6 +29,7 @@ interface UserInfoProps{
   created_time: string,
   issue_date?: string,
   name: string,
+  password: string,
   phone_number: string,
   role: string,
   rrn: string,
@@ -100,9 +101,10 @@ export default function MyPage() {
         headers: { Authorization: localStorage.getItem('access_token') },
       },
     )
-
-    closeModal();
-    toast('서명이 등록되었습니다');
+    setTimeout(() => {
+      closeModal();
+      toast('서명이 등록되었습니다');
+    }, 260);
   };
 
   return (
@@ -162,7 +164,7 @@ export default function MyPage() {
             showModal();
           }}
         >
-          <MenuContextLeft>등록하기</MenuContextLeft>
+          <MenuContextLeft>수정하기</MenuContextLeft>
           <MenuContextRight>
             <RightArrowResized />
           </MenuContextRight>
@@ -295,7 +297,7 @@ const LogOutButton = styled(ConfirmButton)`
 const HuickVer = styled.div`
   font-size: 14;
   color: var(--gray);
-  font-weight: bold;
+  font-weight: 500;
   margin-bottom: 102px
 `;
 

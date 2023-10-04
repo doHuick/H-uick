@@ -1,16 +1,45 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TextBox } from '../../components/TextBox/TextBox';
 import { Main } from '../../style';
-import NavBar from '../../components/NavBar/NavBar';
+// import NavBar from '../../components/NavBar/NavBar';
 import { ReactComponent as Bar } from '../../assets/icons/bar.svg';
 import { ConfirmButton } from '../../components/Button/Button';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate } from 'react-router-dom';
+import SignupSignModal from '../../components/SignModal/SignupSignModal';
+import SignupPasswordModal from '../../components/Password/SignupPasswordModal';
 
 interface StyledInputProps {
   value: string;
 }
+
+interface AccountProps{
+  accountId: number,
+  accountNumber: string,
+  balance: number,
+  bankCode: string,
+  bankName: string,
+  createdTime: string,
+}
+
+interface UserInfoProps{
+  account_info : AccountProps,
+  address: string,
+  created_time: string,
+  issue_date?: string,
+  name: string,
+  phone_number: string,
+  role: string,
+  rrn: string,
+  signature_url?: string,
+  social_id: string,
+  social_type: string,
+  user_id: number,
+  wallet_address?: string,
+  withdrawal_time? : string,
+}
+
 
 export default function SignUppage() {
   const [name, setName] = useState<string>('');
@@ -34,114 +63,205 @@ export default function SignUppage() {
           headers: { Authorization: localStorage.getItem('access_token') },
         },
       );
-      navigate('/welcome');
+      // navigate('/welcome');
     } catch (error) {
       console.error('서버 요청 실패:', error);
     }
+    showSignModal();
   };
 
+  // 모달 띄우기
+  const [signModalOpen, setSignModalOpen] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState<UserInfoProps>()
+
+
+  const showSignModal = () => {
+    setSignModalOpen(true);
+  };
+
+  const closeSignModal = () => {
+    setSignModalOpen(false);
+  };
+
+  const closePasswordModal = () => {
+    setPasswordModalOpen(false);
+    navigate('/welcome');
+  };
+
+  const handleSave = (imageData: string) => {
+    axios.patch(
+      `${BASE_URL}/users/signature`,
+      {
+        signatureBase64: imageData
+      }
+      ,
+      {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      },
+    )
+    // 내 정보 받아오기
+
+    axios.get(`${BASE_URL}/users/me`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    })
+    .then((res) => {
+      setUserInfo(res.data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+    setTimeout(() => {
+      closeSignModal();
+      setPasswordModalOpen(true)
+    }, 250);
+  };
+
+  const handlePassword = (userPassword: string) => {
+    axios.patch(
+      `${BASE_URL}/users/me`,
+      {
+        password: userPassword
+      }
+      ,
+      {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      },
+      )
+      .then((res) => {
+        console.log(res)
+      })
+    console.log(userInfo)
+    console.log(userPassword)
+  }
+
   return (
-    <Main>
-      <TextBox fontSize="22px" fontWeight="700" margin="32px 0 0 35px">
-        회원님, <br />
-        정보가 제대로 입력되었나요?
-      </TextBox>
-      <TextBox
-        fontSize="18px"
-        fontWeight="700"
-        margin="20px 0 0 35px"
-        color="var(--font-gray)"
-      >
-        틀림없이 정확히 기입되었는지 확인해주세요. <br />
-        오기입된 정보는 수정해주시기 바랍니다.
-      </TextBox>
-      <TextBox
-        fontSize="18px"
-        fontWeight="700"
-        margin="50px 0 17px 35px"
-        color="var(--font-gray)"
-      >
-        이름
-      </TextBox>
-      {/* 이름 입력 input */}
-      <StyledInput
-        type="text"
-        value={name}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-      />
-      <TextBox
-        fontSize="18px"
-        fontWeight="700"
-        margin="32px 0 17px 35px"
-        color="var(--font-gray)"
-      >
-        주민등록번호
-      </TextBox>
-      <Id>
-        {/* 주민등록번호 앞자리 입력 input */}
-        <IdInput
-          type="number"
-          maxlength="6"
-          value={idFront}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdFront(e.target.value)}
+    <Main backgroundColor='var(--white)'>
+      <TitleFrame>
+        <TextBox fontSize="22px" fontWeight="700" margin="0 0 12px 0">
+          회원님, <br />
+          정보가 제대로 입력되었나요?
+        </TextBox>
+        <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
+          틀림없이 정확히 기입되었는지 확인해주세요. <br />
+          오기입된 정보는 수정해주시기 바랍니다.
+        </TextBox>
+      </TitleFrame>
+
+      <InputFrame>
+        <TextBox fontSize="18px" fontWeight="500" color="var(--font-gray)">
+          이름
+        </TextBox>
+        {/* 이름 입력 input */}
+        <StyledInput type="text"
+          value={name}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
         />
-        <Bar />
-        {/* 주민등록번호 뒷자리 입력 input */}
-        <IdInput
-          type="number"
-          maxlength="7"
-          value={idBack}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdBack(e.target.value)}
+
+        <TextBoxSignup
+          fontSize="18px"
+          fontWeight="500"
+          color="var(--font-gray)"
+        >
+          주민등록번호
+        </TextBoxSignup>
+        
+        <Id>
+          {/* 주민등록번호 앞자리 입력 input */}
+          <IdInput
+            type="number"
+            maxlength="6"
+            value={idFront}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdFront(e.target.value)}
+          />
+          <Bar />
+          {/* 주민등록번호 뒷자리 입력 input */}
+          <IdInput
+            type="number"
+            maxlength="7"
+            value={idBack}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdBack(e.target.value)}
+          />
+        </Id>
+
+        <TextBoxSignup fontSize="18px" fontWeight="500" color="var(--font-gray)" >
+          주소
+        </TextBoxSignup>
+        {/* 주소 입력 input */}
+        <StyledInput
+          type="text"
+          value={address}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
         />
-      </Id>
-      <TextBox
-        fontSize="18px"
-        fontWeight="700"
-        margin="32px 0 17px 35px"
-        color="var(--font-gray)"
-      >
-        주소
-      </TextBox>
-      {/* 주소 입력 input */}
-      <StyledInput
-        type="text"
-        value={address}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
-      />
-      <TextBox
-        fontSize="18px"
-        fontWeight="700"
-        margin="32px 0 17px 35px"
-        color="var(--font-gray)"
-      >
-        전화번호
-      </TextBox>
-      {/* 전화번호 입력 input */}
-      <StyledInput
-        type="number"
-        maxlength="11"
-        value={phoneNumber}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
-      />
+
+        <TextBoxSignup
+          fontSize="18px"
+          fontWeight="500"
+          color="var(--font-gray)"
+        >
+          전화번호
+        </TextBoxSignup>
+        {/* 전화번호 입력 input */}
+        <StyledInput
+          type="number"
+          maxlength="11"
+          value={phoneNumber}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
+        />
+      </InputFrame>
+      
       <CenterDiv>
-        <ConfirmButton onClick={sendData}>확인</ConfirmButton>
+        <ConfirmButtonRenewed onClick={sendData}>확인</ConfirmButtonRenewed>
       </CenterDiv>
-      <NavBar />
+
+      {signModalOpen ? (
+          <SignupSignModal
+            onSave={handleSave}
+          />
+        ) : null}
+
+      {passwordModalOpen ? (
+        <SignupPasswordModal 
+        closePasswordModal={closePasswordModal}
+        handlePassword={handlePassword}/>
+      ) : null}
+
+      {/* <NavBar /> */}
     </Main>
   );
 }
 
+const TitleFrame = styled.div`
+  position: relative;
+  width: calc(100% - 56px);
+  margin-top: 100px;
+  margin-left: 28px;
+`
+
+const InputFrame = styled(TitleFrame)`
+  position: relative;
+  width: calc()(100% - 56px);
+  margin-top: 60px;
+  margin-left: 28px;
+
+`
+
+const TextBoxSignup = styled(TextBox)`
+  margin-top: 46px;
+`
+
 const StyledInput = styled.input<StyledInputProps>`
-  width: 323px;
+  position: relative;
+  width: 100%;
   height: 30px;
   background-color: var(--whtie);
-  margin-left: 35px;
   border: none;
-  border-bottom: 3px solid var(--gray);
+  border-bottom: 2px solid var(--gray);
   font-size: 18px;
   font-weight: 500;
   &:focus {
-    border-bottom: 3px solid var(--huick-blue);
+    border-bottom: 2px solid var(--huick-blue);
     outline: none;
   }
   &:active {
@@ -155,21 +275,31 @@ const StyledInput = styled.input<StyledInputProps>`
 `;
 
 const IdInput = styled(StyledInput)`
-  width: 133px;
+  width: calc(40%);
   margin: 0px;
 `;
 
 const Id = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 16px;
 `;
 
 // [23-09-12] 임시 가운데 정렬 용도 - 향후 수정 필
 const CenterDiv = styled.div`
+  position: relative;
+  width: calc(100% - 56px);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 70px;
+  margin-top: 80px;
+  margin-left: 28px;
 `;
+
+const ConfirmButtonRenewed = styled(ConfirmButton)`
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 600;
+`

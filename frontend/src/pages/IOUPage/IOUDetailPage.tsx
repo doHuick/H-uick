@@ -1,177 +1,309 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Main } from '../../style';
 import { TextBox } from '../../components/TextBox/TextBox';
 import HeadBar from '../../components/HeadBar/HeadBar';
 import NavBar from '../../components/NavBar/NavBar';
+import LeseeTransferModal from '../../components/TransferModal/LesseeTransfer';
+import SharePasswordModal from '../../components/Password/SharePasswordModal';
 import { ReactComponent as RightArrow } from '../../assets/icons/right-arrow.svg';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios, { BASE_URL } from '../../api/apiController';
+import toast, { toastConfig } from 'react-simple-toasts';
+import 'react-simple-toasts/dist/theme/frosted-glass.css';
 
-type MarginProps = {
-  margin?: string;
-};
+interface ContractInfoProps{
+  contract_id: number,
+  lessee_id: number,
+  lessor_id: number,
+  lessee_name: string,
+  lessee_address: string,
+  lessee_wallet_address: string,
+  lessor_name: string,
+  lessor_address: string,
+  lessor_rrn: number,
+  lessor_phone_number: string,
+  lessor_wallet_address: string,
+  total_repayment_count: number,
+  current_repayment_count: number,
+  start_date: string,
+  due_date: string,
+  repayment_date: string,
+  current_amount: number,
+  amount: number,
+  amount_in_korean: string,
+  rate: number,
+  status: string,
+  pdf_path: string
+}
 
 export default function IOUDetailPage() {
+  const params = useParams();
+  const contractId = params.contractId
+
+  const navigate = useNavigate()
+
+  const [contractInfo, setContractInfo] = useState<ContractInfoProps>()
+  const [userInfo, setUserInfo] = useState(null)
+
+
+  toastConfig({
+    theme: 'frosted-glass',
+    position: 'top-center',
+  });
+  
+  useEffect(() => {
+    axios.get(`${BASE_URL}/contracts/${contractId}`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    }).then((res) => {
+      setContractInfo(res.data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }, []);
+  
+  useEffect(() => {
+    axios.get(`${BASE_URL}/users/me`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    }).then((res) => {
+      setUserInfo(res.data)
+      console.log(res.data)
+    })
+    .catch((err) => {
+    })
+  }, []);
+
+
+  const statusReturn = () => {
+    if (contractInfo?.status == "BEFORE_EXECUTION") {
+      return "계약 체결 전"
+    } else if (contractInfo?.status == "EXECUTION_COMPLETED") {
+      return "계약 체결 완료"
+    } else if (contractInfo?.status == "REPAYMENT_COMPLETED") {
+      return "상환 완료"
+    } else if (contractInfo?.status == "TERMINATION") {
+      return "계약 파기됨"
+    }
+  }
+  
+  const [transferModalOpen, setTransferModalOpen] = useState(false);
+  const [passwordModalOpen, setPasswordModalOpen] = useState(false);
+
+  const openTransferModal = () => {
+    setTransferModalOpen(true)
+  }
+
+  const closeTransferModal = () => {
+    setTransferModalOpen(false);
+  };
+  
+  const transferClicked = () => {
+    setTransferModalOpen(false);
+    setPasswordModalOpen(true);
+  }
+
+  const closePasswordModal = () => {
+    setPasswordModalOpen(false);
+  }
+
+  const passwordCorrect = () => {
+    setPasswordModalOpen(false);
+    // 여기서 송금
+    toast('송금이 완료되었습니다');
+  }
+
+  const toPDF = () => {
+    navigate(`/pdf/${contractId}`)
+  }
+
+
+
   return (
-    <Main>
+    <Main backgroundColor='var(--white)'>
       <HeadBar pageName="차용증" />
-      <TitleDiv margin="105px 25px 20px 25px">
-        <TextBox fontSize="20px" fontWeight="700" color="var(--black)">
-          납부 요약
-        </TextBox>
-      </TitleDiv>
-      <FlexWrapDiv>
+      <InnerContainer>
+        <TitleFrame>
+            납부 요약
+        </TitleFrame>
+
         <CountBox>
-          <TextBox fontSize="15px" fontWeight="400" color="var(--font-gray)">
-            납부횟수
-          </TextBox>
-          <TextBox fontSize="15px" fontWeight="700" color="var(--black)">
-            5회
-          </TextBox>
+          <SummaryLeft>
+            납부회수
+          </SummaryLeft>
+          <SummaryRight>
+            {contractInfo?.current_repayment_count}회
+          </SummaryRight>
         </CountBox>
+
         <RemainBox>
-          <TextBox fontSize="15px" fontWeight="400" color="var(--font-gray)">
-            납부 잔여 금액
-          </TextBox>
-          <TextBox fontSize="15px" fontWeight="700" color="var(--black)">
-            2,300,000원
-          </TextBox>
+          <SummaryLeft>
+            납부잔여금액
+          </SummaryLeft>
+          <SummaryRight>
+            {contractInfo?.current_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
+          </SummaryRight>
         </RemainBox>
-      </FlexWrapDiv>
-      <TitleDiv margin="30px 25px 0 25px">
-        <TextBox fontSize="20px" fontWeight="700" color="var(--black)">
-          계약 상세
-        </TextBox>
-      </TitleDiv>
-      <FlexWrapDiv margin="10px 0 0 0">
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            채권자
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            김싸피
-          </TextBox>
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            채무자
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            이싸피
-          </TextBox>
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            차용금액
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            32,000,000원
-          </TextBox>
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            계약시작일
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            2023.09.12
-          </TextBox>
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            계약종료일
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            2024.10.12
-          </TextBox>
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            1회차 납부일
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            2023.10.01
-          </TextBox>
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            이율
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            1.2%
-          </TextBox>
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            약정사항
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            없음
-          </TextBox>
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="18px" fontWeight="500" color="var(--black)">
-            작성일
-          </TextBox>
-          <TextBox fontSize="16px" fontWeight="500" color="var(--font-gray)">
-            2023.09.26
-          </TextBox>
-        </BetweenDiv>
-        <StyledBar />
-        <BetweenDiv>
-          <TextBox fontSize="17.5px" margin="0 0 15px 0">이미지로 보기</TextBox>
-          <RightArrowResized />
-        </BetweenDiv>
-        <BetweenDiv>
-          <TextBox fontSize="17.5px">PDF로 보기</TextBox>
-          <RightArrowResized />
-        </BetweenDiv>
-      </FlexWrapDiv>
+        
+        <TitleFrame>
+            계약 상세
+        </TitleFrame>
+
+        <DetailFrame>
+          <DetailContext>
+            <DetailLeft>채권자</DetailLeft>
+            <DetailRight>{contractInfo?.lessor_name}</DetailRight>
+          </DetailContext>
+
+          <DetailContext>
+            <DetailLeft>채무자</DetailLeft>
+            <DetailRight>{contractInfo?.lessee_name}</DetailRight>
+          </DetailContext>
+
+          <DetailContext>
+            <DetailLeft>차용금액</DetailLeft>
+            <DetailRight>{contractInfo?.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원</DetailRight>
+          </DetailContext>
+          
+          <DetailContext>
+            <DetailLeft>계약시작일</DetailLeft>
+            <DetailRight>{contractInfo?.start_date.replace(/-/g, '.').slice(0,10)}</DetailRight>
+          </DetailContext>
+          
+          <DetailContext>
+            <DetailLeft>계약종료일</DetailLeft>
+            <DetailRight>{contractInfo?.due_date.replace(/-/g, '.').slice(0,10)}</DetailRight>
+          </DetailContext>
+          
+          <DetailContext>
+            <DetailLeft>이율</DetailLeft>
+            <DetailRight>{contractInfo?.rate}%</DetailRight>
+          </DetailContext>
+          
+          <DetailContext>
+            <DetailLeft>계약상태</DetailLeft>
+            <DetailRight>{statusReturn()}</DetailRight>
+          </DetailContext>
+        </DetailFrame>
+        <StyledBar/>
+
+      </InnerContainer>
+      {contractInfo?.lessee_id == userInfo?.user_id ? (
+        <MenuBarClickable onClick={openTransferModal}>
+          <MenuContextLeft>{contractInfo?.current_repayment_count+1}회차 이자 송금하기</MenuContextLeft>
+          <MenuContextRight>
+            <RightArrowResized />
+          </MenuContextRight>
+        </MenuBarClickable>
+        ) : null}
+        <MenuBarClickable onClick={toPDF}>
+          <MenuContextLeft>차용증 PDF로 보기</MenuContextLeft>
+          <MenuContextRight>
+            <RightArrowResized />
+          </MenuContextRight>
+        </MenuBarClickable>
       <NavBar />
+      
+      {transferModalOpen? (
+        <LeseeTransferModal
+        closeModal={closeTransferModal}
+        transferClicked={transferClicked}
+        paymentCount={contractInfo?.current_repayment_count}
+        lessorName={contractInfo?.lessor_name}
+        balance={userInfo?.account_info.balance}
+        />
+      ): null}
+
+      {passwordModalOpen? (
+        <SharePasswordModal
+        closePasswordModal={closePasswordModal}
+        passwordCorrect={passwordCorrect}
+        userPassword={userInfo?.password}
+        />
+      ): null}
+
+      
     </Main>
   );
 }
 
-const CenterDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 70px;
-`;
 
-const BetweenDiv = styled(CenterDiv)`
-  width: 340px;
+const InnerContainer = styled.div`
+  position: relative;
+  width: calc(100% - 40px);
+  margin-top: 116px;
+  margin-left: 20px;
+  `
+
+  const TitleFrame = styled.div`
+    position: relative;
+    width: calc(100% - 56px);
+    margin-left: 4px;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--black);
+  `
+
+const SummaryLeft = styled.div`
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--font-gray);
+  margin-left: 15px;
+`
+
+const SummaryRight = styled(SummaryLeft)`
+  margin-right: 15px;
+  font-weight: 600;
+  color: var(--black);
+  margin-right: 15px;
+`
+
+const DetailFrame = styled.div`
+  position: relative;
+  width: calc(100% - 8px);
+  margin-left: 4px;
+  margin-top: 22px;
+  margin-bottom: 32px;
+`
+
+const DetailContext = styled.div`
+  margin-bottom: 16px;
+  display: flex;
   justify-content: space-between;
-  margin: 7px 0px;
-`;
+  font-size: 16px;
+  font-weight: 500;
+`
 
-const FlexWrapDiv = styled.div<MarginProps>`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin: ${(props) => props.margin};
-`;
+const DetailLeft = styled.div`
+  color: var(--black);
+`
 
-const TitleDiv = styled.div<MarginProps>`
-  margin: ${(props) => props.margin};
-  display: flex;
-  justify-content: left;
-  align-items: center;
-`;
+const DetailRight = styled.div`
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--font-gray);
+`
+
+
 
 const CountBox = styled.div`
-  width: 330px;
-  height: 65px;
-  padding: 0 15px;
+  position: relative;
+  width: 100%;
+  height: 64px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #f0f2f8;
   border-radius: 10px 10px 0px 0px;
+  margin-top: 10px;
 `;
 
 const RemainBox = styled(CountBox)`
-  height: 50px;
+  height: 48px;
   background-color: #e6e9f3;
   border-radius: 0px 0px 10px 10px;
+  margin-bottom: 32px;
+  margin-top: 0px;
 `;
 
 const RightArrowResized = styled(RightArrow)`
@@ -180,7 +312,44 @@ const RightArrowResized = styled(RightArrow)`
 
 
 const StyledBar = styled.div`
-  width: 340px;
-  border-bottom: 1px solid var(--font-gray);
-  margin: 15px 0;
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid var(--gray);
+  margin-bottom: 8px;
+`;
+
+const MenuBarClickable = styled.div`
+  position: relative;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--white);
+  align-items: center;
+  font-size: 17.5px;
+  &:hover {
+    background-color: var(--background);
+    transition: all ease 250ms;
+  }
+  background-color: var(--white);
+  transition: all ease 250ms;
+`;
+
+const MenuContextLeft = styled.span`
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--black);
+  font-weight: 500;
+  margin-left: 24px;
+`;
+
+const MenuContextRight = styled.span`
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: var(--font-gray);
+  font-size: 16.5px;
+  margin-right: 28px;
 `;
