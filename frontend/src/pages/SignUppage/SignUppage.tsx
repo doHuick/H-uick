@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { TextBox } from '../../components/TextBox/TextBox';
 import { Main } from '../../style';
@@ -170,16 +170,16 @@ export default function SignUppage() {
         <Id>
           {/* 주민등록번호 앞자리 입력 input */}
           <IdInput
-            type="number"
-            maxlength="6"
+            type="string"
+            maxLength={6}
             value={idFront}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdFront(e.target.value)}
           />
           <Bar />
           {/* 주민등록번호 뒷자리 입력 input */}
           <IdInput
-            type="number"
-            maxlength="7"
+            type="string"
+            maxLength={7}
             value={idBack}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdBack(e.target.value)}
           />
@@ -204,8 +204,8 @@ export default function SignUppage() {
         </TextBoxSignup>
         {/* 전화번호 입력 input */}
         <StyledInput
-          type="number"
-          maxlength="11"
+          type="string"
+          maxLength={11}
           value={phoneNumber}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
         />
@@ -226,8 +226,6 @@ export default function SignUppage() {
         closePasswordModal={closePasswordModal}
         handlePassword={handlePassword}/>
       ) : null}
-
-      {/* <NavBar /> */}
     </Main>
   );
 }
@@ -244,7 +242,6 @@ const InputFrame = styled(TitleFrame)`
   width: calc()(100% - 56px);
   margin-top: 60px;
   margin-left: 28px;
-
 `
 
 const TextBoxSignup = styled(TextBox)`
@@ -285,7 +282,6 @@ const Id = styled.div`
   align-items: center;
 `;
 
-// [23-09-12] 임시 가운데 정렬 용도 - 향후 수정 필
 const CenterDiv = styled.div`
   position: relative;
   width: calc(100% - 56px);
@@ -302,4 +298,4 @@ const ConfirmButtonRenewed = styled(ConfirmButton)`
   border-radius: 16px;
   font-size: 17px;
   font-weight: 600;
-`
+`;

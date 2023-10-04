@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Main } from '../../style';
-import { TextBox } from '../../components/TextBox/TextBox';
 import HeadBar from '../../components/HeadBar/HeadBar';
 import NavBar from '../../components/NavBar/NavBar';
 import LeseeTransferModal from '../../components/TransferModal/LesseeTransfer';
@@ -37,6 +36,33 @@ interface ContractInfoProps{
   pdf_path: string
 }
 
+interface AccountProps{
+  accountId: number,
+  accountNumber: string,
+  balance: number,
+  bankCode: string,
+  bankName: string,
+  createdTime: string,
+}
+
+interface UserInfoProps{
+  account_info : AccountProps,
+  address: string,
+  created_time: string,
+  issue_date?: string,
+  name: string,
+  password: string,
+  phone_number: string,
+  role: string,
+  rrn: string,
+  signature_url?: string,
+  social_id: string,
+  social_type: string,
+  user_id: number,
+  wallet_address?: string,
+  withdrawal_time? : string,
+}
+
 export default function IOUDetailPage() {
   const params = useParams();
   const contractId = params.contractId
@@ -44,7 +70,7 @@ export default function IOUDetailPage() {
   const navigate = useNavigate()
 
   const [contractInfo, setContractInfo] = useState<ContractInfoProps>()
-  const [userInfo, setUserInfo] = useState(null)
+  const [userInfo, setUserInfo] = useState<UserInfoProps>()
 
 
   toastConfig({
@@ -70,7 +96,7 @@ export default function IOUDetailPage() {
       setUserInfo(res.data)
       console.log(res.data)
     })
-    .catch((err) => {
+    .catch(() => {
     })
   }, []);
 
@@ -190,7 +216,7 @@ export default function IOUDetailPage() {
       </InnerContainer>
       {contractInfo?.lessee_id == userInfo?.user_id ? (
         <MenuBarClickable onClick={openTransferModal}>
-          <MenuContextLeft>{contractInfo?.current_repayment_count+1}회차 이자 송금하기</MenuContextLeft>
+          <MenuContextLeft>{contractInfo?.current_repayment_count ? contractInfo?.current_repayment_count + 1 : null}회차 이자 송금하기</MenuContextLeft>
           <MenuContextRight>
             <RightArrowResized />
           </MenuContextRight>

@@ -1,8 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
-
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
@@ -37,8 +34,7 @@ const Main = styled.div`
 const GoBack = styled.div`
   position: relative;
   margin-top: 100px;
-  
-`
+`;
 
 const NotFound = styled.div`
   position: absolute;
@@ -46,5 +42,4 @@ const NotFound = styled.div`
   top: 50%;
   display: flex;
   justify-content: center;
-
-`
+`;

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Main } from '../../style';
 import HeadBar from '../../components/HeadBar/HeadBar';
 import { MiniConfirmButton } from '../../components/Button/Button';
-import { useNavigate, useParams } from 'react-router-dom';
+// import { useNavigate, useParams } from 'react-router-dom';
 import axios, { BASE_URL } from '../../api/apiController';
 
 // import { Worker, Viewer, LocalizationMap } from '@react-pdf-viewer/core';
@@ -16,8 +16,8 @@ import { MobilePDFReader } from 'react-read-pdf';
 import './PDFPage.css'
 
 export default function PDFPage() {
-  const params = useParams();
-  const contractId = params.contractId
+  // const params = useParams();
+  // const contractId = params.contractId
   
   const [userInfo, setUserInfo] = useState(null)
 
@@ -37,7 +37,7 @@ export default function PDFPage() {
     }).then((res) => {
       setUserInfo(res.data)
     })
-    .catch((err) => {
+    .catch(() => {
     })
   }, []);
 
@@ -46,7 +46,7 @@ export default function PDFPage() {
       <HeadBar pageName="차용증" />
       <PDFBackground>
         <PDFFrame>
-
+          {userInfo}
           {/* react-pdf-viewer */}
           {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
             <Viewer 
@@ -100,12 +100,6 @@ const PDFFrame = styled.div`
   width: 50%;
   height: 100%;
   overflow-y: hidden;
-`
-
-const PDFPaper = styled.div`
-  position: relative;
-  width: 75%;
-  height: 75%;
 `
 
 const ButtonFrame = styled.div`

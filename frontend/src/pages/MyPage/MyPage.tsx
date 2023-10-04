@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 import { ReactComponent as RightArrow } from '../../assets/icons/right-arrow.svg';
 import HeadBar from '../../components/HeadBar/HeadBar';
-// import SignModalMain from '../../components/SignModal/SignModalMain';
 import SignModal from '../../components/SignModal/SignModal';
 import NavBar from '../../components/NavBar/NavBar';
-// import ModalFrame from '../../components/Modal/ModalFrame';
-import { ConfirmButton } from '../../components/Button/Button';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
 import 'react-simple-toasts/dist/theme/light.css';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate } from 'react-router-dom';
-
 
 interface AccountProps{
   accountId: number,
@@ -56,14 +52,16 @@ export default function MyPage() {
       console.log(res.data)
       setSignatureImage(res.data.signature_url)
     })
-    .catch((err) => {
+    .catch(() => {
       navigate('/login');
     })
   }, []);
 
   const logout = () => {
     localStorage.clear()
-    navigate('/login')
+    axios.get(`${BASE_URL}/v1/user/logout`, {
+      headers: { Authorization: localStorage.getItem('access_token') },
+    })
   }
   
   const signOut = () => {
@@ -80,7 +78,6 @@ export default function MyPage() {
     position: 'top-center',
   });
   
-
   const showModal = () => {
     setModalOpen(true);
   };
@@ -109,7 +106,7 @@ export default function MyPage() {
 
   return (
     <Main>
-      <HeadBar pageName="마이페이지" bgcolor='var(--background)' />
+      <HeadBar pageName="마이페이지" color='var(--background)' />
       <WhiteFrame style={{ marginTop: '108px' }}>
         <MenuBar style={{ paddingTop: '8px', pointerEvents: 'none' }}>
           <MenuTitle>내 계좌 정보</MenuTitle>
@@ -154,7 +151,6 @@ export default function MyPage() {
             ) : (
               <span>서명을 등록해주세요</span>
             )}
-            {/* <img src="../../../sign-test.png" style={{width: '80%', height: '90%'}} alt="" /> */}
           </MenuContextRight>
         </MenuBar>
 
@@ -170,13 +166,6 @@ export default function MyPage() {
           </MenuContextRight>
         </MenuBarClickable>
       </WhiteFrame>
-      {/* {modalOpen && (
-        <SignModalMain closeModal={closeModal} onSave={handleSave} />
-        // <Modal closeModal={closeModal} >
-    
-        // </Modal>
-      )}{' '} */}
-
       <WhiteFrame>
         <MenuBar style={{ paddingTop: '8px', pointerEvents: 'none' }}>
           <MenuTitle>계정</MenuTitle>
@@ -192,14 +181,10 @@ export default function MyPage() {
       </WhiteFrame>
       {modalOpen? (
         <SignModal closeModal={closeModal} onSave={handleSave} />
-        // <ModalFrame closeModal={closeModal} >
-        //   sdsadsadsadasdsa
-        // </ModalFrame>
       ): null}
       <LogoutAndVer>
         <HuickVer>©️ H-uick v 1.0.0</HuickVer>
       </LogoutAndVer>
-
       <NavBar />
     </Main>
   );
@@ -286,25 +271,9 @@ const LogoutAndVer = styled.div`
   flex-direction: column;
   align-items: center;
 `
-
-const LogOutButton = styled(ConfirmButton)`
-  background-color: var(--yellow);
-  margin-top: 8px;
-  margin-bottom: 36px;
-`
-
-
 const HuickVer = styled.div`
   font-size: 14;
   color: var(--gray);
   font-weight: 500;
   margin-bottom: 102px
-`;
-
-const SignOut = styled(HuickVer)`
-  font-size: 12px;
-  color: #d37373;
-  text-decoration: underline;
-  margin-bottom: 6px;
-
 `;

@@ -26,11 +26,6 @@ export default function ModalBase({ closeModal, children, frameHeight, }: ModalB
     }
   };
   
-  const isModalCloseClick = () => {
-    closeAndAnimate();
-
-  };
-
   const closeAndAnimate = () => {
     setIsClosing(true);
     setTimeout(() => {
