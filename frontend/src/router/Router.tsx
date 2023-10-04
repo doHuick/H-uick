@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Mainpage from '../pages/MainPage/Mainpage';
 import SignUppage from '../pages/SignUppage/SignUppage';
@@ -17,17 +16,16 @@ import PDFPage from '../pages/IOUPage/PDFPage';
 export default function Router() {
   return (
     <BrowserRouter>
-
       <Routes>
         <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="/oauth/redirect" element={<KakaoAuthHandler />}/>
-        
+        <Route path="/oauth/redirect" element={<KakaoAuthHandler />} />
+
         <Route element={<PrivateRoute />}>
-          <Route path="/" element={<Mainpage />}></Route>
-          {/* <Route element={<AuthenticatedRoute />}> */}
+          <Route element={<AuthenticatedRoute />}>
             <Route path="/signup" element={<SignUppage />}></Route>
-            <Route path="/welcome" element={<Welcomepage/>}></Route>
-          {/* </Route> */}
+            <Route path="/welcome" element={<Welcomepage />}></Route>
+          </Route>
+          <Route path="/" element={<Mainpage />}></Route>
           <Route path="/mypage" element={<MyPage />}></Route>
           <Route path="/chatbot" element={<ChatbotPage />}></Route>
           <Route path="/share/:contractId" element={<SharePage />}></Route>

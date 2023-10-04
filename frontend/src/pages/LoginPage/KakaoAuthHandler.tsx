@@ -13,9 +13,16 @@ const KakaoAuthHandler = () => {
   const accessTokenParam: string | null = new URL(currentUri).searchParams.get(
     'token',
   );
+  const refreshTokenParam: string | null = new URL(currentUri).searchParams.get(
+    'refresh',
+  );
 
   if (accessTokenParam !== null) {
     localStorage.setItem('access_token', accessTokenParam);
+  }
+
+  if (refreshTokenParam !== null) {
+    localStorage.setItem('refresh_token', refreshTokenParam);
   }
 
   useEffect(() => {

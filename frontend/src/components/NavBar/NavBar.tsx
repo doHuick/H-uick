@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { ReactComponent as MainSvg } from '../../assets/icons/mainpage.svg';
@@ -16,45 +16,28 @@ const NavBar = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const getActiveNav = (): string | null => {
+    const active = Object.keys(navRoutes).find((nav) => isNavActive(nav));
+    return active || null;
+  };
+
   useEffect(() => {
     setActiveNav(getActiveNav());
   }, []);
 
   const handleNavClick = (nav: string) => {
     setActiveNav(nav);
-    switch (nav) {
-      case 'main':
-        navigate('/main');
-        break;
-      case 'contract':
-        navigate('/contract');
-        break;
-      case 'chatbot':
-        navigate('/chatbot');
-        break;
-      case 'mypage':
-        navigate('/mypage');
-        break;
-    }
+    navigate(navRoutes[nav]);
   };
 
   const navRoutes: Record<string, string> = {
-    main: '/main',
+    main: '/',
     contract: '/contract',
     chatbot: '/chatbot',
     mypage: '/mypage',
   };
 
   const isNavActive = (nav: string) => location.pathname === navRoutes[nav];
-
-  const getActiveNav = (): string | null => {
-    for (const nav in navRoutes) {
-      if (isNavActive(nav)) {
-        return nav;
-      }
-    }
-    return null;
-  };
 
   return (
     <BottomBar>
@@ -98,7 +81,7 @@ const BottomBar = styled.div`
   justify-content: center;
   align-items: center;
   gap: 70px;
-  background-color: #F0F0F0;
+  background-color: #f0f0f0;
 `;
 
 const NavItem = styled.div<NavItemProps>`
