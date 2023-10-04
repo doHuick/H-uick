@@ -22,7 +22,6 @@ public class AuthController {
 
 	@GetMapping("/refresh")
 	public ResponseEntity<AuthApiDto.Response> refreshToken(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("refresh token");
 		String token = authService.refreshToken(request, response);
 
 		return ResponseEntity.ok().body(AuthApiDto.Response.from(token));
