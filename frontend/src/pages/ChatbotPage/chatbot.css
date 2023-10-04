@@ -4,7 +4,7 @@
   height: calc(100% - 176px);
   white-space: pre-line;
   bottom: 80px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .react-chatbot-kit-chat-inner-container {
@@ -81,6 +81,7 @@
   margin-left: 12px;
   width: auto;
   line-height: 19px;
+
 }
 
 .react-chatbot-kit-chat-bot-message-arrow {

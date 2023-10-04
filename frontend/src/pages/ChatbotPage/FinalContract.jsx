@@ -402,12 +402,12 @@ const ChatbotButtonShare = styled(ChatbotButton)`
   margin-left: 12px;
   margin-right: 12px;
   line-height: 19px;
-  background-color: #f2f2f7;
+  background-color: #f1f1f1;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  width: 50%;
+  width: 54%;
 `;
 
 const RightArrowResized = styled(RightArrow)`

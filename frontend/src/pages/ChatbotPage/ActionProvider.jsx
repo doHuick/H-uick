@@ -1,5 +1,6 @@
 import React from 'react';
 import { createClientMessage } from 'react-chatbot-kit';
+import axios from 'axios';
 
 var isLender = true
 localStorage.setItem("toSendLocal", '')
@@ -26,9 +27,9 @@ const toFirst = () => {
   localStorage.setItem("userButtonsLocal", '[]')
   localStorage.setItem("isPWDCorrect", 'false')
   const botMessage = createChatBotMessage(
-    "님 안녕하세요?\n궁금한게 있다면 '질문하기'를 보내보세요\n\n휙봇과 대화하며\n차용증을 작성할 수 있습니다.\n\n다시 시작하고 싶다면\n'처음으로'를 보내보세요\n\n다음의 항목들에 하나씩 답변해주세요!",
+    "`휙봇을 통해 간편하게\n차용증을 작성할 수 있습니다.\n\n다음의 항목들에 하나씩 답변해주세요!`",
   );
-  const botMessageSecond = createChatBotMessage('빌림 or 빌려줌', {
+  const botMessageSecond = createChatBotMessage('가장 중요한 것부터 시작할게요', {
     widget: 'lendborrowbutton',
   });
 
@@ -47,7 +48,7 @@ const toFirst = () => {
       localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
       const clientmessage = createClientMessage('빌려주기');
       const botMessage = createChatBotMessage(
-        '대화형할지 카카오할지', {widget: 'chatkakaobutton'}
+        '작성 방식을 선택해주세요', {widget: 'chatkakaobutton'}
         );
         // const botMessagesecond = createChatBotMessage('얼마를 빌려주시나요?', {
         //   delay: 900,
@@ -70,7 +71,7 @@ const toFirst = () => {
       localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
       const clientmessage = createClientMessage('빌리기');
       const botMessage = createChatBotMessage(
-        '대화형할지 카카오할지', {widget: 'chatkakaobutton'}
+        '작성 방식을 선택해주세요', {widget: 'chatkakaobutton'}
         );
         // const botMessagesecond = createChatBotMessage('얼마를 빌려주시나요?', {
         //   delay: 900,
@@ -125,17 +126,17 @@ const toFirst = () => {
   // 카카오캡쳐 업로드
   const handleUpload = () => {
     if (localStorage.getItem('kakaoUploaded') == 'false') {
-      const botMessage = createChatBotMessage('만들어 드리겠습니다!');
+      const botMessage = createChatBotMessage('이미지를 분석한 내용으로 만들어드릴게요');
       // 여기서 이미지 보내고 내용 받기
-      // const toSend = JSON.parse(localStorage.getItem('tempContractLocal'));
+      const toSend = JSON.parse(localStorage.getItem('tempContractLocal'));
 
       // 더미데이터
-      const toSend = {
-        loanAmount: 120,
-        maturityDate: '20240101',
-        interestRate: 12,
-      };
-      localStorage.setItem("tempContractLocal", JSON.stringify(toSend))
+      // const toSend = {
+      //   loanAmount: 120,
+      //   maturityDate: '20240101',
+      //   interestRate: 12,
+      // };
+      // localStorage.setItem("tempContractLocal", JSON.stringify(toSend))
 
 
 
@@ -160,8 +161,8 @@ const toFirst = () => {
         6,
       )}월 ${toSend.maturityDate.slice(6, 8)}일
       이자율: ${toSend.interestRate}%\n
-      위 내용이 맞나요`,
-        { widget: 'confirmbutton', delay: 900 },
+      내용이 맞는지 확인하고\n궁금한 점이 있다면 '질문하기'를 보내보세요`,
+        { widget: 'confirmbutton', delay: 2000 },
       );;
 
       const toSendContract = { isLender: isLender, loanAmount: toSend.loanAmount, maturityDate: toSend.maturityDate, interestRate: toSend.interestRate }
@@ -275,7 +276,7 @@ const toFirst = () => {
       6,
     )}월 ${toSend.maturityDate.slice(6, 8)}일
     이자율: ${toSend.interestRate}%\n
-    위 내용이 맞나요`,
+    내용이 맞는지 확인하고\n궁금한 점이 있다면 '질문하기'를 보내보세요`,
       { widget: 'confirmbutton' },
     );
 
@@ -316,7 +317,7 @@ const toFirst = () => {
         localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
         const clientmessage = createClientMessage('아니에용');
         const botMessage = createChatBotMessage(
-          "수정하고 싶은 항목을 선택해주세요\n다시 작성하려면 '처음으로'", { widget: 'editbutton' }
+          "수정하고 싶은 항목을 선택해주세요\n다시 작성하려면 '처음으로'를 보내주세요", { widget: 'editbutton' }
         );
     
         setState((prev) => ({
@@ -385,11 +386,59 @@ const toFirst = () => {
 
   };
 
+  const handleAsk = () => {
+      const botMessage = createChatBotMessage('휙봇에게 질문을 해주세요');
 
-  const goToPage = () => {
-    const navigate = useNavigate();
-    navigate("/contractTemp")
+      setState((prev) => ({
+        ...prev,
+        messages: [...prev.messages, botMessage ],
+      }));
+      
+    };
+
+    const handleAnswer = (response) => {
+      const botMessage = createChatBotMessage(`${response}`);
+      const botMessageSecond = createChatBotMessage("추가 질문이 있다면 '질문하기'를,\n없으시다면 '돌아가기'를 입력해주세요");
+      
+      setState((prev) => ({
+        ...prev,
+        messages: [...prev.messages, botMessage, botMessageSecond ],
+      }));
+    }
+
+  const handleGPTResponse = (message) => {
+    const toSend = JSON.parse(localStorage.getItem('tempContractLocal'));
+    console.log(message)
+    const botMessage = createChatBotMessage('잠시 기다려주세요');
+    const askGPT = {
+      user_id: 1,
+      contract_tmp_key: "11",
+      contract_info: {
+                          loanAmount: toSend?.loanAmount,
+                          amountInKorean: null,
+                          interestRate: toSend?.interestRate,
+                          maturityDate: toSend?.maturityDate,
+  
+                        },
+      chat: message,
+    }
+
+    axios.post(
+      `https://h-uick.com/ai/contracts/assist?user_id=1&contract_tmp_key=11`,
+      askGPT,
+      {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+      .then((res) => {
+        handleAnswer(res.data.answer)
+      })
+      
+    setState((prev) => ({
+      ...prev,
+      messages: [...prev.messages, botMessage ],
+    }));
   };
+
 
   // Put the handleHello function in the actions object to pass to the MessageParser
   return (
@@ -419,6 +468,8 @@ const toFirst = () => {
             handleDateEdit,
             handleRateEdit,
             handleShare,
+            handleAsk,
+            handleGPTResponse,
           },
         });
       })}

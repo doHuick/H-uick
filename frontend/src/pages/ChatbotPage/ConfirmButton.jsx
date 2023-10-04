@@ -6,12 +6,12 @@ const ConfirmButton = (props) => {
     const [buttonsVisible, setButtonsVisible] = useState(true);
     const confirmOptions = [
         {
-          text: "맞아용",
+          text: "맞아요",
           handler: props.actionProvider.handleYesConfirmButton,
           id: 1,
         },
         {
-          text: "아니에용",
+          text: "아니에요",
           handler: props.actionProvider.handleNoConfirmButton,
           id: 2
         },
@@ -44,7 +44,7 @@ const ChatbotButton = styled.div`
   height: 32px;
   border: none;
   border-radius: 24px;
-  background-color: #F2F2F7;
+  background-color: #f1f1f1;
   display: flex;
   justify-content: center;
   align-items: center;
