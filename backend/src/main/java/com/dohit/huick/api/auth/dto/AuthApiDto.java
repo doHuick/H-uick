@@ -5,8 +5,21 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class AuthApiDto {
+
+	@Getter
+	@NoArgsConstructor
+	@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+	public static class Request {
+		private String refreshToken;
+
+		@Builder
+		public Request(String refreshToken) {
+			this.refreshToken = refreshToken;
+		}
+	}
 
 	@Getter
 	@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
