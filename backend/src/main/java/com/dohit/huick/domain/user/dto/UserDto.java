@@ -28,12 +28,14 @@ public class UserDto {
 	private String phoneNumber;
 	private String password;
 	private LocalDateTime issueDate;
+	private String walletKey;
 	private AccountDto accountInfo;
 
 	@Builder
-	private UserDto(Long userId, String name, String rrn, String address, String walletAddress, SocialType socialType,
-		String socialId, LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl,
-		String phoneNumber, String password, LocalDateTime issueDate, AccountDto accountInfo) {
+	private UserDto(Long userId, String name, String rrn, String address, String walletAddress,
+		SocialType socialType, String socialId, LocalDateTime createdTime, Role role,
+		LocalDateTime withdrawalTime, String signatureUrl, String phoneNumber, String password,
+		LocalDateTime issueDate, String walletKey, AccountDto accountInfo) {
 		this.userId = userId;
 		this.name = name;
 		this.rrn = rrn;
@@ -43,11 +45,12 @@ public class UserDto {
 		this.socialId = socialId;
 		this.createdTime = createdTime;
 		this.role = role;
-		this.phoneNumber = phoneNumber;
-		this.password = password;
 		this.withdrawalTime = withdrawalTime;
 		this.signatureUrl = signatureUrl;
+		this.phoneNumber = phoneNumber;
+		this.password = password;
 		this.issueDate = issueDate;
+		this.walletKey = walletKey;
 		this.accountInfo = accountInfo;
 	}
 
@@ -58,6 +61,8 @@ public class UserDto {
 			.rrn(request.getRrn())
 			.address(request.getAddress())
 			.phoneNumber(request.getPhoneNumber())
+			.walletAddress(request.getWalletAddress())
+			.walletKey(request.getWalletKey())
 			.build();
 	}
 
