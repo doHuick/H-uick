@@ -14,12 +14,10 @@ public class RepaymentApiDto {
 	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Request {
 		Long contractId;
-		Long amount;
 
 		@Builder
-		public Request(Long contractId, Long amount) {
+		public Request(Long contractId) {
 			this.contractId = contractId;
-			this.amount = amount;
 		}
 	}
 }
