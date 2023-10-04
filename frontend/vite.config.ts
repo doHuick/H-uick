@@ -6,4 +6,9 @@ export default defineConfig({
   plugins: [react(), svgr()],
   base: './',
   assetsInclude: ['**/*.*'], 
+  server: {
+    watch: {
+      usePolling: true,
+    }
+  }
 })
