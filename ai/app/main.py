@@ -21,7 +21,7 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def test_connection() -> str:
+async def test_connection():
     try:
         response = "Hello, jisungguridangdang"
 
@@ -31,7 +31,7 @@ async def test_connection() -> str:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/contracts/assist")
-async def create_assist_chat(assist_request: AssistRequest) -> str:
+async def create_assist_chat(assist_request: AssistRequest):
     try:
         response = contract_assist_service.create_assist_chat_response(assist_request.user_id, 
                                                                        assist_request.contract_tmp_key,
