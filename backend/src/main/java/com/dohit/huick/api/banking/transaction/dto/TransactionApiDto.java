@@ -15,14 +15,14 @@ public class TransactionApiDto {
 	@NoArgsConstructor
 	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Request {
-		private String senderAccountNumber;
-		private String receiverAccountNumber;
+		private Long senderId;
+		private Long receiverId;
 		private Long amount;
 
 		@Builder
-		private Request(String senderAccountNumber, String receiverAccountNumber, Long amount) {
-			this.senderAccountNumber = senderAccountNumber;
-			this.receiverAccountNumber = receiverAccountNumber;
+		private Request(Long senderId, Long receiverId, Long amount) {
+			this.senderId = senderId;
+			this.receiverId = receiverId;
 			this.amount = amount;
 		}
 	}
@@ -31,17 +31,17 @@ public class TransactionApiDto {
 	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Response {
 		private Long transactionId;
-		private String senderAccountNumber;
-		private String receiverAccountNumber;
+		private String senderId;
+		private String receiverId;
 		private Long amount;
 		private LocalDateTime transactionTime;
 
 		@Builder
-		private Response(Long transactionId, String senderAccountNumber, String receiverAccountNumber, Long amount,
+		private Response(Long transactionId, String senderId, String receiverId, Long amount,
 			LocalDateTime transactionTime) {
 			this.transactionId = transactionId;
-			this.senderAccountNumber = senderAccountNumber;
-			this.receiverAccountNumber = receiverAccountNumber;
+			this.senderId = senderId;
+			this.receiverId = receiverId;
 			this.amount = amount;
 			this.transactionTime = transactionTime;
 		}
@@ -49,8 +49,8 @@ public class TransactionApiDto {
 		public static Response from(TransactionDto transactionDto) {
 			return Response.builder()
 				.transactionId(transactionDto.getTransactionId())
-				.senderAccountNumber(transactionDto.getSenderAccountNumber())
-				.receiverAccountNumber(transactionDto.getReceiverAccountNumber())
+				.senderId(transactionDto.getSenderAccountNumber())
+				.receiverId(transactionDto.getReceiverAccountNumber())
 				.amount(transactionDto.getAmount())
 				.transactionTime(transactionDto.getTransactionTime())
 				.build();

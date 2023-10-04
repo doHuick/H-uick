@@ -33,7 +33,6 @@ public class BankingService {
 	private final TransactionService transactionService;
 	private final BankService bankService;
 	private final RepaymentService repaymentService;
-
 	private final ContractService contractService;
 
 	public void createAccount(Long userId) {
@@ -44,7 +43,7 @@ public class BankingService {
 		// 랜덤한 잔액 생성하기
 		SecureRandom secureRandom = new SecureRandom();
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(secureRandom.nextInt(900000) + 100000);
+		stringBuilder.append(secureRandom.nextInt(9000) + 1000);
 		int random = secureRandom.nextInt(3) + 3;
 		stringBuilder.append("0".repeat(random));
 		Long randomMoney = Long.parseLong(stringBuilder.toString());
@@ -64,7 +63,8 @@ public class BankingService {
 
 	public Long transferMoney(TransactionDto transactionDto) throws BankingException {
 		// from 계좌 가져옴
-		AccountDto senderAccountDto = accountService.getAccountByAccountNumber(transactionDto.getSenderAccountNumber());
+		// AccountDto senderAccountDto = accountService.getAccountByAccountNumber(transactionDto.getSenderAccountNumber());
+		AccountDto senderAccountDto = accountService.getAccountsByUserId(transactionDto.getSenderId()).get(0);
 		if (senderAccountDto.getBalance() < transactionDto.getAmount()) {
 			throw new TransferException(ErrorCode.NOT_ENOUGH_MONEY);
 		}
@@ -73,12 +73,14 @@ public class BankingService {
 		accountService.updateBalance(senderAccountDto.getAccountNumber(), -transactionDto.getAmount());
 
 		// to 계좌  가져와서 돈을 넣음
-		AccountDto receiverAccountDto = accountService.getAccountByAccountNumber(
-			transactionDto.getReceiverAccountNumber());
+		AccountDto receiverAccountDto = accountService.getAccountsByUserId(transactionDto.getReceiverId()).get(0);
 		accountService.updateBalance(receiverAccountDto.getAccountNumber(), transactionDto.getAmount());
 
+
+
 		// 트랜잭션 데이터를 생성함
-		return transactionService.createTransaction(transactionDto);
+		return transactionService.createTransaction(TransactionDto.from(transactionDto, senderAccountDto.getAccountNumber(),
+			receiverAccountDto.getAccountNumber()));
 	}
 
 	public List<TransactionDto> getTransactionsByUserId(Long userId) {
