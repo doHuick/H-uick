@@ -31,7 +31,8 @@ public class ContractApiDto {
 		String useAutoTransfer;
 
 		@Builder
-		private Request(Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate, Long amount, String amountInKorean,
+		private Request(Long lesseeId, Long lessorId, LocalDateTime startDate, LocalDateTime dueDate, Long amount,
+			String amountInKorean,
 			Float rate, ContractStatus status, String pdfPath, String useAutoTransfer) {
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
@@ -54,6 +55,8 @@ public class ContractApiDto {
 		Long lessorId;
 		String lesseeName;
 		String lesseeAddress;
+		String lesseeRrn;
+		String lesseePhoneNumber;
 		String lesseeWalletAddress;
 		String lessorName;
 		String lessorAddress;
@@ -73,16 +76,19 @@ public class ContractApiDto {
 		String pdfPath;
 
 		@Builder
-		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress, String lesseeWalletAddress,
-			String lessorName, String lessorAddress, String lessorRrn, String lessorPhoneNumber, String lessorWalletAddress,
+		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress,
+			String lesseeRrn, String lesseePhoneNumber, String lesseeWalletAddress, String lessorName,
+			String lessorAddress, String lessorRrn, String lessorPhoneNumber, String lessorWalletAddress,
 			Integer totalRepaymentCount, Integer currentRepaymentCount, LocalDateTime startDate,
-			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount, String amountInKorean,Float rate,
-			ContractStatus status, String pdfPath) {
+			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount,
+			String amountInKorean, Float rate, ContractStatus status, String pdfPath) {
 			this.contractId = contractId;
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
 			this.lesseeName = lesseeName;
 			this.lesseeAddress = lesseeAddress;
+			this.lesseeRrn = lesseeRrn;
+			this.lesseePhoneNumber = lesseePhoneNumber;
 			this.lesseeWalletAddress = lesseeWalletAddress;
 			this.lessorName = lessorName;
 			this.lessorAddress = lessorAddress;
@@ -110,6 +116,8 @@ public class ContractApiDto {
 				.lessorId(contractDto.getLessorId())
 				.lesseeName(lesseeDto.getName())
 				.lesseeAddress(lesseeDto.getAddress())
+				.lesseeRrn(lesseeDto.getRrn())
+				.lesseePhoneNumber(lesseeDto.getPhoneNumber())
 				.lesseeWalletAddress(lesseeDto.getWalletAddress())
 				.lessorName(lessorDto.getName())
 				.lessorAddress(lessorDto.getAddress())
@@ -144,11 +152,12 @@ public class ContractApiDto {
 				.pdfPath(contractDto.getPdfPath())
 				.build();
 		}
+
 		public static Response updateWalletAddress(String lesseeWalletAddress, String lessorWalletAddress) {
 			return Response.builder()
-					.lesseeWalletAddress(lesseeWalletAddress)
-					.lessorWalletAddress(lessorWalletAddress)
-					.build();
+				.lesseeWalletAddress(lesseeWalletAddress)
+				.lessorWalletAddress(lessorWalletAddress)
+				.build();
 		}
 	}
 }
