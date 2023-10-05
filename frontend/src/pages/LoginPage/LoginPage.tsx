@@ -2,12 +2,21 @@ import styled from 'styled-components';
 import { Main } from '../../style';
 import { ReactComponent as Kakao } from '../../assets/images/kakao.svg';
 
+// const LOGIN_URL = ;
+
 export default function LoginPage() {
   return (
     <Main>
       <Landing>
         <Image src="/H-uick.gif" />
-        <KakaoBox href="https://h-uick.com/api/oauth2/authorization/kakao?redirect_uri=https://h-uick.com/oauth/redirect">
+        <KakaoBox
+          href={
+            import.meta.env.VITE_BASEURL_BACK +
+            '/oauth2/authorization/kakao?redirect_uri=' +
+            import.meta.env.VITE_BASEURL_FRONT +
+            '/oauth/redirect'
+          }
+        >
           <Kakao />
         </KakaoBox>
       </Landing>
