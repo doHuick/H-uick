@@ -50,3 +50,11 @@
 .zoomIn {
   display: none !important
 }
+
+.pageNumber{
+  display: none !important
+}
+
+#footer {
+  display: none !important
+}

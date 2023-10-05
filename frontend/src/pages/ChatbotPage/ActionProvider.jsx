@@ -27,7 +27,7 @@ const toFirst = () => {
   localStorage.setItem("userButtonsLocal", '[]')
   localStorage.setItem("isPWDCorrect", 'false')
   const botMessage = createChatBotMessage(
-    "`휙봇을 통해 간편하게\n차용증을 작성할 수 있습니다.\n\n다음의 항목들에 하나씩 답변해주세요!`",
+    "휙봇을 통해 간편하게\n차용증을 작성할 수 있습니다\n\n다음의 항목들에 하나씩 답변해주세요!",
   );
   const botMessageSecond = createChatBotMessage('가장 중요한 것부터 시작할게요', {
     widget: 'lendborrowbutton',
@@ -222,7 +222,7 @@ const toFirst = () => {
   // 만기일이 오늘 이하임
   const endDateFailed = () => {
     const botMessage = createChatBotMessage(
-      '만기일은 시작일보다 뒤\n만기일 다시',
+      '만기일은 시작일 이후여야 합니다\n만기일을 다시 입력해주세요',
     );
 
     setState((prev) => ({
@@ -233,7 +233,7 @@ const toFirst = () => {
 
   // 이자율
   const annualRate = () => {
-    const botMessage = createChatBotMessage('이자율은 몇%로 하시겠습니까?');
+    const botMessage = createChatBotMessage('이자율은 몇 퍼센트로 하시겠습니까?');
 
     setState((prev) => ({
       ...prev,
@@ -253,7 +253,7 @@ const toFirst = () => {
 
   // 이자율 형식 안맞음
   const rateFailed = () => {
-    const botMessage = createChatBotMessage('이자율을 숫자로');
+    const botMessage = createChatBotMessage('이자율을 숫자로 입력해주세요');
 
     setState((prev) => ({
       ...prev,
@@ -295,7 +295,7 @@ const toFirst = () => {
       if (!userButtons[2]) {
         userButtons.push('handleConfirm')
         localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
-        const clientmessage = createClientMessage('맞아용');
+        const clientmessage = createClientMessage('맞아요');
         const botMessage = createChatBotMessage('위의 내용으로 만들어드릴게요');
         const botMessageSecond = createChatBotMessage(
         '작성된 임시 차용증을 확인해보세요',
@@ -315,7 +315,7 @@ const toFirst = () => {
       if (!userButtons[2]) {
         userButtons.push('handleConfirm')
         localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
-        const clientmessage = createClientMessage('아니에용');
+        const clientmessage = createClientMessage('아니에요');
         const botMessage = createChatBotMessage(
           "수정하고 싶은 항목을 선택해주세요\n다시 작성하려면 '처음으로'를 보내주세요", { widget: 'editbutton' }
         );
@@ -377,7 +377,7 @@ const toFirst = () => {
   };
 
   const handleShare = () => {
-      const botMessage = createChatBotMessage('작성이 완료되었습니다. 공유해서~', {});
+      const botMessage = createChatBotMessage('작성이 완료되었습니다', {});
 
       setState((prev) => ({
         ...prev,
