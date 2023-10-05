@@ -10,6 +10,8 @@ app = FastAPI()
 # CORS 미들웨어 설정
 origins = [
     # 허용하려는 출처
+    "https://localhost:5173",
+    "http://localhost:5173",
     "http://www.h-uick.com",
     "https://www.h-uick.com",
     "http://h-uick.com",
