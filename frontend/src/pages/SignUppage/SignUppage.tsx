@@ -18,32 +18,6 @@ interface DataProps {
   address: string;
 }
 
-interface AccountProps {
-  accountId: number;
-  accountNumber: string;
-  balance: number;
-  bankCode: string;
-  bankName: string;
-  createdTime: string;
-}
-
-interface UserInfoProps {
-  account_info: AccountProps;
-  address: string;
-  created_time: string;
-  issue_date?: string;
-  name: string;
-  phone_number: string;
-  role: string;
-  rrn: string;
-  signature_url?: string;
-  social_id: string;
-  social_type: string;
-  user_id: number;
-  wallet_address?: string;
-  withdrawal_time?: string;
-}
-
 export default function SignUppage() {
   const [name, setName] = useState<string>('');
   const [idFront, setIdFront] = useState<string>('');
@@ -102,7 +76,6 @@ export default function SignUppage() {
   // 모달 띄우기
   const [signModalOpen, setSignModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState<UserInfoProps>();
 
   const showSignModal = () => {
     setSignModalOpen(true);
@@ -132,9 +105,6 @@ export default function SignUppage() {
     axios
       .get(`${BASE_URL}/users/me`, {
         headers: { Authorization: localStorage.getItem('access_token') },
-      })
-      .then((res) => {
-        setUserInfo(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -205,7 +175,7 @@ export default function SignUppage() {
           <Bar />
           {/* 주민등록번호 뒷자리 입력 input */}
           <IdInput
-            type="string"
+            type="password"
             maxLength={7}
             value={idBack}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -245,6 +215,7 @@ export default function SignUppage() {
           type="string"
           maxLength={11}
           value={phoneNumber}
+          placeholder='ex) 010-1234-5678'
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setPhoneNumber(e.target.value)
           }
