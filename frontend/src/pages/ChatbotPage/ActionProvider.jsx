@@ -162,7 +162,7 @@ const toFirst = () => {
       )}월 ${toSend.maturityDate.slice(6, 8)}일
       이자율: ${toSend.interestRate}%\n
       내용이 맞는지 확인하고\n궁금한 점이 있다면 '질문하기'를 보내보세요`,
-        { widget: 'confirmbutton', delay: 2000 },
+        { widget: 'confirmbutton', delay: 900 },
       );;
 
       const toSendContract = { isLender: isLender, loanAmount: toSend.loanAmount, maturityDate: toSend.maturityDate, interestRate: toSend.interestRate }
@@ -317,7 +317,7 @@ const toFirst = () => {
         localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
         const clientmessage = createClientMessage('아니에요');
         const botMessage = createChatBotMessage(
-          "수정하고 싶은 항목을 선택해주세요\n다시 작성하려면 '처음으로'를 보내주세요", { widget: 'editbutton' }
+          "수정하고 싶은 항목을 선택해주세요", { widget: 'editbutton' }
         );
     
         setState((prev) => ({

@@ -5,7 +5,6 @@ import { TextBox } from '../../components/TextBox/TextBox';
 import { ReactComponent as Check } from '../../assets/icons/check.svg';
 import { ReactComponent as Bar } from '../../assets/icons/long-bar.svg';
 import { ConfirmButton } from '../../components/Button/Button';
-import HeadBar from '../../components/HeadBar/HeadBar';
 import NavBar from '../../components/NavBar/NavBar';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
@@ -54,7 +53,7 @@ export default function Welcomepage() {
 
   return (
     <Main backgroundColor="var(--white)">
-      <HeadBar pageName="회원가입" color="var(--white)" />
+      {/* <HeadBar pageName="회원가입" color="var(--white)" /> */}
       <CheckDiv>
         <Check />
       </CheckDiv>
@@ -107,9 +106,9 @@ export default function Welcomepage() {
         <TextBox fontSize="15.5px" fontWeight="500" color="var(--font-gray)">
           {walletAdd}
         </TextBox>
-        <CenterDiv>
-          <ConfirmButton onClick={() => navigation('/')}>휙 사용해보기</ConfirmButton>
-        </CenterDiv>
+        <ButtonFrame>
+          <ConfirmButtonRenewed onClick={() => navigation('/')}>휙 사용해보기</ConfirmButtonRenewed>
+        </ButtonFrame>
       </FlexWrapDiv>
       <NavBar />
     </Main>
@@ -150,8 +149,25 @@ const FlexWrapDiv = styled.div`
 `;
 
 const CheckDiv = styled.div`
-  margin-top: 150px;
+  margin-top: 124px;
   margin-bottom: 36px;
   display: flex;
   justify-content: center;
+`;
+
+
+const ButtonFrame = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+`
+
+const ConfirmButtonRenewed = styled(ConfirmButton)`
+  position: relative;
+  width: 324px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 600;
 `;

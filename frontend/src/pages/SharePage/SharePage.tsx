@@ -67,13 +67,14 @@ export default function SharePage() {
   const isLogin = useAuth();
   const navigate = useNavigate();
 
-  localStorage.setItem('contractId', contractId || '');
+  // @ts-ignore
+  localStorage.setItem('contractId', contractId);
 
   if (!isLogin) {
     navigate('/login');
   } else {
-    navigate(`/share/${contractId}`)
-    localStorage.removeItem('contractId')
+    navigate(`/share/${contractId}`);
+    localStorage.removeItem('contractId');
   }
 
   const [contractInfo, setContractInfo] = useState<ContractInfoProps>();
@@ -125,24 +126,20 @@ export default function SharePage() {
       });
   }, []);
 
-  const terminateContract = async () => {
-    try {
-      await axios
-        .patch(
-          `${BASE_URL}/contracts/status/${contractId}`,
+  const terminateContract = () => {
+    axios
+      .patch(
+        `${BASE_URL}/contracts/status/${contractId}`,
 
-          {
-            headers: { Authorization: localStorage.getItem('access_token') },
-            status: 'TERMINATION',
-          },
-        )
-        .then((res) => {
-          console.log(res);
-          location.reload();
-        });
-    } catch (error) {
-      console.error('서버 요청 실패:', error);
-    }
+        {
+          headers: { Authorization: localStorage.getItem('access_token') },
+          status: 'TERMINATION',
+        },
+      )
+      .then((res) => {
+        console.log(res);
+        location.reload();
+      });
   };
 
   // 계약 체결 후 송금, 디테일페이지로 이동
@@ -630,7 +627,7 @@ const ButtonFrame = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 28px 0;
+  margin: 28px 0px;
 `;
 
 const Button = styled(MiniConfirmButton)`
