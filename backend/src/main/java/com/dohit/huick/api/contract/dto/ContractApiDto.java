@@ -142,6 +142,38 @@ public class ContractApiDto {
 				.build();
 		}
 
+		public static Response of(ContractDto contractDto, UserDto lesseeDto, UserDto lessorDto,
+			RepaymentDto repaymentDto, int totalRepaymentCount, int paidCount, Long balance) {
+			return Response.builder()
+				.contractId(contractDto.getContractId())
+				.lesseeId(contractDto.getLesseeId())
+				.lessorId(contractDto.getLessorId())
+				.lesseeName(lesseeDto.getName())
+				.lesseeAddress(lesseeDto.getAddress())
+				.lesseeRrn(lesseeDto.getRrn())
+				.lesseePhoneNumber(lesseeDto.getPhoneNumber())
+				.lesseeWalletAddress(lesseeDto.getWalletAddress())
+				.lessorName(lessorDto.getName())
+				.lessorAddress(lessorDto.getAddress())
+				.lessorRrn(lessorDto.getRrn())
+				.lessorPhoneNumber(lessorDto.getPhoneNumber())
+				.lessorWalletAddress(lessorDto.getWalletAddress())
+				.totalRepaymentCount(totalRepaymentCount)
+				.currentRepaymentCount(repaymentDto.getRepaymentCount())
+				.paidCount(paidCount)
+				.startDate(contractDto.getStartDate())
+				.dueDate(contractDto.getDueDate())
+				.repaymentDate(repaymentDto.getRepaymentDate())
+				.currentAmount(repaymentDto.getAmount())
+				.amount(contractDto.getAmount())
+				.balance(balance)
+				.amountInKorean(contractDto.getAmountInKorean())
+				.rate(contractDto.getRate())
+				.status(contractDto.getStatus())
+				.pdfPath(contractDto.getPdfPath())
+				.build();
+		}
+
 		public static Response from(ContractDto contractDto) {
 			return Response.builder()
 				.contractId(contractDto.getContractId())
