@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Main } from '../../style';
 import HeadBar from '../../components/HeadBar/HeadBar';
 import { MiniConfirmButton } from '../../components/Button/Button';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // import axios, { BASE_URL } from '../../api/apiController';
 
 // import { Worker, Viewer, LocalizationMap } from '@react-pdf-viewer/core';
@@ -18,6 +18,7 @@ import './PDFPage.css'
 export default function PDFPage() {
   const params = useParams();
   const contractId = params.contractId
+  const navigate = useNavigate()
   
   const pdfURL = `https://huick-bucket.s3.ap-northeast-2.amazonaws.com/contract/${contractId}.pdf`
 
@@ -30,7 +31,9 @@ export default function PDFPage() {
   //   .catch(() => {
   //   })
   // }, []);
-
+  const goBack = () => {
+    navigate(-1)
+  }
   return (
     <Main backgroundColor='var(--white)'>
       <HeadBar pageName="차용증" />
@@ -44,7 +47,7 @@ export default function PDFPage() {
 
 
         <ButtonFrame>
-          <Button>
+          <Button onClick={goBack}>
             확인
           </Button>
         </ButtonFrame>

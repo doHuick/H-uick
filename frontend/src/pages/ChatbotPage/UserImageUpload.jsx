@@ -107,7 +107,7 @@ const UserImageUpload = (props) => {
       </UploadChat>
       {uploadedImage ? (
         <ChatbotButton key={1} onClick={props.actionProvider.handleUpload}>
-          <span onClick={handleUploadClick}>업로드</span>
+          <span>업로드</span>
         </ChatbotButton>
       ) : null}
     </UploadFrame>
