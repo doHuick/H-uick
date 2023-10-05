@@ -19,6 +19,7 @@ export default function Router() {
       <Routes>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/oauth/redirect" element={<KakaoAuthHandler />} />
+        <Route path="/share/:contractId" element={<SharePage />}></Route>
 
         <Route element={<PrivateRoute />}>
           <Route element={<AuthenticatedRoute />}>
@@ -28,7 +29,6 @@ export default function Router() {
           <Route path="/" element={<Mainpage />}></Route>
           <Route path="/mypage" element={<MyPage />}></Route>
           <Route path="/chatbot" element={<ChatbotPage />}></Route>
-          <Route path="/share/:contractId" element={<SharePage />}></Route>
           <Route path="/detail/:contractId" element={<IOUDetailPage />}></Route>
           <Route path="/pdf/:contractId" element={<PDFPage />}></Route>
           <Route path="/404" element={<NotFoundPage />}></Route>
