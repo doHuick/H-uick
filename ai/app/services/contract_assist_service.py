@@ -8,7 +8,7 @@ conversation_history = defaultdict(list)
 
 # OpenAI API model 설정
 MODEL_NAME = 'gpt-3.5-turbo'
-TEMPERATURE = 0.6
+TEMPERATURE = 0.5
 OPENAI_API_KEY = config('OPENAI_API_KEY')
 
 assist_model = ChatOpenAI(model_name=MODEL_NAME, temperature=TEMPERATURE, openai_api_key=OPENAI_API_KEY)
