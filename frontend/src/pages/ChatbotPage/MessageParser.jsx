@@ -20,7 +20,7 @@ const MessageParser = ({ children, actions, props }) => {
   const parse = (message) => {
     const userButtons = JSON.parse(localStorage.getItem('userButtonsLocal'));
     userChat.push(message);
-    console.log(userChat)
+    // console.log(userChat)
 
     if (message.includes('처음으로')) {
       actions.toFirst();
@@ -29,7 +29,7 @@ const MessageParser = ({ children, actions, props }) => {
 
     if (message.includes('돌아가기')) {
       userChat.pop();
-      console.log(userChat)
+      // console.log(userChat)
       actions.contractConfirm(toSend, borrowedDate);
     }
     
@@ -38,7 +38,7 @@ const MessageParser = ({ children, actions, props }) => {
       userChat.pop()
       userChat.pop()
       userChat.pop()
-      console.log(userChat)
+      // console.log(userChat)
     }
 
     if (message.includes('질문하기')) {
@@ -50,7 +50,7 @@ const MessageParser = ({ children, actions, props }) => {
       userChat.push('더미')
       userChat.push('더미')
 
-      console.log(userChat)
+      // console.log(userChat)
 
       actions.handleAsk();
     }

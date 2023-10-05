@@ -22,7 +22,7 @@ const FinalContract = (props) => {
       setUserInfo(res.data)
     })
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
     })
   }, []);
 
@@ -135,7 +135,7 @@ const FinalContract = (props) => {
   };
 
   const sendTempContract = async () => {
-    console.log(withoutAuto)
+    // console.log(withoutAuto)
     try {
       await axios.post(
         `${BASE_URL}/contracts`,
@@ -158,7 +158,7 @@ const FinalContract = (props) => {
       )
       .then((res) => {
         setContractID(res.data.contract_id)
-        console.log(res.data)
+        // console.log(res.data)
       })
     } catch (error) {
       console.error('서버 요청 실패:', error);
@@ -204,7 +204,7 @@ const FinalContract = (props) => {
 
   const closeAndShare = () => {
     var isPWDCorrect = JSON.parse(localStorage.getItem('isPWDCorrect'));
-    console.log(userInfo)
+    // console.log(userInfo)
     shareKakao();
     setShareModalOpen(false);
   };

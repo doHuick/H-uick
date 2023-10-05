@@ -40,7 +40,7 @@ export default function Mainpage() {
           headers: { Authorization: localStorage.getItem('access_token') },
         })
         .then((res) => {
-          console.log('lessee/me data : ', res.data);
+          // console.log('lessee/me data : ', res.data);
           if (res.data === '') {
             setFeeds([]);
           } else {
@@ -62,7 +62,7 @@ export default function Mainpage() {
           headers: { Authorization: localStorage.getItem('access_token') },
         })
         .then((res) => {
-          console.log('lessor/me data : ', res.data);
+          // console.log('lessor/me data : ', res.data);
           if (res.data === '') {
             setFeeds([]);
           } else {
@@ -288,7 +288,7 @@ const BlueBox = styled.div`
   height: 160px;
   border-radius: 10px;
   box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.04);
-  margin: 15px 14px 6.5px 14px;
+  margin: 20px 14px 6.5px 14px;
   padding: 20px 0px;
 `;
 

@@ -6,7 +6,7 @@ export default function AuthenticatedRoute() {
 
   if (isUserInfo) {
     // 회원 추가정보를 모두 입력했으면 메인으로
-    console.log('가입 완료 확인');
+    // console.log('가입 완료 확인');
     return <Navigate replace to="/" />;
   }
 

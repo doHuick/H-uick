@@ -85,10 +85,10 @@ export default function IOUDetailPage() {
       headers: { Authorization: localStorage.getItem('access_token') },
     }).then((res) => {
       setContractInfo(res.data)
-      console.log(res.data)
+      // console.log(res.data)
     })
-    .catch((err) => {
-      console.log(err)
+    .catch(() => {
+      // console.log(err)
     })
   }, []);
   
@@ -97,7 +97,7 @@ export default function IOUDetailPage() {
       headers: { Authorization: localStorage.getItem('access_token') },
     }).then((res) => {
       setUserInfo(res.data)
-      console.log(res.data)
+      // console.log(res.data)
     })
     .catch(() => {
     })
@@ -148,8 +148,8 @@ export default function IOUDetailPage() {
         headers: { Authorization: localStorage.getItem('access_token') },
       },
       )
-      .then((res) => {
-        console.log(res)
+      .then(() => {
+        // console.log(res)
         location.reload();
       })
 
@@ -286,7 +286,7 @@ export default function IOUDetailPage() {
 const InnerContainer = styled.div`
   position: relative;
   width: calc(100% - 40px);
-  margin-top: 116px;
+  margin-top: 80px;
   margin-left: 20px;
   `
 
