@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dohit.huick.api.banking.repayment.dto.RepaymentApiDto;
 import com.dohit.huick.domain.banking.service.BankingService;
+import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.service.ContractService;
 
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,10 @@ public class RepaymentController {
 	private final ContractService contractService;
 
 	@PostMapping
-	public ResponseEntity<Void> repay(@RequestBody RepaymentApiDto.Request request){
-		bankingService.repay(contractService.getContractByContractId(request.getContractId()), request.getAmount());
-
-		return ResponseEntity.ok().build();
+	public ResponseEntity<RepaymentApiDto.Response> repay(@RequestBody RepaymentApiDto.Request request){
+		ContractDto contractDto = contractService.getContractByContractId(request.getContractId());
+		bankingService.repay(contractDto);
+		RepaymentApiDto.Response response = RepaymentApiDto.Response.from(contractDto.getPdfPath());
+		return ResponseEntity.ok().body(response);
 	}
 }

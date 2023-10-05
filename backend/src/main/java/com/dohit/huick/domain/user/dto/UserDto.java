@@ -81,6 +81,7 @@ public class UserDto {
 			.signatureUrl(user.getSignatureUrl())
 			.issueDate(user.getIssueDate())
 			.phoneNumber(user.getPhoneNumber())
+			.walletKey(user.getWalletKey())
 			.password(user.getPassword())
 			.build();
 	}
@@ -101,6 +102,7 @@ public class UserDto {
 			.issueDate(userDto.getIssueDate())
 			.phoneNumber(userDto.getPhoneNumber())
 			.password(userDto.getPassword())
+			.walletKey(userDto.getWalletKey())
 			.accountInfo(accountDto)
 			.build();
 	}

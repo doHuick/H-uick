@@ -14,12 +14,29 @@ public class RepaymentApiDto {
 	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 	public static class Request {
 		Long contractId;
-		Long amount;
 
 		@Builder
-		public Request(Long contractId, Long amount) {
+		public Request(Long contractId) {
 			this.contractId = contractId;
-			this.amount = amount;
+		}
+	}
+
+	@Getter
+	@NoArgsConstructor
+	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+	public static class Response {
+		String pdfPath;
+		
+
+		@Builder
+		private Response(String pdfPath) {
+			this.pdfPath = pdfPath;
+		}
+
+		public static Response from(String pdfPath) {
+			return Response.builder()
+				.pdfPath(pdfPath)
+				.build();
 		}
 	}
 }

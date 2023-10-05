@@ -140,12 +140,14 @@ public class RepaymentService {
 	public List<RepaymentDto> findUnpaidAutoRepaymentUntilToday() {
 		LocalDateTime today = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-		List<Repayment> repayments = repaymentRepository.findByStatusAndRepaymentDateBefore(RepaymentStatus.UNPAID, today);
+		List<Repayment> repayments = repaymentRepository.findByStatusAndRepaymentDateBefore(RepaymentStatus.UNPAID,
+			today);
 		List<RepaymentDto> repaymentDtos = new ArrayList<>();
 
-		for (Repayment r: repayments) {
-			Contract c = contractRepository.findByContractId(r.getContractId()).orElseThrow(() -> new ContractException(ErrorCode.NOT_EXIST_CONTRACT));
-			if(c.getUseAutoTransfer().equals("Y"))
+		for (Repayment r : repayments) {
+			Contract c = contractRepository.findByContractId(r.getContractId())
+				.orElseThrow(() -> new ContractException(ErrorCode.NOT_EXIST_CONTRACT));
+			if (c.getUseAutoTransfer().equals("Y"))
 				repaymentDtos.add(RepaymentDto.from(r));
 		}
 
@@ -174,5 +176,14 @@ public class RepaymentService {
 
 		return repaymentRepository.getRepaymentsByRepaymentDateBeforeAndStatus(today, RepaymentStatus.UNPAID)
 			.stream().map(RepaymentDto::from).collect(Collectors.toList());
+	}
+
+	public Long calculateBalance(Long contractId, RepaymentStatus status) {
+		Long balance = repaymentRepository.findRepaymentsByContractIdAndStatus(contractId, status)
+			.stream()
+			.mapToLong(Repayment::getAmount)
+			.sum();
+
+		return balance;
 	}
 }
