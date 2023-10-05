@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { ReactComponent as MainSvg } from '../../assets/icons/mainpage.svg';
 import { ReactComponent as MySvg } from '../../assets/icons/mypage.svg';
-import { ReactComponent as ContractSvg } from '../../assets/icons/contract.svg';
 import { ReactComponent as ChatbotSvg } from '../../assets/icons/chatbot.svg';
 
 type NavItemProps = {
@@ -32,7 +31,6 @@ const NavBar = () => {
 
   const navRoutes: Record<string, string> = {
     main: '/',
-    contract: '/contract',
     chatbot: '/chatbot',
     mypage: '/mypage',
   };
@@ -46,12 +44,6 @@ const NavBar = () => {
         active={activeNav === 'main'}
       >
         <MainSvg />
-      </NavItem>
-      <NavItem
-        onClick={() => handleNavClick('contract')}
-        active={activeNav === 'contract'}
-      >
-        <ContractSvg />
       </NavItem>
       <NavItem
         onClick={() => handleNavClick('chatbot')}
@@ -80,7 +72,7 @@ const BottomBar = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 70px;
+  gap: 100px;
   background-color: #f0f0f0;
 `;
 
