@@ -29,14 +29,14 @@ const HeadBarContainer = styled.div<HeadBarProps>`
   position: fixed;
   top: 0px;
   width: 100%;
-  height: 100px;
+  height: 64px;
   z-index: 1;
   background-color: ${(props) => props.color || 'var(--white)'};
 `
 
 const HeadBarInner = styled.div`
   position: relative;
-  margin-top: 60px;
+  margin-top: 24px;
   width: 100%;
   display: flex;
   justify-content: space-between;

@@ -25,8 +25,8 @@ export default function Welcomepage() {
     axios.get(`${BASE_URL}/users/me`, {
       headers: { Authorization: localStorage.getItem('access_token') },
     }).then((res) => {
-      console.log('res:data : ',res.data);
-      console.log('res.data.name : ', res.data.name);
+      // console.log('res:data : ',res.data);
+      // console.log('res.data.name : ', res.data.name);
       setName(res.data.name);
       setAccountNumber(res.data.account_info.accountNumber);
       setCreatedTime(res.data.created_time);
@@ -53,8 +53,8 @@ export default function Welcomepage() {
   };
 
   return (
-    <Main>
-      <HeadBar pageName="회원가입" color="var(--background)" />
+    <Main backgroundColor="var(--white)">
+      <HeadBar pageName="회원가입" color="var(--white)" />
       <CheckDiv>
         <Check />
       </CheckDiv>

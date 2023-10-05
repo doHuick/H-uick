@@ -106,7 +106,7 @@ export default function MyPage() {
   return (
     <Main>
       <HeadBar pageName="마이페이지" color="var(--background)" />
-      <WhiteFrame style={{ marginTop: '108px' }}>
+      <WhiteFrame style={{ marginTop: '72px' }}>
         <MenuBar style={{ paddingTop: '8px', pointerEvents: 'none' }}>
           <MenuTitle>내 계좌 정보</MenuTitle>
         </MenuBar>

@@ -45,7 +45,7 @@ const UserImageUpload = (props) => {
       }
     })
     .then(response => {
-      console.log('응답 데이터:', response.data);
+      // console.log('응답 데이터:', response.data);
       setGptResponse(response.data)
       localStorage.setItem("tempContractLocal", JSON.stringify(response.data));
       
@@ -63,7 +63,7 @@ const UserImageUpload = (props) => {
 
 
   const handleUploadClick = () => {
-    console.log(gptResponse)
+    // console.log(gptResponse)
     const url = localStorage.getItem('userKakaoCaptureURL');
     setDisableUpload(true);
     axiosController
@@ -79,7 +79,7 @@ const UserImageUpload = (props) => {
         },
       )
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
       });
   };
 

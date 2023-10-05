@@ -408,7 +408,7 @@ const toFirst = () => {
 
   const handleGPTResponse = (message) => {
     const toSend = JSON.parse(localStorage.getItem('tempContractLocal'));
-    console.log(message)
+    // console.log(message)
     const botMessage = createChatBotMessage('잠시 기다려주세요');
     const askGPT = {
       user_id: 1,

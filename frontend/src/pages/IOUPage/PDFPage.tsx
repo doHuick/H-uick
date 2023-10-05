@@ -60,8 +60,8 @@ const PDFBackground = styled.div`
   position: relative;
   left: -50%;
   width: 200%;
-  height: 72%;
-  margin-top: 112px;
+  height: 74%;
+  margin-top: 76px;
   background-color: var(--background);
   box-shadow: inset 0px 0px 12px rgba(0,0,0, 0.08);
   display: flex;

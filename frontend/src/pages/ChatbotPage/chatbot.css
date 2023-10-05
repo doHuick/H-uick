@@ -1,7 +1,7 @@
 .react-chatbot-kit-chat-container {
   position: absolute;
   width: 100%;
-  height: calc(100% - 176px);
+  height: calc(100% - 140px);
   white-space: pre-line;
   bottom: 80px;
   font-weight: 400;
