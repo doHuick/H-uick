@@ -23,6 +23,7 @@ import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.entity.Contract;
 import com.dohit.huick.domain.contract.repository.ContractRepository;
+import com.dohit.huick.domain.user.dto.UserDto;
 import com.dohit.huick.domain.user.entity.User;
 import com.dohit.huick.domain.user.repository.UserRepository;
 import com.dohit.huick.global.error.ErrorCode;
@@ -50,13 +51,14 @@ public class ContractService {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public ContractDto createContract(ContractDto contractDto) {
 		Contract contract = contractRepository.save(Contract.from(contractDto));
-
 		return ContractDto.from(contract);
 	}
 
 	public ContractDto getContractByContractId(Long contractId) {
-		return ContractDto.from(contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
-			ErrorCode.NOT_EXIST_CONTRACT)));
+		Contract contract = contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
+			ErrorCode.NOT_EXIST_CONTRACT));
+
+		return ContractDto.from(contract);
 	}
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)

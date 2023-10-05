@@ -6,6 +6,7 @@ import java.util.Objects;
 import com.dohit.huick.api.contract.dto.ContractApiDto;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.entity.Contract;
+import com.dohit.huick.domain.user.dto.UserDto;
 
 import lombok.Builder;
 import lombok.Getter;
