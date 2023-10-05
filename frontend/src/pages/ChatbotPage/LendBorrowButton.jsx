@@ -38,7 +38,7 @@ const ChatbotButton = styled.div`
   height: 32px;
   border: none;
   border-radius: 24px;
-  background-color: #F2F2F7;
+  background-color: #f1f1f1;
   display: flex;
   justify-content: center;
   align-items: center;

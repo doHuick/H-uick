@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Main } from '../../style';
 import HeadBar from '../../components/HeadBar/HeadBar';
 import { MiniConfirmButton } from '../../components/Button/Button';
-// import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios, { BASE_URL } from '../../api/apiController';
 
 // import { Worker, Viewer, LocalizationMap } from '@react-pdf-viewer/core';
@@ -16,57 +16,27 @@ import { MobilePDFReader } from 'react-read-pdf';
 import './PDFPage.css'
 
 export default function PDFPage() {
-  // const params = useParams();
-  // const contractId = params.contractId
+  const params = useParams();
+  const contractId = params.contractId
   
-  const [userInfo, setUserInfo] = useState(null)
+  const pdfURL = `https://huick-bucket.s3.ap-northeast-2.amazonaws.com/contract/${contractId}.pdf`
 
-
-  // react-pdf
-  // const [numPages, setNumPages] = useState(null);
-  // const [pageNumber, setPageNumber] = useState(1);
-
-  // function onDocumentLoadSuccess({numPages}: any) {
-  //     setNumPages(numPages);
-  // }
-
-
-  useEffect(() => {
-    axios.get(`${BASE_URL}/users/me`, {
-      headers: { Authorization: localStorage.getItem('access_token') },
-    }).then((res) => {
-      setUserInfo(res.data)
-    })
-    .catch(() => {
-    })
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`${BASE_URL}/users/me`, {
+  //     headers: { Authorization: localStorage.getItem('access_token') },
+  //   }).then((res) => {
+  //     setUserInfo(res.data)
+  //   })
+  //   .catch(() => {
+  //   })
+  // }, []);
 
   return (
     <Main backgroundColor='var(--white)'>
       <HeadBar pageName="차용증" />
       <PDFBackground>
         <PDFFrame>
-          {userInfo}
-          {/* react-pdf-viewer */}
-          {/* <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-            <Viewer 
-            defaultScale={0.5}
-            fileUrl="/sample.pdf"
-            />
-
-          </Worker> */}
-
-          {/* react-pdf */}
-          {/* <PDFPaper>
-            <Document file="/sample.pdf" onLoadSuccess={onDocumentLoadSuccess}>
-                <Page pageNumber={pageNumber}/>
-            </Document>
-
-          </PDFPaper> */}
-
-          <MobilePDFReader url="/sample.pdf"/>
-
-
+          <MobilePDFReader url={pdfURL} />
 
         </PDFFrame>
       </PDFBackground>
@@ -103,11 +73,11 @@ const PDFFrame = styled.div`
 `
 
 const ButtonFrame = styled.div`
-  position: absolute;
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
-  bottom: 48px;
+  margin-top: 28px;
 `
 
 const Button = styled(MiniConfirmButton)`

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 
 const userChat = [];
 localStorage.setItem('tempContractLocal', '');
@@ -20,19 +20,41 @@ const MessageParser = ({ children, actions, props }) => {
   const parse = (message) => {
     const userButtons = JSON.parse(localStorage.getItem('userButtonsLocal'));
     userChat.push(message);
+    console.log(userChat)
 
     if (message.includes('처음으로')) {
       actions.toFirst();
       userChat.length = 0;
     }
 
-    if (message.includes('질문하기')) {
-      userChat.push('더미')
-      userChat.push('더미')
-      userChat.push('더미')
-      userChat.push('더미')
+    if (message.includes('돌아가기')) {
+      userChat.pop();
+      console.log(userChat)
+      actions.contractConfirm(toSend, borrowedDate);
+    }
+    
+    if (userChat.length >= 4 && !(message.includes('질문하기')) && !(message.includes('돌아가기'))) {
+      actions.handleGPTResponse(message)
+      userChat.pop()
+      userChat.pop()
+      userChat.pop()
       console.log(userChat)
     }
+
+    if (message.includes('질문하기')) {
+      if (userChat[4]) {
+        if (userChat[4] == '질문하기') {
+          userChat.pop()
+        }
+        }
+      userChat.push('더미')
+      userChat.push('더미')
+
+      console.log(userChat)
+
+      actions.handleAsk();
+    }
+
 
     // 금액
     if (userChat.length == 1 && !userButtons[0] && userButtons.length < 3) {
@@ -137,7 +159,7 @@ const MessageParser = ({ children, actions, props }) => {
     }
 
     // 이자율
-    if (userChat.length == 3 && userButtons.length < 3) {
+    if (userChat.length == 3 && userButtons.length < 3 && !(userChat[3] == '질문하기')) {
       const letters = ['%', '퍼센트', '퍼'];
       for (var i = 0; i < letters.length; i++) {
         message = message.replace(letters[i], '');

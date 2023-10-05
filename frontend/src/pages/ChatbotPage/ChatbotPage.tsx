@@ -23,7 +23,7 @@ export default function ChatbotPage() {
         config={config}
         messageParser={MessageParser}
         actionProvider={ActionProvider}
-        placeholderText="휙봇에게 ~"
+        placeholderText=" "
       />
 
       <NavBar />
