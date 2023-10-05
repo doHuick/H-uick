@@ -97,7 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.logout()
 			.logoutUrl("/v1/user/logout")
-			.logoutSuccessUrl("/")
+			.logoutSuccessUrl("/login")
 			.clearAuthentication(true)
 			.deleteCookies(OAuth2AuthorizationRequestBasedOnCookieRepository.REFRESH_TOKEN)
 			.addLogoutHandler(logoutHandler)
