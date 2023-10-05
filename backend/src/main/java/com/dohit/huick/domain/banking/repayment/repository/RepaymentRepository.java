@@ -30,5 +30,8 @@ public interface RepaymentRepository extends JpaRepository<Repayment, Long> {
 
 	Optional<Repayment> getRepaymentByRepaymentId(Long repaymentId);
 
-	Optional<Repayment> getRepaymentsByRepaymentDateBeforeAndStatus(LocalDateTime today, RepaymentStatus status);
+	List<Repayment> getRepaymentsByRepaymentDateBeforeAndStatus(LocalDateTime today, RepaymentStatus status);
+
+	@Lock(LockModeType.PESSIMISTIC_READ)
+	List<Repayment> findRepaymentsByContractIdAndStatus(Long contractId, RepaymentStatus repaymentStatus);
 }

@@ -2,11 +2,9 @@ package com.dohit.huick.domain.contract.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
@@ -51,13 +49,14 @@ public class ContractService {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public ContractDto createContract(ContractDto contractDto) {
 		Contract contract = contractRepository.save(Contract.from(contractDto));
-
 		return ContractDto.from(contract);
 	}
 
 	public ContractDto getContractByContractId(Long contractId) {
-		return ContractDto.from(contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
-			ErrorCode.NOT_EXIST_CONTRACT)));
+		Contract contract = contractRepository.findByContractId(contractId).orElseThrow(() -> new ContractException(
+			ErrorCode.NOT_EXIST_CONTRACT));
+
+		return ContractDto.from(contract);
 	}
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -141,7 +140,6 @@ public class ContractService {
 
 			Resource resource = resourceLoader.getResource("classpath:fonts/NanumMyeongjo-Regular.ttf");
 
-// Resource resource = resourceLoader.getResource("classpath:fonts/NanumMyeongjo-Regular.ttf");
 			ClassPathResource classPathResource = new ClassPathResource("fonts/NanumMyeongjo-Regular.ttf");
 
 			try {
@@ -160,7 +158,7 @@ public class ContractService {
 
 			return outputStream.toByteArray();
 		} catch (Exception e) {
-						throw new RuntimeException("Failed to convert HTML to PDF", e);
+			throw new RuntimeException("Failed to convert HTML to PDF", e);
 		}
 	}
 

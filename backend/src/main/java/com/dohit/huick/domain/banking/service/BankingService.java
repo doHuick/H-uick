@@ -64,7 +64,13 @@ public class BankingService {
 	public Long transferMoney(TransactionDto transactionDto) throws BankingException {
 		// from 계좌 가져옴
 		// AccountDto senderAccountDto = accountService.getAccountByAccountNumber(transactionDto.getSenderAccountNumber());
-		AccountDto senderAccountDto = accountService.getAccountsByUserId(transactionDto.getSenderId()).get(0);
+		AccountDto senderAccountDto = null;
+		if(transactionDto.getSenderId() != null) {
+			senderAccountDto = accountService.getAccountsByUserId(transactionDto.getSenderId()).get(0);
+		} else if (transactionDto.getSenderAccountNumber() !=null) {
+			senderAccountDto = accountService.getAccountByAccountNumber(transactionDto.getSenderAccountNumber());
+		}
+
 		if (senderAccountDto.getBalance() < transactionDto.getAmount()) {
 			throw new TransferException(ErrorCode.NOT_ENOUGH_MONEY);
 		}
@@ -73,9 +79,14 @@ public class BankingService {
 		accountService.updateBalance(senderAccountDto.getAccountNumber(), -transactionDto.getAmount());
 
 		// to 계좌  가져와서 돈을 넣음
-		AccountDto receiverAccountDto = accountService.getAccountsByUserId(transactionDto.getReceiverId()).get(0);
-		accountService.updateBalance(receiverAccountDto.getAccountNumber(), transactionDto.getAmount());
+		AccountDto receiverAccountDto = null;
 
+		if(transactionDto.getReceiverId() != null) {
+			receiverAccountDto = accountService.getAccountsByUserId(transactionDto.getReceiverId()).get(0);
+		} else if (transactionDto.getReceiverAccountNumber() !=null) {
+			receiverAccountDto = accountService.getAccountByAccountNumber(transactionDto.getReceiverAccountNumber());
+		}
+		accountService.updateBalance(receiverAccountDto.getAccountNumber(), transactionDto.getAmount());
 
 
 		// 트랜잭션 데이터를 생성함
@@ -99,16 +110,15 @@ public class BankingService {
 		return unpaidCount == 0;
 	}
 
-	public void repay(ContractDto contractDto, Long amount) {
+	public void repay(ContractDto contractDto) {
 		RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(contractDto.getContractId());
-		if (!Objects.equals(amount, repaymentDto.getAmount())) {
-			throw new BankingException(ErrorCode.NOT_EQUAL_AMOUNT);
-		}
+
 
 		// 이체시키고
 		Long transactionId = transferMoney(
 			TransactionDto.of(getAccountByUserId(contractDto.getLesseeId()).getAccountNumber(),
-				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), amount));
+				getAccountByUserId(contractDto.getLessorId()).getAccountNumber(), repaymentDto.getAmount()));
+
 
 		// 상환데이터 넣고
 		repaymentService.updateStatusPAIDAndTransactionId(repaymentDto.getRepaymentId(), transactionId);
