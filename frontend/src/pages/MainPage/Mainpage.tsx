@@ -288,7 +288,7 @@ const BlueBox = styled.div`
   height: 160px;
   border-radius: 10px;
   box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.04);
-  margin: 64px 14px 6.5px 14px;
+  margin: 15px 14px 6.5px 14px;
   padding: 20px 0px;
 `;
 
@@ -321,7 +321,7 @@ const FlexDiv2 = styled(FlexDiv)`
 const PigImg = styled.img`
   width: 125px;
   height: 125px;
-  margin: 120px 0 30px 0;
+  margin: 80px 0 30px 0;
 `;
 
 const CenterDiv = styled.div`
@@ -337,6 +337,6 @@ const StyledMain = styled(Main)`
 
 const ContractsDiv = styled.div`
   overflow-y: scroll;
-  height: 451px;
+  height: 370px;
   max-height: 100%;
 `;
