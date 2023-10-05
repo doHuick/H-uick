@@ -9,7 +9,7 @@ const EditButton = (props) => {
       id: 1,
     },
     {
-      text: '만기일',
+      text: '갚는 날짜',
       handler: props.actionProvider.handleDateEdit,
       id: 2,
     },
