@@ -46,7 +46,7 @@ export default function Rolling({monthBorrow, monthRent}: RollingProps) {
                   <Bulb />
                   {item.title}
                 </TextBox>
-                <TextBox fontSize="12.5px" fontWeight="700">
+                <TextBox fontSize="12.5px" fontWeight="600">
                   {item.content}
                 </TextBox>
               </NoticeContent>
@@ -58,7 +58,7 @@ export default function Rolling({monthBorrow, monthRent}: RollingProps) {
   };
       
 const RollingDiv = styled.li`
-width: 275px;
+width: 281px;
 height: 30px;
 background-color: var(--white);
 border-radius: 9px;

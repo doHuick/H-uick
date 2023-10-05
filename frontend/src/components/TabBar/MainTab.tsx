@@ -48,7 +48,7 @@ const Tab = styled.div<TabProps>`
   width: 100%;
   height: 35px;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 500;
   text-align: center;
   text-decoration: none;
   color: ${(props: TabProps) =>

@@ -159,7 +159,7 @@ export default function Mainpage() {
           <FlexDiv2 margin="10px 0px 0px 0px">
             <TextBox
               fontSize="17px"
-              fontWeight="700"
+              fontWeight="600"
               color="var(--white)"
               textAlign="left"
             >
@@ -167,7 +167,7 @@ export default function Mainpage() {
             </TextBox>
             <TextBox
               fontSize="17px"
-              fontWeight="500"
+              fontWeight="400"
               color="var(--white)"
               textAlign="left"
             >
@@ -180,8 +180,8 @@ export default function Mainpage() {
         <FlexDiv2 margin="0px 30px">
           <TextBox
             fontSize="14px"
-            fontWeight="500"
-            color="var(--white)"
+            fontWeight="300"
+            color="var(--background)"
             textAlign="left"
           >
             싸피{' '}
@@ -199,10 +199,10 @@ export default function Mainpage() {
         {/* 잔액 */}
         <TextBox
           fontSize="30px"
-          fontWeight="700"
+          fontWeight="600"
           color="var(--white)"
           textAlign="left"
-          margin="20px 30px"
+          margin="21px 30px 22px 30px"
         >
           {nowBalance}
           <TextBox
@@ -254,6 +254,7 @@ export default function Mainpage() {
                   fontWeight="700"
                   color="var(--huick-blue)"
                   textAlign="left"
+                  margin="1px 0px 0px 0px"
                 >
                   {feed.rate}%
                 </TextBox>
@@ -261,20 +262,22 @@ export default function Mainpage() {
               <FlexDiv margin="0px 30px 9px 30px">
                 <TextBox
                   fontSize="12px"
-                  fontWeight="500"
+                  fontWeight="400"
                   color="var(--gray)"
                   textAlign="left"
+                  margin="-2px 0px 0px 0px"
                 >
                   {feed.total_repayment_count}회 중{' '}
                   {feed.current_repayment_count}회 납부 완료
                 </TextBox>
               </FlexDiv>
-              <FlexDiv margin="0px 30px">
+              <FlexEndDiv margin="14px 30px 0px 30px">
                 <TextBox
                   fontSize="24px"
                   fontWeight="700"
                   color="var(--black)"
                   textAlign="left"
+                  margin="0 0 -1px 0"
                 >
                   {feed.current_amount.toLocaleString()}원
                 </TextBox>
@@ -286,7 +289,7 @@ export default function Mainpage() {
                 >
                   {feed.repayment_date.getDate().toString()}일 납부
                 </TextBox>
-              </FlexDiv>
+              </FlexEndDiv>
             </WhiteBox>
           ))}
         </ContractsDiv>
@@ -325,6 +328,10 @@ const FlexDiv = styled.div<FlexDivProps>`
   align-items: center;
   margin: ${(props: FlexDivProps) => props.margin};
 `;
+
+const FlexEndDiv = styled(FlexDiv)`
+  align-items: flex-end;
+`
 
 const FlexDiv2 = styled(FlexDiv)`
   justify-content: left;
