@@ -29,23 +29,26 @@ const KakaoAuthHandler = () => {
     // Access Token이 생성되었으면,
     if (accessTokenParam) {
       // 로그인 성공
-      axios.get(`${BASE_URL}/users/me`, {
-        headers: { Authorization: localStorage.getItem('access_token') },
-      }).then((res) => {
-        const data = res.data;
-        if (data.address !== null && data.rrn !== null && data.phone_number !==null && data.name !== null) {
-          // 회원가입이 된 유저면 메인페이지로 이동
-          navigate('/');
-        } else if (localStorage.getItem('contractId')) {
-          // 미로그인 시 카카오톡 공유 리다이렉트를 위한 조건
-          const contractId = localStorage.getItem('contractId')
-          navigate(`/share/${contractId}`)
-        }
-        else {
-          // 회원가입이 안된 유저면 회원가입 페이지로 이동
-          navigate('/signup');
-        }
-      });
+      axios
+        .get(`${BASE_URL}/users/me`, {
+          headers: { Authorization: localStorage.getItem('access_token') },
+        })
+        .then((res) => {
+          const data = res.data;
+          if (data.address !== null) {
+            // 회원가입이 된 유저면 메인페이지로 이동
+            if (localStorage.getItem('contractId')) {
+              // 미로그인 시 카카오톡 공유 리다이렉트를 위한 조건
+              const contractId = localStorage.getItem('contractId');
+              navigate(`/share/${contractId}`);
+            } else {
+              navigate('/');
+            }
+          }  else {
+            // 회원가입이 안된 유저면 회원가입 페이지로 이동
+            navigate('/signup');
+          }
+        });
     }
   });
 

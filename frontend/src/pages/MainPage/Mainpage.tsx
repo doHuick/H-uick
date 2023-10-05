@@ -205,12 +205,13 @@ export default function Mainpage() {
           margin="20px 30px"
         >
           {nowBalance}
-          <TextBox fontSize="30px"
-          fontWeight="500"
-          color="var(--white)"
-          margin="0 0 0 2px"
+          <TextBox
+            fontSize="30px"
+            fontWeight="500"
+            color="var(--white)"
+            margin="0 0 0 2px"
           >
-          원
+            원
           </TextBox>
         </TextBox>
 
@@ -235,7 +236,10 @@ export default function Mainpage() {
       ) : (
         <ContractsDiv>
           {feeds.map((feed) => (
-            <WhiteBox key={feed.contract_id} onClick={() => navigate(`/detail/${feed.contract_id}`)}>
+            <WhiteBox
+              key={feed.contract_id}
+              onClick={() => navigate(`/detail/${feed.contract_id}`)}
+            >
               <FlexDiv margin="0px 30px 2px 30px">
                 <TextBox
                   fontSize="15px"
@@ -346,6 +350,6 @@ const StyledMain = styled(Main)`
 
 const ContractsDiv = styled.div`
   overflow-y: scroll;
-  height: 490px;
-  max-height: 100%;
+  height: calc(100% - 352px);
+  /* height: 490px; */
 `;
