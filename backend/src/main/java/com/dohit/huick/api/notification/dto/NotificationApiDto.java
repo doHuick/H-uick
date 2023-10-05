@@ -19,9 +19,16 @@ public class NotificationApiDto {
 	public static class Request {
 		String token;
 
+		Long userId;
+		String title;
+		String body;
+
 		@Builder
-		private Request(String token) {
+		private Request(String token, Long userId, String title, String body) {
 			this.token = token;
+			this.userId = userId;
+			this.title = title;
+			this.body = body;
 		}
 	}
 

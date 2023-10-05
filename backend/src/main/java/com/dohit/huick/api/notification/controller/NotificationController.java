@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dohit.huick.api.notification.dto.NotificationApiDto;
 import com.dohit.huick.domain.notification.dto.DeviceTokenDto;
+import com.dohit.huick.domain.notification.dto.NotificationDto;
 import com.dohit.huick.domain.notification.service.NotificationService;
 import com.dohit.huick.global.userinfo.UserInfo;
 
@@ -24,7 +25,8 @@ public class NotificationController {
 	private final NotificationService notificationService;
 
 	@PostMapping("/token")
-	public ResponseEntity<Void> createDeviceToken(@UserInfo Long userId, @RequestBody NotificationApiDto.Request request) {
+	public ResponseEntity<Void> createDeviceToken(@UserInfo Long userId,
+		@RequestBody NotificationApiDto.Request request) {
 		notificationService.createDeviceToken(DeviceTokenDto.of(userId, request.getToken()));
 		return ResponseEntity.ok().build();
 	}
@@ -35,4 +37,11 @@ public class NotificationController {
 			NotificationApiDto.Response::from).collect(
 			Collectors.toList()));
 	}
+
+	@PostMapping
+	public ResponseEntity<Void> sendNotification(@RequestBody NotificationApiDto.Request request) {
+		notificationService.sendNotificationDirectly(NotificationDto.from(request));
+		return ResponseEntity.ok().build();
+	}
+
 }
