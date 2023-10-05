@@ -191,7 +191,7 @@ const FinalContract = (props) => {
         title: '휙, 편리한 차용증 관리📝',
         description: `${userInfo.name}님이 보낸 차용증이 도착했어요`,
         imageUrl:
-        'https://file.notion.so/f/f/1eb5f2e9-ac13-43fd-80e4-ff4db0622bcc/7f6b7063-aa36-46d5-a2e5-bf04975592e4/square.png?id=c60b6018-8f6b-411f-92fb-e5817b598d28&table=block&spaceId=1eb5f2e9-ac13-43fd-80e4-ff4db0622bcc&expirationTimestamp=1696428000000&signature=PfA8kipAOlpNPWYXhrThF3Wl23Db8kBlShLxztdx3rE&downloadName=square.png',
+        'https://github-production-user-asset-6210df.s3.amazonaws.com/55385934/273015907-b422779c-530e-4c95-8cc1-9e1867dce437.png',
         link: {
           // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
           mobileWebUrl: `http://h-uick.com/share/${contractID}`,
