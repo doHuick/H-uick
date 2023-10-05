@@ -201,7 +201,7 @@ const toFirst = () => {
 
   // 만기일
   const endDate = () => {
-    const botMessage = createChatBotMessage('만기일은 언제로 할까요?');
+    const botMessage = createChatBotMessage('갚는 날짜는 언제로 할까요?');
 
     setState((prev) => ({
       ...prev,
@@ -222,7 +222,7 @@ const toFirst = () => {
   // 만기일이 오늘 이하임
   const endDateFailed = () => {
     const botMessage = createChatBotMessage(
-      '만기일은 시작일 이후여야 합니다\n만기일을 다시 입력해주세요',
+      '갚는 날짜는 시작일 이후여야 합니다\n만기일을 다시 입력해주세요',
     );
 
     setState((prev) => ({
@@ -350,8 +350,8 @@ const toFirst = () => {
     if (!userButtons[3]) {
       userButtons.push('handleDateEdit')
       localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
-      const clientmessage = createClientMessage('만기일');
-      const botMessage = createChatBotMessage('수정할 만기일을 입력해주세요', { delay: 900 });
+      const clientmessage = createClientMessage('갚는 날짜');
+      const botMessage = createChatBotMessage('수정할 날짜를 입력해주세요', { delay: 900 });
 
       setState((prev) => ({
         ...prev,

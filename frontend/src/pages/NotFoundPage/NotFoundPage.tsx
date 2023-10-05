@@ -10,12 +10,13 @@ export default function NotFoundPage() {
   
   return (
     <Main>
-      <GoBack onClick={onClickBack}>
-        메인으로가기
-      </GoBack>
-      <NotFound>
+      <TextFrame>
         없는 페이지입니다
-      </NotFound>
+        <GoBack onClick={onClickBack}>
+          메인으로 가기
+        </GoBack>
+      </TextFrame>
+      <PigHead src="/pig-head.png" alt="" />
     </Main>
   );
 }
@@ -31,15 +32,27 @@ const Main = styled.div`
   overflow-x: hidden;
 `;
 
+const TextFrame = styled.div`
+  position: relative;
+  width: 100%;
+  right: 10%;
+  top: 20%;
+  text-align: end;
+  font-size: 32px;
+  font-weight: 600;
+`
+
 const GoBack = styled.div`
   position: relative;
-  margin-top: 100px;
+  font-size: 28px;
+  font-weight: 500;
+  margin-top: 6px;
 `;
 
-const NotFound = styled.div`
+
+const PigHead = styled.img`
   position: absolute;
-  width: 100%;
-  top: 50%;
-  display: flex;
-  justify-content: center;
-`;
+  width: 92%;
+  bottom: -6%;
+  left: -28%;
+`
