@@ -132,6 +132,18 @@ export default function Mainpage() {
         );
         setMonthRent(totalCurrentAmount.toLocaleString());
       });
+
+    if (localStorage.getItem("device_token")) {
+      console.log(localStorage.getItem("device_token"));
+      axios
+        .post(`${BASE_URL}/notifications/token`,
+        { token: localStorage.getItem("device_token")},
+        {
+          headers: { Authorization: localStorage.getItem('access_token') },
+        });
+        
+      localStorage.removeItem("device_token");
+    }
   }, []);
 
   // [계좌 복사 클릭 시 toast 메시지]
