@@ -1,6 +1,7 @@
 package com.dohit.huick.domain.contract.dto;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import com.dohit.huick.api.contract.dto.ContractApiDto;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
@@ -26,7 +27,8 @@ public class ContractDto {
 
 	@Builder
 	public ContractDto(Long contractId, Long lesseeId, Long lessorId, LocalDateTime startDate,
-		LocalDateTime dueDate, Long amount, String amountInKorean, Float rate, ContractStatus status, LocalDateTime createdTime,
+		LocalDateTime dueDate, Long amount, String amountInKorean, Float rate, ContractStatus status,
+		LocalDateTime createdTime,
 		String pdfPath, String useAutoTransfer) {
 		this.contractId = contractId;
 		this.lesseeId = lesseeId;
@@ -55,6 +57,7 @@ public class ContractDto {
 			.status(contract.getStatus())
 			.createdTime(contract.getCreatedTime())
 			.pdfPath(contract.getPdfPath())
+			.useAutoTransfer(contract.getUseAutoTransfer())
 			.build();
 	}
 
@@ -69,7 +72,7 @@ public class ContractDto {
 			.rate(request.getRate())
 			.status(request.getStatus())
 			.pdfPath(request.getPdfPath())
-			.useAutoTransfer(request.getUseAutoTransfer())
+			.useAutoTransfer(Objects.equals(request.getUseAutoTransfer(), "Y") ? "Y" : "N")
 			.build();
 	}
 

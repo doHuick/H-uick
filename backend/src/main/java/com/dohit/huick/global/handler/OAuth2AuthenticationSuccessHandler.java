@@ -112,6 +112,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 		CookieUtil.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 		return UriComponentsBuilder.fromUriString(targetUrl)
 			.queryParam("token", accessToken.getToken())
+			.queryParam("refresh", refreshToken.getToken())
 			.build().toUriString();
 	}
 

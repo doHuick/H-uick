@@ -14,18 +14,20 @@ public class RepaymentDto {
 	private Long contractId;
 	private Long transactionId;
 	private Long amount;
+	private Long balance;
 	private LocalDateTime repaymentDate;
 	private Integer repaymentCount;
 	private RepaymentStatus status;
 
 	@Builder
-	private RepaymentDto(Long repaymentId, Long contractId, Long transactionId, Long amount,
+	private RepaymentDto(Long repaymentId, Long contractId, Long transactionId, Long amount, Long balance,
 		LocalDateTime repaymentDate, Integer repaymentCount,
 		RepaymentStatus status) {
 		this.repaymentId = repaymentId;
 		this.contractId = contractId;
 		this.transactionId = transactionId;
 		this.amount = amount;
+		this.balance = balance;
 		this.repaymentDate = repaymentDate;
 		this.repaymentCount = repaymentCount;
 		this.status = status;
@@ -45,6 +47,7 @@ public class RepaymentDto {
 			.contractId(repayment.getContractId())
 			.transactionId(repayment.getTransactionId())
 			.amount(repayment.getAmount())
+			.balance(repayment.getBalance())
 			.repaymentDate(repayment.getRepaymentDate())
 			.repaymentCount(repayment.getRepaymentCount())
 			.status(repayment.getStatus())

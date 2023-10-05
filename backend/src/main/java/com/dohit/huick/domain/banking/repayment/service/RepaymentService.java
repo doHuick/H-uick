@@ -1,10 +1,12 @@
 package com.dohit.huick.domain.banking.repayment.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Year;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
@@ -13,10 +15,16 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.dohit.huick.domain.banking.repayment.constant.RepaymentStatus;
 import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.entity.Repayment;
 import com.dohit.huick.domain.banking.repayment.repository.RepaymentRepository;
 import com.dohit.huick.domain.contract.dto.ContractDto;
+import com.dohit.huick.domain.contract.entity.Contract;
+import com.dohit.huick.domain.contract.repository.ContractRepository;
+import com.dohit.huick.global.error.ErrorCode;
+import com.dohit.huick.global.error.exception.BankingException;
+import com.dohit.huick.global.error.exception.ContractException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,11 +33,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RepaymentService {
 	private final RepaymentRepository repaymentRepository;
-
-	// @Lock(LockModeType.PESSIMISTIC_WRITE)
-	// public void createRepayment(RepaymentDto repaymentDto) {
-	//     repaymentRepository.save(Repayment.from(repaymentDto));
-	// }
+	private final ContractRepository contractRepository;
 
 	public List<RepaymentDto> getRepaymentsByContractId(Long contractId) {
 		return repaymentRepository.findByContractId(contractId).stream().map(RepaymentDto::from).collect(
@@ -93,7 +97,8 @@ public class RepaymentService {
 				}
 
 				repaymentRepository.save(
-					Repayment.of(contractDto.getContractId(), totalAmount - sumOfAmount, dueDate, count++));
+					Repayment.of(contractDto.getContractId(), totalAmount - sumOfAmount, dueDate, count++,
+						contractDto.getUseAutoTransfer()));
 
 				payday = dueDate;
 				continue;
@@ -115,15 +120,59 @@ public class RepaymentService {
 						366 : 365) * nextTransferDateDayOfYear);
 			}
 
-			repaymentRepository.save(Repayment.of(contractDto.getContractId(), amount, nextPayday, count++));
+			repaymentRepository.save(Repayment.of(contractDto.getContractId(), amount, nextPayday, count++,
+				contractDto.getUseAutoTransfer()));
 
 			payday = nextPayday;
 			sumOfAmount += amount;
 		}
 	}
 
-	public RepaymentDto findCurrentRepaymentByContractId(Long contractId) {
-		return repaymentRepository.findFirstByContractIdAndRepaymentDateAfterOrderByRepaymentDateAsc(contractId,
-			LocalDateTime.now()).map(RepaymentDto::from).orElse(null);
+	public RepaymentDto findTopUnpaidRepaymentByContractId(Long contractId) {
+		return repaymentRepository.findTopByContractIdAndStatusOrderByRepaymentDateAsc(contractId,
+			RepaymentStatus.UNPAID).map(RepaymentDto::from).orElse(null);
+	}
+
+	public int countRepaymentsByContractIdAndStatus(Long contractId, RepaymentStatus repaymentStatus) {
+		return repaymentRepository.countRepaymentsByContractIdAndStatus(contractId, repaymentStatus);
+	}
+
+	public List<RepaymentDto> findUnpaidAutoRepaymentUntilToday() {
+		LocalDateTime today = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+
+		List<Repayment> repayments = repaymentRepository.findByStatusAndRepaymentDateBefore(RepaymentStatus.UNPAID, today);
+		List<RepaymentDto> repaymentDtos = new ArrayList<>();
+
+		for (Repayment r: repayments) {
+			Contract c = contractRepository.findByContractId(r.getContractId()).orElseThrow(() -> new ContractException(ErrorCode.NOT_EXIST_CONTRACT));
+			if(c.getUseAutoTransfer().equals("Y"))
+				repaymentDtos.add(RepaymentDto.from(r));
+		}
+
+		return repaymentDtos;
+	}
+
+	public void updateStatusPAIDAndTransactionId(Long repaymentId, Long transactionId) {
+		Repayment repayment = repaymentRepository.getRepaymentByRepaymentId(repaymentId)
+			.orElseThrow(() -> new BankingException(ErrorCode.NOT_EXIST_REPAYMENT));
+
+		repayment.updateStatusPAIDAndTransactionId(transactionId);
+		;
+	}
+
+	public List<RepaymentDto> getRepaymentsAfter3Days() {
+		LocalDateTime startOfDay = LocalDateTime.of(LocalDate.now().plusDays(3L), LocalTime.MIN);
+		LocalDateTime endOfDay = LocalDateTime.of(LocalDate.now().plusDays(3L), LocalTime.MAX);
+
+		return repaymentRepository.findByRepaymentDateBetween(startOfDay, endOfDay).stream().map(
+			RepaymentDto::from).collect(
+			Collectors.toList());
+	}
+
+	public List<RepaymentDto> getOverdueRepayments() {
+		LocalDateTime today = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
+
+		return repaymentRepository.getRepaymentsByRepaymentDateBeforeAndStatus(today, RepaymentStatus.UNPAID)
+			.stream().map(RepaymentDto::from).collect(Collectors.toList());
 	}
 }

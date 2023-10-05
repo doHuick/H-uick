@@ -21,6 +21,8 @@ public class UserApiDto {
 		private String rrn;
 		private String address;
 		private String phoneNumber;
+		private String walletAddress;
+		private String walletKey;
 	}
 
 	@Getter
@@ -45,13 +47,14 @@ public class UserApiDto {
 		private String signatureUrl;
 		private LocalDateTime issueDate;
 		private String phoneNumber;
+		private String password;
 		private AccountDto accountInfo;
 
 		@Builder
 		private Response(Long userId, String name, String rrn, String address, String walletAddress,
 			SocialType socialType,
 			String socialId, LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl,
-			LocalDateTime issueDate, String phoneNumber, AccountDto accountInfo) {
+			LocalDateTime issueDate, String phoneNumber, String password, AccountDto accountInfo) {
 			this.userId = userId;
 			this.name = name;
 			this.rrn = rrn;
@@ -65,6 +68,7 @@ public class UserApiDto {
 			this.signatureUrl = signatureUrl;
 			this.issueDate = issueDate;
 			this.phoneNumber = phoneNumber;
+			this.password = password;
 			this.accountInfo = accountInfo;
 		}
 
@@ -83,6 +87,7 @@ public class UserApiDto {
 				.signatureUrl(userDto.getSignatureUrl())
 				.issueDate(userDto.getIssueDate())
 				.phoneNumber(userDto.getPhoneNumber())
+				.password(userDto.getPassword())
 				.accountInfo(userDto.getAccountInfo())
 				.build();
 		}

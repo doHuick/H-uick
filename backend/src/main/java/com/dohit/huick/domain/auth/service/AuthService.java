@@ -2,7 +2,6 @@ package com.dohit.huick.domain.auth.service;
 
 import java.util.Date;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,33 +47,32 @@ public class AuthService {
 		refreshTokenRepository.save(RefreshToken.of(Long.valueOf(name), refreshToken.getToken()));
 	}
 
-	public String refreshToken(HttpServletRequest request, HttpServletResponse response) throws BusinessException {
+	public String refreshToken(HttpServletRequest request, HttpServletResponse response, String refreshToken) throws
+		BusinessException {
+
+		// access token을 헤더에서 가져오기
+		String accessToken = HeaderUtil.getAccessToken(request);
 
 		// access token 확인
-		String accessToken = HeaderUtil.getAccessToken(request);
 		AuthToken authToken = authTokenProvider.convertAuthToken(accessToken);
 		if (!authToken.getTokenClaimsRegardlessOfExpire()) {
-			// return ApiResponse.invalidAccessToken();
+			// access token이 올바르지 않으면 예외 발생
 			throw new AuthenticationException(ErrorCode.NOT_VALID_TOKEN);
 		}
 
 		// expired access token 인지 확인
 		Claims claims = authToken.getExpiredTokenClaims();
 		if (claims == null) {
+			// access token이 만료되지 않았다면 null을 반환
 			return null;
 		}
 
 		String userId = claims.getSubject();
 		Role role = Role.of(claims.get("role", String.class));
 
-		// refresh token
-		String refreshToken = CookieUtil.getCookie(request, REFRESH_TOKEN)
-			.map(Cookie::getValue)
-			.orElse((null));
 		AuthToken authRefreshToken = authTokenProvider.convertAuthToken(refreshToken);
-		System.out.println(refreshToken);
-		if (!authRefreshToken.validate()) {
-			// return ApiResponse.invalidRefreshToken();
+		
+		if (!authRefreshToken.getTokenClaimsRegardlessOfExpire()) {
 			throw new AuthenticationException(ErrorCode.NOT_VALID_TOKEN);
 		}
 
@@ -82,10 +80,8 @@ public class AuthService {
 		RefreshToken refreshTokenInRedis = refreshTokenRepository.findByUserId(Long.valueOf(userId))
 			.orElseThrow(() -> new AuthenticationException(
 				ErrorCode.NOT_VALID_TOKEN));
-		if (refreshTokenInRedis.getRefreshToken().equals(refreshToken)) {
-			// return ApiResponse.invalidRefreshToken();
-			System.out.println(refreshTokenInRedis.getRefreshToken());
-			System.out.println(refreshToken);
+
+		if (!refreshTokenInRedis.getRefreshToken().equals(refreshToken)) {
 			throw new AuthenticationException(ErrorCode.NOT_VALID_TOKEN);
 		}
 
@@ -95,7 +91,6 @@ public class AuthService {
 			role.getCode(),
 			new Date(now.getTime() + appProperties.getAuth().getTokenExpiry())
 		);
-
 		long validTime = authRefreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
 
 		// refresh 토큰 기간이 3일 이하로 남은 경우, refresh 토큰 갱신

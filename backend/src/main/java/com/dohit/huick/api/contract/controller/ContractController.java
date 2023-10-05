@@ -57,7 +57,7 @@ public class ContractController {
 		} else {
 			lessorDto = UserDto.from("", "", "", "");
 		}
-		RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(contractId);
+		RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(contractId);
 
 		if (repaymentDto == null)
 			repaymentDto = RepaymentDto.of(0L, 0, null);
@@ -71,12 +71,12 @@ public class ContractController {
 	}
 
 	@GetMapping("/me")
-	public ResponseEntity<List<ContractApiDto.Response>> getContractByUserId(@UserInfo Long userId) {
-		System.out.println(userId);
+	public ResponseEntity<List<ContractApiDto.Response>> getContractsByUserId(@UserInfo Long userId) {
 		UserDto userDto = userService.getUserByUserId(userId);
 		List<ContractApiDto.Response> response = contractService.getContractsByUserId(userId).stream()
+			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
-				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
+				RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(
 					contractDto.getContractId());
 				int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 					.size();
@@ -98,12 +98,13 @@ public class ContractController {
 
 	@GetMapping("/lessee/me")
 	// 체결되지 않은 계약 처리해줘야함
-	public ResponseEntity<List<ContractApiDto.Response>> getContractByLesseeId(@UserInfo Long lesseeId) {
+	public ResponseEntity<List<ContractApiDto.Response>> getContractsByLesseeId(@UserInfo Long lesseeId) {
 		UserDto lesseeDto = userService.getUserByUserId(lesseeId);
 		List<ContractApiDto.Response> response = contractService.getContractByLesseeId(lesseeId).stream()
+			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
 				UserDto lessorDto = userService.getUserByUserId(contractDto.getLessorId());
-				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
+				RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(
 					contractDto.getContractId());
 				int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 					.size();
@@ -117,12 +118,13 @@ public class ContractController {
 	}
 
 	@GetMapping("/lessor/me")
-	public ResponseEntity<List<ContractApiDto.Response>> getContractByLessorId(@UserInfo Long lessorId) {
+	public ResponseEntity<List<ContractApiDto.Response>> getContractsByLessorId(@UserInfo Long lessorId) {
 		UserDto lessorDto = userService.getUserByUserId(lessorId);
 		List<ContractApiDto.Response> response = contractService.getContractByLessorId(lessorId).stream()
+			.filter(contractDto -> contractDto.getStatus() == ContractStatus.EXECUTION_COMPLETED)
 			.map(contractDto -> {
 				UserDto lesseeDto = userService.getUserByUserId(contractDto.getLesseeId());
-				RepaymentDto repaymentDto = repaymentService.findCurrentRepaymentByContractId(
+				RepaymentDto repaymentDto = repaymentService.findTopUnpaidRepaymentByContractId(
 					contractDto.getContractId());
 				int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 					.size();
@@ -148,6 +150,9 @@ public class ContractController {
 	public ResponseEntity<ContractApiDto.Response> updateFinalContract(@PathVariable Long contractId,
 		@RequestBody ContractApiDto.Request request) throws IOException {
 		ContractDto contractDto = contractService.updateFinalContract(contractId, ContractDto.from(request));
+		if (request.getStatus().equals(ContractStatus.EXECUTION_COMPLETED)) {
+			repaymentService.createAllRepayment(contractService.getContractByContractId(contractId));
+		}
 		ContractApiDto.Response response = ContractApiDto.Response.from(contractDto);
 
 		// 전자지갑 업데이트

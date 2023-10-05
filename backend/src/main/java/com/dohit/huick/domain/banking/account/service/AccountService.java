@@ -26,9 +26,9 @@ public class AccountService {
 
 	private final AccountRepository accountRepository;
 
-	public List<AccountDto> getAccountsByUserId(Long userId){
+	public List<AccountDto> getAccountsByUserId(Long userId) {
 		List<Account> accounts = accountRepository.findByUserId(userId);
-		if(accounts.size() == 0) {
+		if (accounts == null || accounts.size() == 0) {
 			throw new BankingException(ErrorCode.NO_ACCOUNT_EXIST);
 		}
 
@@ -49,7 +49,7 @@ public class AccountService {
 			StringBuilder stringBuilder = new StringBuilder("110408");
 			stringBuilder.append(secureRandom.nextInt(900000) + 100000);
 			try {
-				accountRepository.save(Account.of(stringBuilder.toString(),userId,"001",0L));
+				accountRepository.save(Account.of(stringBuilder.toString(), userId, "001", 0L));
 				return;
 			} catch (Exception ignored) {
 			}

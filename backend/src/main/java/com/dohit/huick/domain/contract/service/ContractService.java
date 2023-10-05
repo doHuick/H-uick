@@ -2,25 +2,23 @@ package com.dohit.huick.domain.contract.service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.net.URL;
 
 import javax.persistence.LockModeType;
 
-import com.itextpdf.html2pdf.ConverterProperties;
-import com.itextpdf.layout.font.FontProvider;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
-import com.dohit.huick.domain.banking.autotransfer.dto.AutoTransferDto;
-import com.dohit.huick.domain.banking.autotransfer.service.AutoTransferService;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
 import com.dohit.huick.domain.contract.dto.ContractDto;
 import com.dohit.huick.domain.contract.entity.Contract;
@@ -31,7 +29,9 @@ import com.dohit.huick.global.error.ErrorCode;
 import com.dohit.huick.global.error.exception.AuthenticationException;
 import com.dohit.huick.global.error.exception.ContractException;
 import com.dohit.huick.infra.aws.S3Uploader;
+import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.itextpdf.layout.font.FontProvider;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,9 +40,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ContractService {
 	private final ContractRepository contractRepository;
-	private final AutoTransferService autoTransferService;
 	private final SpringTemplateEngine templateEngine;
 	private final S3Uploader s3Uploader;
+	private final ResourceLoader resourceLoader;
 
 	private static final String CONTRACT_S3_DIRNAME = "contract";
 	private final UserRepository userRepository;
@@ -50,9 +50,6 @@ public class ContractService {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	public ContractDto createContract(ContractDto contractDto) {
 		Contract contract = contractRepository.save(Contract.from(contractDto));
-		if (Objects.equals(contractDto.getUseAutoTransfer(),"Y")) {
-			autoTransferService.createAutoTransfer(AutoTransferDto.from(ContractDto.from(contract)));
-		}
 
 		return ContractDto.from(contract);
 	}
@@ -100,7 +97,12 @@ public class ContractService {
 		byte[] pdfContract = html2pdf(htmlContract);
 
 		// PDF S3에 저장하기
-		String pdfS3Url = s3Uploader.uploadPdf(pdfContract, CONTRACT_S3_DIRNAME, contractId);
+		String pdfS3Url = null;
+		try {
+			pdfS3Url = s3Uploader.uploadPdf(pdfContract, CONTRACT_S3_DIRNAME, contractId);
+		} catch (IOException e) {
+			throw new ContractException(ErrorCode.CANNOT_UPLOAD_PDF);
+		}
 
 		// PDF 저장 주소 contract에 저장해주기
 		contract.updatePdfPath(pdfS3Url);
@@ -126,7 +128,6 @@ public class ContractService {
 		return templateEngine.process("contract", context);
 	}
 
-
 	private byte[] html2pdf(String htmlContract) {
 		try {
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -137,12 +138,11 @@ public class ContractService {
 			// FontProvider 객체 생성
 			FontProvider fontProvider = new FontProvider();
 
-			// 클래스 로더를 사용하여 폰트 파일의 URL을 얻음
-			URL fontUrl = getClass().getClassLoader().getResource("fonts/NanumMyeongjo-Regular.ttf");
+			Resource resource = resourceLoader.getResource("classpath:fonts/NanumMyeongjo-Regular.ttf");
 
-			if (fontUrl != null) {
+			if (resource.exists()) {
 				// FontProvider에 폰트 추가
-				fontProvider.addFont(fontUrl.getPath());
+				fontProvider.addFont(resource.getURL().getPath());
 			} else {
 				throw new RuntimeException("Font file not found");
 			}
@@ -155,7 +155,7 @@ public class ContractService {
 
 			return outputStream.toByteArray();
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to convert HTML to PDF", e);
+						throw new RuntimeException("Failed to convert HTML to PDF", e);
 		}
 	}
 

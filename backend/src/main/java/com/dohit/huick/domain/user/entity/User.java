@@ -86,10 +86,14 @@ public class User {
 	@Size(min = 6, max = 6)
 	private String password;
 
+	@Column
+	private String walletKey;
+
 	@Builder
 	public User(Long userId, String walletAddress, SocialType socialType, String socialId,
 		LocalDateTime createdTime, Role role, LocalDateTime withdrawalTime, String signatureUrl, String rrn,
-		String address, String name, LocalDateTime issueDate, String phoneNumber, String password) {
+		String address, String name, LocalDateTime issueDate, String phoneNumber, String password,
+		String walletKey) {
 		this.userId = userId;
 		this.walletAddress = walletAddress;
 		this.socialType = socialType;
@@ -104,6 +108,7 @@ public class User {
 		this.issueDate = issueDate;
 		this.phoneNumber = phoneNumber;
 		this.password = password;
+		this.walletKey = walletKey;
 	}
 
 	public void signup(UserDto userDto) {
@@ -111,6 +116,8 @@ public class User {
 		this.name = userDto.getName();
 		this.rrn = userDto.getRrn();
 		this.phoneNumber = userDto.getPhoneNumber();
+		this.walletAddress = userDto.getWalletAddress();
+		this.walletKey = userDto.getWalletKey();
 	}
 
 	public void withdraw() {
