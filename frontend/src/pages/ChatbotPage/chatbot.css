@@ -3,7 +3,7 @@
   width: 100%;
   height: calc(100% - 140px);
   white-space: pre-line;
-  bottom: 80px;
+  bottom: 70px;
   font-weight: 400;
 }
 
@@ -32,6 +32,7 @@
 
 .react-chatbot-kit-chat-input {
   width: 85%;
+  height: 10px;
   border: none;
   margin-left: 5%;
   background-color: #F0F0F0;
@@ -50,7 +51,8 @@
 
 .react-chatbot-kit-chat-btn-send {
   position: absolute;
-  right: 28px;
+  /* right: 28px; */
+  right: 6.6%;
   width: 30px;
   height: 100%;
   border-bottom-right-radius: 0px;

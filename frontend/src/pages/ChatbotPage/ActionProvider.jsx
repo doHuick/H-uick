@@ -20,24 +20,24 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
     }));
   };
 
-const toFirst = () => {
-  localStorage.setItem("toSendLocal", '')
-  localStorage.setItem("userKakaoCaptureURL", '')
-  localStorage.setItem("tempContractLocal", '')
-  localStorage.setItem("userButtonsLocal", '[]')
-  localStorage.setItem("isPWDCorrect", 'false')
-  const botMessage = createChatBotMessage(
-    "휙봇을 통해 간편하게\n차용증을 작성할 수 있습니다\n\n다음의 항목들에 하나씩 답변해주세요!",
-  );
-  const botMessageSecond = createChatBotMessage('가장 중요한 것부터 시작할게요', {
-    widget: 'lendborrowbutton',
-  });
+  const toFirst = () => {
+    localStorage.setItem("toSendLocal", '')
+    localStorage.setItem("userKakaoCaptureURL", '')
+    localStorage.setItem("tempContractLocal", '')
+    localStorage.setItem("userButtonsLocal", '[]')
+    localStorage.setItem("isPWDCorrect", 'false')
+    const botMessage = createChatBotMessage(
+      "휙봇을 통해 간편하게\n차용증을 작성할 수 있습니다\n\n다음의 항목들에 하나씩 답변해주세요!",
+    );
+    const botMessageSecond = createChatBotMessage('가장 중요한 것부터 시작할게요', {
+      widget: 'lendborrowbutton',
+    });
 
-  setState((prev) => ({
-    ...prev,
-    messages: [...prev.messages, botMessage, botMessageSecond],
-  }));
-};
+    setState((prev) => ({
+      ...prev,
+      messages: [...prev.messages, botMessage, botMessageSecond],
+    }));
+  };
 
   // 빌려줌
   const handleILend = () => {
