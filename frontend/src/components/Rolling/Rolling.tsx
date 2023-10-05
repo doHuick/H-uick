@@ -16,12 +16,12 @@ export default function Rolling({monthBorrow, monthRent}: RollingProps) {
       {
       no: 1,
       title: '이번달 입금 예정 금액',
-      content: `${monthBorrow}원`,
+      content: `${monthRent}원`,
       },
       {
       no: 2,
       title: '이번달 출금 예정 금액',
-      content: `${monthRent}원`,
+      content: `${monthBorrow}원`,
       }
   
   ]

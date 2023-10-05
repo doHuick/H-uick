@@ -24,13 +24,13 @@ export const MainTab = ({ setNowActive }: FeedTabProps) => {
         active={activeTab === 'borrowing'}
         onClick={() => handleTabClick('borrowing')}
       >
-        차용
+        빌린 돈
       </Tab>
       <Tab
         active={activeTab === 'rental'}
         onClick={() => handleTabClick('rental')}
       >
-        대여
+        빌려준 돈
       </Tab>
     </TabContainer>
   );
@@ -45,7 +45,7 @@ const TabContainer = styled.div`
 `;
 
 const Tab = styled.div<TabProps>`
-  width: 45px;
+  width: 100%;
   height: 35px;
   font-size: 20px;
   font-weight: 700;
