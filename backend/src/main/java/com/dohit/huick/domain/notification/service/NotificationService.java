@@ -30,7 +30,7 @@ public class NotificationService {
 	public void sendNotification(NotificationDto notificationDto) throws FirebaseMessagingException {
 		List<DeviceToken> deviceToken = deviceTokenRepository.findByUserId(notificationDto.getUserId());
 
-		if(notificationDto.getNotificationType() == NotificationType.UPCOMING_TRANSFER) {
+		if (notificationDto.getNotificationType() == NotificationType.UPCOMING_TRANSFER) {
 			Notification notification = Notification.builder()
 				.setTitle("이체 예정")
 				.setBody("이체 예정")
@@ -46,8 +46,7 @@ public class NotificationService {
 					throw new RuntimeException(e);
 				}
 			});
-		}
-		else if(notificationDto.getNotificationType() == NotificationType.TRANSFER_SUCCESS) {
+		} else if (notificationDto.getNotificationType() == NotificationType.TRANSFER_SUCCESS) {
 			Notification notification = Notification.builder()
 				.setTitle("이체 성공")
 				.setBody("이체 성공")
@@ -63,8 +62,7 @@ public class NotificationService {
 					throw new RuntimeException(e);
 				}
 			});
-		}
-		else if(notificationDto.getNotificationType() == NotificationType.OVERDUE) {
+		} else if (notificationDto.getNotificationType() == NotificationType.OVERDUE) {
 			Notification notification = Notification.builder()
 				.setTitle("연체")
 				.setBody("연체")
@@ -84,7 +82,8 @@ public class NotificationService {
 	}
 
 	public NotificationDto createNotification(NotificationDto notificationDto) {
-		return NotificationDto.from(notificationRepository.save(com.dohit.huick.domain.notification.entity.Notification.from(notificationDto)));
+		return NotificationDto.from(
+			notificationRepository.save(com.dohit.huick.domain.notification.entity.Notification.from(notificationDto)));
 	}
 
 	public void createDeviceToken(DeviceTokenDto deviceTokenDto) {
@@ -92,10 +91,40 @@ public class NotificationService {
 	}
 
 	public List<DeviceTokenDto> getDeviceTokenByUserId(Long userId) {
-		return deviceTokenRepository.findByUserId(userId).stream().map(DeviceTokenDto::from).collect(Collectors.toList());
+		return deviceTokenRepository.findByUserId(userId)
+			.stream()
+			.map(DeviceTokenDto::from)
+			.collect(Collectors.toList());
 	}
 
 	public List<NotificationDto> getNotificationUserId(Long userId) {
-		return notificationRepository.findByUserId(userId).stream().map(NotificationDto::from).collect(Collectors.toList());
+		return notificationRepository.findByUserId(userId)
+			.stream()
+			.map(NotificationDto::from)
+			.collect(Collectors.toList());
+	}
+
+	public void sendNotificationDirectly(NotificationDto notificationDto) {
+		Notification notification = Notification.builder()
+			.setTitle(notificationDto.getTitle())
+			.setBody(notificationDto.getBody())
+			.build();
+
+		deviceTokenRepository.findByUserId(notificationDto.getUserId())
+			.forEach(deviceToken -> {
+				System.out.println(deviceToken.getDeviceToken());
+				Message message = Message.builder()
+					.setToken(deviceToken.getDeviceToken())
+					.setNotification(notification)
+					.build();
+
+				try {
+					firebaseMessaging.send(message);
+					System.out.println("sent");
+				} catch (FirebaseMessagingException e) {
+					e.printStackTrace();
+				}
+			});
+
 	}
 }
