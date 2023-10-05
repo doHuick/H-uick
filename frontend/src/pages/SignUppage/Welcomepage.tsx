@@ -15,8 +15,7 @@ export default function Welcomepage() {
   const [name, setName] = useState<String>('');
   const [accountNumber, setAccountNumber] = useState<String>('');
   const [createdTime, setCreatedTime] = useState<String>('');
-  // 지갑 생성 되면 활성화
-  // const [wallet, setWallet] = useState<String>('');
+  const [wallet, setWallet] = useState<String>('');
 
   const navigation = useNavigate();
 
@@ -29,11 +28,9 @@ export default function Welcomepage() {
       setName(res.data.name);
       setAccountNumber(res.data.account_info.accountNumber);
       setCreatedTime(res.data.created_time);
-      // setWallet(res.data.wallet_address);
+      setWallet(res.data.wallet_address);
     })
   }, []);
-  // [23-09-15] 계좌주소 받아서 연동시켜야 함
-  const walletAdd = '2fW4MLoas49wX0z235pw1z3223k21dolqwl';
 
   // 계좌 복사 클릭 시 toast 메시지
   toastConfig({
@@ -99,12 +96,12 @@ export default function Welcomepage() {
           <TextBox fontSize="15.5px" fontWeight="500" color="var(--font-gray)">
             지갑주소
           </TextBox>
-          <CopyButton onClick={() => handleCopyClick(`${walletAdd}`)}>
+          <CopyButton onClick={() => handleCopyClick(`${wallet}`)}>
             복사
           </CopyButton>
         </BetweenDiv>
         <TextBox fontSize="15.5px" fontWeight="500" color="var(--font-gray)">
-          {walletAdd}
+          {wallet}
         </TextBox>
         <ButtonFrame>
           <ConfirmButtonRenewed onClick={() => navigation('/')}>휙 사용해보기</ConfirmButtonRenewed>

@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import SignupSignModal from '../../components/SignModal/SignupSignModal';
 import SignupPasswordModal from '../../components/Password/SignupPasswordModal';
 import toast, { toastConfig } from 'react-simple-toasts';
+import { createWallet } from '../../utils/wallet';
 
 interface StyledInputProps {
   value: string;
@@ -27,6 +28,8 @@ export default function SignUppage() {
   const navigate = useNavigate();
 
   const sendData = async () => {
+    const [walletAddress, walletKey] = createWallet();
+
     try {
       await axios.post(
         `${BASE_URL}/users/rrn`,
@@ -35,14 +38,16 @@ export default function SignUppage() {
           rrn: `${idFront}${idBack}`,
           address: `${address}`,
           phone_number: `${phoneNumber}`,
+          wallet_address: `${walletAddress}`,
+          wallet_key: `${walletKey}`,
         },
         {
           headers: { Authorization: localStorage.getItem('access_token') },
         },
       )
-      .then(() => {
-        showSignModal();
-      })
+        .then(() => {
+          showSignModal();
+        })
     } catch (error) {
       toast('모든 정보를 빠짐없이 정확히 입력해주세요.');
     }

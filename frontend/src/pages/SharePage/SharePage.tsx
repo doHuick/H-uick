@@ -8,6 +8,7 @@ import { MiniConfirmButton } from '../../components/Button/Button';
 import BorrowModal from '../../components/TransferModal/BorrowModal';
 import SharePasswordModal from '../../components/Password/SharePasswordModal';
 import ShareLendModal from '../../components/TransferModal/ShareLendModal';
+import { createContract } from '../../utils/contract';
 
 interface AccountProps {
   accountId: number;
@@ -108,7 +109,7 @@ export default function SharePage() {
         setUserInfo(res.data);
         // console.log(res.data)
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -169,8 +170,24 @@ export default function SharePage() {
             headers: { Authorization: localStorage.getItem('access_token') },
           },
         )
-        .then(() => {
+        .then((res) => {
           // console.log(res);
+          const contractData = res.data;
+          const interestRate = contractData.rate * 1000000; // 소수점 저장 불가하므로
+          const issueDate = parseInt((contractData.start_date).substring(0, 10).replace(/-/g, ''), 10);
+          const maturityDate = parseInt((contractData.due_date).substring(0, 10).replace(/-/g, ''), 10);
+
+          createContract(
+            contractData.pdf_path,
+            contractData.lessor_wallet_address,
+            contractData.lessee_wallet_address,
+            contractData.amount,
+            interestRate,
+            issueDate,
+            maturityDate
+          ).catch((error) => {
+            console.error("블록체인에 계약 기록 실패:", error);
+          });
         });
 
       // 유저가 빌려줄때 송금
@@ -218,8 +235,24 @@ export default function SharePage() {
             headers: { Authorization: localStorage.getItem('access_token') },
           },
         )
-        .then(() => {
+        .then((res) => {
           // console.log(res);
+          const contractData = res.data;
+          const interestRate = contractData.rate * 1000000; // 소수점 저장 불가하므로
+          const issueDate = parseInt((contractData.start_date).substring(0, 10).replace(/-/g, ''), 10);
+          const maturityDate = parseInt((contractData.due_date).substring(0, 10).replace(/-/g, ''), 10);
+
+          createContract(
+            contractData.pdf_path,
+            contractData.lessor_wallet_address,
+            contractData.lessee_wallet_address,
+            contractData.amount,
+            interestRate,
+            issueDate,
+            maturityDate
+          ).catch((error) => {
+            console.error("블록체인에 계약 기록 실패:", error);
+          });
         });
 
       // 유저가 빌릴때 송금
@@ -329,26 +362,26 @@ export default function SharePage() {
                 {contractInfo?.lessor_id
                   ? `${userInfo?.rrn.slice(0, 6)}-${userInfo?.rrn.slice(6, 13)}`
                   : `${contractInfo?.lessee_rrn.slice(
-                      0,
-                      6,
-                    )}-${contractInfo?.lessee_rrn.slice(6, 13)}`}
+                    0,
+                    6,
+                  )}-${contractInfo?.lessee_rrn.slice(6, 13)}`}
               </FourthColContext>
               <FourthColContext>
                 {contractInfo?.lessor_id
                   ? `${userInfo?.phone_number.slice(
-                      0,
-                      3,
-                    )}-${userInfo?.phone_number.slice(
-                      3,
-                      7,
-                    )}-${userInfo?.phone_number.slice(7, 11)}`
+                    0,
+                    3,
+                  )}-${userInfo?.phone_number.slice(
+                    3,
+                    7,
+                  )}-${userInfo?.phone_number.slice(7, 11)}`
                   : `${contractInfo?.lessee_phone_number.slice(
-                      0,
-                      3,
-                    )}-${contractInfo?.lessee_phone_number.slice(
-                      3,
-                      7,
-                    )}-${contractInfo?.lessee_phone_number.slice(7, 11)}`}
+                    0,
+                    3,
+                  )}-${contractInfo?.lessee_phone_number.slice(
+                    3,
+                    7,
+                  )}-${contractInfo?.lessee_phone_number.slice(7, 11)}`}
               </FourthColContext>
             </FourthCol>
             <FifthCol>( 서 명 )</FifthCol>
