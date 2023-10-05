@@ -15,7 +15,8 @@
 }
 
 #root {
-  width: 390px;
+  width: 100vw;
+  max-width: 500px;
   height: 100dvh;
   position: absolute;
   top: 50%;

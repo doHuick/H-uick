@@ -110,9 +110,6 @@ export default function SharePage() {
   
   // 차용증 완성시키기
   const executeContract = () => {
-    console.log(contractId)
-    console.log(contractInfo?.lessee_id)
-    console.log(userInfo?.user_id)
     // 지금 유저가 빌려주는사람
     if (contractInfo?.lessor_id == null) {
       axios.patch(
@@ -361,21 +358,21 @@ export default function SharePage() {
         </ButtonFrame>
       )}
 
-      {contractInfo?.lessor_id == userInfo?.user_id && contractInfo?.status === "BEFORE_EXECUTION" && (
+      {/* {contractInfo?.lessor_id == userInfo?.user_id && contractInfo?.status === "BEFORE_EXECUTION" && (
         <ButtonFrame>
           <NoButton>
             다른사람에게 공유해보세요
           </NoButton>
         </ButtonFrame>
-      )}
+      )} */}
 
-      {contractInfo?.lessee_id == userInfo?.user_id &&  contractInfo?.status === "BEFORE_EXECUTION" &&(
+      {/* {contractInfo?.lessee_id == userInfo?.user_id &&  contractInfo?.status === "BEFORE_EXECUTION" &&(
         <ButtonFrame>
           <NoButton>
             다른사람에게 공유해보세요
           </NoButton>
         </ButtonFrame>
-      )}
+      )} */}
 
       {modalOpen ? (
           <BorrowModal
