@@ -7,7 +7,7 @@ export default function LoginPage() {
     <Main>
       <Landing>
         <Image src="/H-uick.gif" />
-        <KakaoBox href="http://localhost:8080/oauth2/authorization/kakao?redirect_uri=http://localhost:5173/oauth/redirect">
+        <KakaoBox href="https://h-uick.com/api/oauth2/authorization/kakao?redirect_uri=https://h-uick.com/oauth/redirect">
           <Kakao />
         </KakaoBox>
       </Landing>

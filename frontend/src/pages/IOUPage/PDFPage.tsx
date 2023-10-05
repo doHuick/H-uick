@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Main } from '../../style';
 import HeadBar from '../../components/HeadBar/HeadBar';
 import { MiniConfirmButton } from '../../components/Button/Button';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios, { BASE_URL } from '../../api/apiController';
+import { useParams } from 'react-router-dom';
+// import axios, { BASE_URL } from '../../api/apiController';
 
 // import { Worker, Viewer, LocalizationMap } from '@react-pdf-viewer/core';
 // import '@react-pdf-viewer/core/lib/styles/index.css';
