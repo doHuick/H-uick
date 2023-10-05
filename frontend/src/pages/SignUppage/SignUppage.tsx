@@ -1,45 +1,48 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { TextBox } from '../../components/TextBox/TextBox';
 import { Main } from '../../style';
-// import NavBar from '../../components/NavBar/NavBar';
 import { ReactComponent as Bar } from '../../assets/icons/bar.svg';
 import { ConfirmButton } from '../../components/Button/Button';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate } from 'react-router-dom';
 import SignupSignModal from '../../components/SignModal/SignupSignModal';
 import SignupPasswordModal from '../../components/Password/SignupPasswordModal';
+import toast, { toastConfig } from 'react-simple-toasts';
 
 interface StyledInputProps {
   value: string;
 }
 
-interface AccountProps{
-  accountId: number,
-  accountNumber: string,
-  balance: number,
-  bankCode: string,
-  bankName: string,
-  createdTime: string,
+interface DataProps {
+  address: string;
 }
 
-interface UserInfoProps{
-  account_info : AccountProps,
-  address: string,
-  created_time: string,
-  issue_date?: string,
-  name: string,
-  phone_number: string,
-  role: string,
-  rrn: string,
-  signature_url?: string,
-  social_id: string,
-  social_type: string,
-  user_id: number,
-  wallet_address?: string,
-  withdrawal_time? : string,
+interface AccountProps {
+  accountId: number;
+  accountNumber: string;
+  balance: number;
+  bankCode: string;
+  bankName: string;
+  createdTime: string;
 }
 
+interface UserInfoProps {
+  account_info: AccountProps;
+  address: string;
+  created_time: string;
+  issue_date?: string;
+  name: string;
+  phone_number: string;
+  role: string;
+  rrn: string;
+  signature_url?: string;
+  social_id: string;
+  social_type: string;
+  user_id: number;
+  wallet_address?: string;
+  withdrawal_time?: string;
+}
 
 export default function SignUppage() {
   const [name, setName] = useState<string>('');
@@ -63,18 +66,43 @@ export default function SignUppage() {
           headers: { Authorization: localStorage.getItem('access_token') },
         },
       );
-      // navigate('/welcome');
     } catch (error) {
-      console.error('서버 요청 실패:', error);
+      toast('모든 정보를 빠짐없이 정확히 입력해주세요.');
     }
     showSignModal();
   };
 
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+
+  const setAddr = () => {
+    // wrapRef를 사용하여 요소를 보이게 함.
+    if (wrapRef.current) {
+      wrapRef.current.style.display = 'block';
+    }
+    // @ts-ignore
+    new daum.Postcode({
+      width: '100%',
+      oncomplete: function (data: DataProps) {
+        setAddress(data.address);
+
+        // 검색이 완료되면 wrapRef를 사용하여 요소를 숨김.
+        if (wrapRef.current) {
+          wrapRef.current.style.display = 'none';
+        }
+      },
+    }).embed(wrapRef.current);
+  };
+
+  toastConfig({
+    theme: 'frosted-glass',
+    position: 'top-center',
+    maxVisibleToasts: 1,
+  });
+
   // 모달 띄우기
   const [signModalOpen, setSignModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState<UserInfoProps>()
-
+  const [userInfo, setUserInfo] = useState<UserInfoProps>();
 
   const showSignModal = () => {
     setSignModalOpen(true);
@@ -93,28 +121,28 @@ export default function SignUppage() {
     axios.patch(
       `${BASE_URL}/users/signature`,
       {
-        signatureBase64: imageData
-      }
-      ,
+        signatureBase64: imageData,
+      },
       {
         headers: { Authorization: localStorage.getItem('access_token') },
       },
-    )
-    // 내 정보 받아오기
+    );
 
-    axios.get(`${BASE_URL}/users/me`, {
-      headers: { Authorization: localStorage.getItem('access_token') },
-    })
-    .then((res) => {
-      setUserInfo(res.data)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    // 내 정보 받아오기
+    axios
+      .get(`${BASE_URL}/users/me`, {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+      .then((res) => {
+        setUserInfo(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     setTimeout(() => {
       closeSignModal();
-      setPasswordModalOpen(true)
+      setPasswordModalOpen(true);
     }, 250);
   };
 
@@ -122,22 +150,16 @@ export default function SignUppage() {
     axios.patch(
       `${BASE_URL}/users/me`,
       {
-        password: userPassword
-      }
-      ,
+        password: userPassword,
+      },
       {
         headers: { Authorization: localStorage.getItem('access_token') },
       },
-      )
-      .then((res) => {
-        console.log(res)
-      })
-    console.log(userInfo)
-    console.log(userPassword)
-  }
+    );
+  };
 
   return (
-    <Main backgroundColor='var(--white)'>
+    <Main backgroundColor="var(--white)">
       <TitleFrame>
         <TextBox fontSize="22px" fontWeight="700" margin="0 0 12px 0">
           회원님, <br />
@@ -154,9 +176,12 @@ export default function SignUppage() {
           이름
         </TextBox>
         {/* 이름 입력 input */}
-        <StyledInput type="text"
+        <StyledInput
+          type="text"
           value={name}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setName(e.target.value)
+          }
         />
 
         <TextBoxSignup
@@ -166,14 +191,16 @@ export default function SignUppage() {
         >
           주민등록번호
         </TextBoxSignup>
-        
+
         <Id>
           {/* 주민등록번호 앞자리 입력 input */}
           <IdInput
             type="string"
             maxLength={6}
             value={idFront}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdFront(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setIdFront(e.target.value)
+            }
           />
           <Bar />
           {/* 주민등록번호 뒷자리 입력 input */}
@@ -181,19 +208,30 @@ export default function SignUppage() {
             type="string"
             maxLength={7}
             value={idBack}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIdBack(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setIdBack(e.target.value)
+            }
           />
         </Id>
 
-        <TextBoxSignup fontSize="18px" fontWeight="500" color="var(--font-gray)" >
+        <TextBoxSignup
+          fontSize="18px"
+          fontWeight="500"
+          color="var(--font-gray)"
+        >
           주소
         </TextBoxSignup>
         {/* 주소 입력 input */}
         <StyledInput
+          id="addr"
           type="text"
           value={address}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
+          onClick={setAddr}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setAddress(e.target.value)
+          }
         />
+        <PostBox ref={wrapRef} />
 
         <TextBoxSignup
           fontSize="18px"
@@ -207,24 +245,23 @@ export default function SignUppage() {
           type="string"
           maxLength={11}
           value={phoneNumber}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setPhoneNumber(e.target.value)
+          }
         />
       </InputFrame>
-      
+
       <CenterDiv>
         <ConfirmButtonRenewed onClick={sendData}>확인</ConfirmButtonRenewed>
       </CenterDiv>
 
-      {signModalOpen ? (
-          <SignupSignModal
-            onSave={handleSave}
-          />
-        ) : null}
+      {signModalOpen ? <SignupSignModal onSave={handleSave} /> : null}
 
       {passwordModalOpen ? (
-        <SignupPasswordModal 
-        closePasswordModal={closePasswordModal}
-        handlePassword={handlePassword}/>
+        <SignupPasswordModal
+          closePasswordModal={closePasswordModal}
+          handlePassword={handlePassword}
+        />
       ) : null}
     </Main>
   );
@@ -235,18 +272,18 @@ const TitleFrame = styled.div`
   width: calc(100% - 56px);
   margin-top: 100px;
   margin-left: 28px;
-`
+`;
 
 const InputFrame = styled(TitleFrame)`
   position: relative;
-  width: calc()(100% - 56px);
+  width: calc() (100% - 56px);
   margin-top: 60px;
   margin-left: 28px;
-`
+`;
 
 const TextBoxSignup = styled(TextBox)`
   margin-top: 46px;
-`
+`;
 
 const StyledInput = styled.input<StyledInputProps>`
   position: relative;
@@ -266,8 +303,8 @@ const StyledInput = styled.input<StyledInputProps>`
   }
   &::-webkit-inner-spin-button,
   ::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
   }
 `;
 
@@ -298,4 +335,9 @@ const ConfirmButtonRenewed = styled(ConfirmButton)`
   border-radius: 16px;
   font-size: 17px;
   font-weight: 600;
+`;
+
+const PostBox = styled.div`
+  display: none;
+  position: relative;
 `;

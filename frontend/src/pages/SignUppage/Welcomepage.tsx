@@ -10,6 +10,7 @@ import NavBar from '../../components/NavBar/NavBar';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
 import axios, { BASE_URL } from '../../api/apiController';
+import { useNavigate } from 'react-router-dom';
 
 export default function Welcomepage() {
   const [name, setName] = useState<String>('');
@@ -17,6 +18,8 @@ export default function Welcomepage() {
   const [createdTime, setCreatedTime] = useState<String>('');
   // 지갑 생성 되면 활성화
   // const [wallet, setWallet] = useState<String>('');
+
+  const navigation = useNavigate();
 
   useEffect(() => {
     axios.get(`${BASE_URL}/users/me`, {
@@ -105,7 +108,7 @@ export default function Welcomepage() {
           {walletAdd}
         </TextBox>
         <CenterDiv>
-          <ConfirmButton>휙 사용해보기</ConfirmButton>
+          <ConfirmButton onClick={() => navigation('/')}>휙 사용해보기</ConfirmButton>
         </CenterDiv>
       </FlexWrapDiv>
       <NavBar />
