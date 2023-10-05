@@ -32,6 +32,8 @@ const UserImageUpload = (props) => {
     setImageFile(e.target.files[0])
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
+    setUploadedImage(imageUrl);
+
 
     const contractTmpKey = '11'; // 예시로 '11'을 사용했습니다. 실제 key 값을 사용해야 합니다.
     const url = `https://h-uick.com/ai/contracts/messenger?user_id=${userInfo.user_id}&contract_tmp_key=${contractTmpKey}`;
@@ -55,7 +57,6 @@ const UserImageUpload = (props) => {
     });
 
     // localStorage.setItem("userKakaoCaptureURL", JSON.stringify(imageUrl));
-    setUploadedImage(imageUrl);
   };
 
   // 응답 데이터: {loanAmount: 1000, interestRate: 0, maturityDate: '20231220'}
@@ -67,9 +68,9 @@ const UserImageUpload = (props) => {
     const url = localStorage.getItem('userKakaoCaptureURL');
     setDisableUpload(true);
     axiosController
-      .post(
-        `${BASE_URL}/contracts`,
-        {
+    .post(
+      `${BASE_URL}/contracts`,
+      {
           user_id: 1,
           contract_tmp_key: null,
           file: url,
@@ -77,37 +78,40 @@ const UserImageUpload = (props) => {
         {
           headers: { Authorization: localStorage.getItem('access_token') },
         },
-      )
-      .then((res) => {
-        // console.log(res.data);
-      });
-  };
-
-  return (
-    <UploadFrame>
+        )
+        .then((res) => {
+          // console.log(res.data);
+        });
+      };
+      
+      return (
+        <UploadFrame>
       <UploadChat>
+        {gptResponse == null && uploadedImage ? (
+        <Spinner/>
+        ) : null }
         <input
           type="file"
           id="file"
           accept="image/*"
           onChange={onChangeImage}
           disabled={disableUpload}
-        />
+          />
         <label htmlFor="file" className={disableUpload ? 'disabled' : ''}>
           {uploadedImage ? (
             <img
-              className="uploaded-image"
-              src={uploadedImage}
-              alt="프로필 없을때"
+            className="uploaded-image"
+            src={uploadedImage}
+            alt="프로필 없을때"
             />
-          ) : (
-            <img src="/upload-image-icon.png" alt="프로필사진" />
-          )}
+            ) : (
+              <img src="/upload-image-icon.png" alt="프로필사진" />
+              )}
         </label>
       </UploadChat>
-      {uploadedImage ? (
+      {uploadedImage && gptResponse ? (
         <ChatbotButton key={1} onClick={props.actionProvider.handleUpload}>
-          <span>업로드</span>
+          <span>채팅 분석하기</span>
         </ChatbotButton>
       ) : null}
     </UploadFrame>
@@ -198,3 +202,25 @@ const ChatbotButton = styled.div`
   margin-top: -12px;
   margin-bottom: 24px;
 `;
+
+const Spinner = styled.div`
+width: 52px;
+  height: 52px;
+  border: 5px solid var(--gray);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite; /* Apply the rotation animation */
+  position: absolute;
+  z-index: 10;
+  
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`
