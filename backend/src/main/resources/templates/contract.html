@@ -23,25 +23,49 @@
 
         /* Title */
         .title {
-            font-size: 20px; /* 제목 폰트 크기 조정 */
+            font-size: 30px; /* 제목 폰트 크기 조정 */
             text-align: center; /* 제목 중앙 정렬 */
             margin-bottom: 20px; /* 제목과 본문 사이의 여백 조정 */
+            font-weight: bold;
         }
 
         /* Body */
         .body {
+            width: 90%;
+            font-size: 18px;
             margin-bottom: 20px; /* 본문 여백 조정 */
+            background-color: white;
+            /* white-space: normal; */
+            /* word-break: normal; */
+            /* overflow: auto; */
+            word-break: keep-all;
+        }
+        .money {
+            font-size: 18px;
+            margin-bottom: 20px; /* 제목과 본문 사이의 여백 조정 */
+            font-weight: 500;
         }
 
         /* TextBold */
         .text-bold {
             font-weight: bold;
         }
+        .text-big {
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .text-bigger {
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .date {
+            text-align: center;
+        }
 
         /* ContractTable */
         .contract-table {
             position: relative;
-            width: 100%;
+            width: 90%;
             display: flex;
             align-items: center;
             line-height: 1.6;
@@ -148,43 +172,48 @@
 <div class="a4-container">
     <div class="contract-paper">
         <br/><br/>
+        <br/><br/>
+        <br/><br/>
         <div class="title">
             <span>차&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;용&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;증</span>
         </div>
         <br/><br/><br/>
-        <div class="body">
-            &#8361;&nbsp;<span th:text="${contract.amount}"></span> 원 &nbsp;( <span th:text="${contract.amountInKorean}"></span> 원 )
+        <div class="money">
+            &#8361;&nbsp;<span th:text="${contract.amount}"></span> 원&nbsp;( <span th:text="${contract.amountInKorean}"></span>)
         </div>
         <br/>
         <div class="body">
-            위 금액을 채무자가 채권자로부터 <span th:text="${#temporals.format(contract.startDate, 'yyyy년 MM월 dd일')}"></span> 에 빌립니다.
-            이자는 연 <span th:text="${contract.rate}"></span> % 로 하여
-            매달 <span th:text="${#temporals.format(contract.startDate, 'd일')}"></span>  에 갚겠으며,
-            원금은 <span th:text="${#temporals.format(contract.dueDate, 'yyyy년 MM월 dd일')}"></span> 까지 채권자에게 갚겠습니다.
+            위 금액을 채무자가 채권자로부터 <span class="text-bold" th:text="${#temporals.format(contract.startDate, 'yyyy년 MM월 dd일')}"></span> 에 빌립니다.
+            이자는 연 <span class="text-bold" th:text="${contract.rate}"></span> <span class = "text-bold"> % </span> 로 하여
+            매달 <span class="text-bold" th:text="${#temporals.format(contract.startDate, 'd일')}"></span>  에 갚겠으며,
+            원금은 <span class="text-bold" th:text="${#temporals.format(contract.dueDate, 'yyyy년 MM월 dd일')}"></span> 까지 채권자에게 갚겠습니다.
         </div>
         <br/><br/>
         <!-- 채무자 ContractTable -->
         <div class="contract-table">
             <div class="first-col">
-                <span>채무자</span>
+                <span class="text-big">채무자</span>
             </div>
             <div class="second-col">
-                <span>이 름</span>
-                <span>주 소</span>
-                <span>주 민 등 록 번 호</span>
-                <span>전 화 번 호</span>
+                <span class="text-big">이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;름</span>
+                <span class="text-big">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소</span>
+                <span class="text-big">주 민 등 록 번 호</span>
+                <span class="text-big">전&nbsp;&nbsp;&nbsp;&nbsp;화&nbsp;&nbsp;&nbsp;&nbsp;번&nbsp;&nbsp;&nbsp;호</span>
             </div>
             <div class="third-col">
-                <span>:</span><span>:</span><span>:</span><span>:</span>
+                <span class="text-big">:</span>
+                <span class="text-big">:</span>
+                <span class="text-big">:</span>
+                <span class="text-big">:</span>
             </div>
             <div class="fourth-col">
-                <span th:text="${lessee.name}"></span>
-                <span th:text="${lessee.address}"></span>
-                <span th:text="${lessee.rrn}"></span>
-                <span th:text="${lessee.phoneNumber}"></span>
+                <span class="text-big"th:text="${lessee.name}"></span>
+                <span class="text-big"th:text="${lessee.address}"></span>
+                <span class="text-big"th:text="${lessee.rrn}"></span>
+                <span class="text-big"th:text="${lessee.phoneNumber}"></span>
             </div>
             <div class="fifth-col">
-                <span>( 서 명 )</span>
+                <span class="text-big">( 서 명 )</span>
                 <img class="signature" th:src="${lessee.signatureUrl}" />
             </div>
         </div>
@@ -193,30 +222,31 @@
         <!-- 채권자 ContractTable -->
         <div class="contract-table">
             <div class="first-col">
-                <span>채권자</span>
+                <span class="text-big">채권자</span>
             </div>
             <div class="second-col">
-                <span>이 름</span>
-                <span>주 소</span>
+                <span class="text-big">이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;름</span>
+                <span class="text-big">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소</span>
             </div>
             <div class="third-col">
-                <span>:</span><span>:</span>
+                <span class="text-big">:</span>
+                <span class="text-big">:</span>
             </div>
             <div class="fourth-col">
-                <span th:text="${lessor.name}"></span>
-                <span th:text="${lessor.address}"></span>
+                <span class="text-big"th:text="${lessor.name}"></span>
+                <span class="text-big"th:text="${lessor.address}"></span>
             </div>
             <div class="fifth-col">
-                <span>( 서 명 )</span>
+                <span class="text-big">( 서 명 )</span>
                 <img class="signature" th:src="${lessor.signatureUrl}" />
             </div>
         </div>
         <br/><br/>
-        <div>
-            <span th:text="${#temporals.format(contract.createdTime, 'yyyy년 MM월 dd일')}"></span></span>
+        <div class="date">
+        <span class="text-bigger" th:text="${#temporals.format(contract.startDate, 'yyyy년 MM월 dd일')}"></span>
         </div>
-        <br/><br/>
     </div>
+    
 </div>
 </body>
 </html>
