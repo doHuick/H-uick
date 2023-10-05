@@ -9,8 +9,11 @@ app = FastAPI()
 
 # CORS 미들웨어 설정
 origins = [
-    "http://localhost:5173",  # 허용하려는 출처
-    # 필요한 경우 다른 출처도 추가할 수 있습니다.
+    # 허용하려는 출처
+    "http://www.h-uick.com",
+    "https://www.h-uick.com",
+    "http://h-uick.com",
+    "https://h-uick.com"
 ]
 
 app.add_middleware(
