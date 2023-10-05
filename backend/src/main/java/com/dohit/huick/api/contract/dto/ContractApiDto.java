@@ -65,11 +65,13 @@ public class ContractApiDto {
 		String lessorWalletAddress;
 		Integer totalRepaymentCount;
 		Integer currentRepaymentCount;
+		Integer paidCount;
 		LocalDateTime startDate;
 		LocalDateTime dueDate;
 		LocalDateTime repaymentDate;
 		Long currentAmount;
 		Long amount;
+		Long balance;
 		String amountInKorean;
 		Float rate;
 		ContractStatus status;
@@ -79,8 +81,8 @@ public class ContractApiDto {
 		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress,
 			String lesseeRrn, String lesseePhoneNumber, String lesseeWalletAddress, String lessorName,
 			String lessorAddress, String lessorRrn, String lessorPhoneNumber, String lessorWalletAddress,
-			Integer totalRepaymentCount, Integer currentRepaymentCount, LocalDateTime startDate,
-			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount,
+			Integer totalRepaymentCount, Integer currentRepaymentCount, Integer paidCount, LocalDateTime startDate,
+			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount, Long balance,
 			String amountInKorean, Float rate, ContractStatus status, String pdfPath) {
 			this.contractId = contractId;
 			this.lesseeId = lesseeId;
@@ -97,11 +99,13 @@ public class ContractApiDto {
 			this.lessorWalletAddress = lessorWalletAddress;
 			this.totalRepaymentCount = totalRepaymentCount;
 			this.currentRepaymentCount = currentRepaymentCount;
+			this.paidCount = paidCount;
 			this.startDate = startDate;
 			this.dueDate = dueDate;
 			this.repaymentDate = repaymentDate;
 			this.currentAmount = currentAmount;
 			this.amount = amount;
+			this.balance = balance;
 			this.amountInKorean = amountInKorean;
 			this.rate = rate;
 			this.status = status;
