@@ -33,7 +33,7 @@ const KakaoAuthHandler = () => {
         headers: { Authorization: localStorage.getItem('access_token') },
       }).then((res) => {
         const data = res.data;
-        if (data.address == null) {
+        if (data.address !== null && data.rrn !== null && data.phone_number !==null && data.name !== null) {
           // 회원가입이 된 유저면 메인페이지로 이동
           navigate('/');
         } else if (localStorage.getItem('contractId')) {

@@ -8,6 +8,7 @@ import { MainTab } from '../../components/TabBar/MainTab';
 import axios, { BASE_URL } from '../../api/apiController';
 import toast, { toastConfig } from 'react-simple-toasts';
 import Rolling from '../../components/Rolling/Rolling';
+import { useNavigate } from 'react-router-dom';
 
 type FlexDivProps = {
   margin?: string;
@@ -22,6 +23,7 @@ interface ContractProps {
   repayment_date: Date;
   current_amount: number;
   rate: number;
+  name?: string;
 }
 
 export default function Mainpage() {
@@ -31,6 +33,7 @@ export default function Mainpage() {
   const [accountNumber, setAccountNumber] = useState<string>('');
   const [monthBorrow, setMonthBorrow] = useState<number | null>(null);
   const [monthRent, setMonthRent] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   // [Tab 기능]
   const fetchFeedsForTab = (tab: string) => {
@@ -46,7 +49,7 @@ export default function Mainpage() {
           } else {
             const myContracts = res.data.map((contractData: ContractProps) => ({
               contract_id: contractData.contract_id,
-              lessee_name: contractData.lessee_name,
+              name: contractData.lessor_name,
               total_repayment_count: contractData.total_repayment_count,
               current_repayment_count: contractData.current_repayment_count,
               repayment_date: new Date(contractData.repayment_date),
@@ -68,7 +71,7 @@ export default function Mainpage() {
           } else {
             const myContracts = res.data.map((contractData: ContractProps) => ({
               contract_id: contractData.contract_id,
-              lessee_name: contractData.lessee_name,
+              name: contractData.lessee_name,
               total_repayment_count: contractData.total_repayment_count,
               current_repayment_count: contractData.current_repayment_count,
               repayment_date: new Date(contractData.repayment_date),
@@ -141,7 +144,7 @@ export default function Mainpage() {
   const handleCopyClick = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast('지갑주소가 복사되었습니다.');
+      toast('계좌번호가 복사되었습니다.');
     } catch (error) {
       toast('에러가 발생했습니다.');
     }
@@ -201,7 +204,14 @@ export default function Mainpage() {
           textAlign="left"
           margin="20px 30px"
         >
-          {nowBalance}원
+          {nowBalance}
+          <TextBox fontSize="30px"
+          fontWeight="500"
+          color="var(--white)"
+          margin="0 0 0 2px"
+          >
+          원
+          </TextBox>
         </TextBox>
 
         {/* 롤링 공지 */}
@@ -225,7 +235,7 @@ export default function Mainpage() {
       ) : (
         <ContractsDiv>
           {feeds.map((feed) => (
-            <WhiteBox key={feed.contract_id}>
+            <WhiteBox key={feed.contract_id} onClick={() => navigate(`/detail/${feed.contract_id}`)}>
               <FlexDiv margin="0px 30px 2px 30px">
                 <TextBox
                   fontSize="15px"
@@ -233,7 +243,7 @@ export default function Mainpage() {
                   color="var(--black)"
                   textAlign="left"
                 >
-                  {feed.lessee_name}
+                  {feed.name}
                 </TextBox>
                 <TextBox
                   fontSize="20px"
@@ -295,10 +305,9 @@ const BlueBox = styled.div`
 const WhiteBox = styled.div`
   background-color: var(--white);
   width: 360px;
-  height: 70px;
   border-radius: 10px;
   box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.04);
-  margin: 9px 14px;
+  margin: 11px 14px;
   padding: 14px 0px;
   padding-bottom: 18px;
   &:hover {
@@ -337,6 +346,6 @@ const StyledMain = styled(Main)`
 
 const ContractsDiv = styled.div`
   overflow-y: scroll;
-  height: 370px;
+  height: 490px;
   max-height: 100%;
 `;
