@@ -5,26 +5,32 @@ from langchain.schema import HumanMessage, SystemMessage
 from collections import defaultdict
 import easyocr
 import json
+from datetime import datetime
 
 conversation_history = defaultdict(list)
 
 reader = easyocr.Reader(['ko'])
 
+now = datetime.now()
+
 # OpenAI API model 설정
 MODEL_NAME = 'gpt-4'
-TEMPERATURE = 0
+TEMPERATURE = 0.5
 OPENAI_API_KEY = config('OPENAI_API_KEY')
 
 messenger_model = ChatOpenAI(model_name=MODEL_NAME, temperature=TEMPERATURE, openai_api_key=OPENAI_API_KEY)
-# System 프롬프트 작성
-messenger_sys = SystemMessage(content="""
-                              메신저에서 대화한 내용을 OCR로 추출한거야.
-                              그래서 부정확한 부분이 있어. 그런 부분들은 유추해줘.
-                              두 사람이 돈을 빌려주겠다는 약속을 하는 내용인데, 차용 계약서에 필요한 정보를 추출하는게 목표야.
 
-                              대화내용에는 빌려주는 금액(loanAmount), 이자율(interestRate), 받을 날짜(maturityDate)가 포함될거야.
-                              답변해줄 때는 {"contract_info": {"loanAmount: 1000(int), interestRate: 3(float), maturityDate: 20210201(str)"}}과 같은 형태로 답변해줘
-                              이외의 내용은 포함하지 말아줘.
+# System 프롬프트 작성
+messenger_sys = SystemMessage(content=f"""
+                              It's an OCR extraction of what was said in the messenger.
+                              So there are some inaccuracies. You'll have to infer them.
+                              The goal is to extract the information needed for a loan agreement between two people promising to lend money.
+                              Today's date is {now.date()}.
+                              Currently, the maximum legal interest rate is 20% (except for small amounts up to 100,000 won).
+
+                              The dialogue will include the amount to be lent (loanAmount), the interest rate (interestRate), and the date to be received (maturityDate).
+                              When you respond, you'll use the following structure: {"contract_info": {"loanAmount: 1000(int), interestRate: 3.2(float), maturityDate: 20210201(str)"}}.
+                              Do not include anything else.
                               """)
 
 def create_messenger_contract(user_id: int, contract_tmp_key: str, image_data: bytes):
