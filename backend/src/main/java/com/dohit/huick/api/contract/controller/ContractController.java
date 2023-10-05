@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dohit.huick.api.contract.dto.ContractApiDto;
+import com.dohit.huick.domain.banking.repayment.constant.RepaymentStatus;
 import com.dohit.huick.domain.banking.repayment.dto.RepaymentDto;
 import com.dohit.huick.domain.banking.repayment.service.RepaymentService;
 import com.dohit.huick.domain.contract.constant.ContractStatus;
@@ -65,9 +66,13 @@ public class ContractController {
 		int totalRepaymentCount = repaymentService.getRepaymentsByContractId(contractDto.getContractId())
 			.size();
 
+		int paidCount = repaymentService.countRepaymentsByContractIdAndStatus(contractId, RepaymentStatus.PAID);
+
+		Long balance = repaymentService.calculateBalance(contractId, RepaymentStatus.UNPAID);
+
 		return ResponseEntity.ok()
 			.body(ContractApiDto.Response.of(contractService.getContractByContractId(contractId),
-				lesseeDto, lessorDto, repaymentDto, totalRepaymentCount));
+				lesseeDto, lessorDto, repaymentDto, totalRepaymentCount, paidCount, balance));
 	}
 
 	@GetMapping("/me")
@@ -157,7 +162,6 @@ public class ContractController {
 		// 전자지갑 업데이트
 		// String lesseeAddress = userService.getUserByUserId(contractDto.getLesseeId()).getWalletAddress();
 		// String lessorAddress = userService.getUserByUserId(contractDto.getLessorId()).getWalletAddress();
-
 
 		UserDto lessee = userService.getUserByUserId(contractDto.getLesseeId());
 		UserDto lessor = userService.getUserByUserId(contractDto.getLessorId());
