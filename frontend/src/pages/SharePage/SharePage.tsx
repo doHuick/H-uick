@@ -67,13 +67,13 @@ export default function SharePage() {
   const isLogin = useAuth();
   const navigate = useNavigate();
 
-  // @ts-ignore
-  localStorage.setItem('contractId', contractId);
+  if (contractId) {
+    localStorage.setItem('contractId', contractId);
+  }
 
   if (!isLogin) {
     navigate('/login');
   } else {
-    navigate(`/share/${contractId}`);
     localStorage.removeItem('contractId');
   }
 
@@ -118,7 +118,7 @@ export default function SharePage() {
       })
       .then((res) => {
         setContractInfo(res.data);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -126,20 +126,24 @@ export default function SharePage() {
       });
   }, []);
 
-  const terminateContract = () => {
-    axios
-      .patch(
-        `${BASE_URL}/contracts/status/${contractId}`,
+  const terminateContract = async () => {
+    try {
+      await axios
+        .patch(
+          `${BASE_URL}/contracts/status/${contractId}`,
 
-        {
-          headers: { Authorization: localStorage.getItem('access_token') },
-          status: 'TERMINATION',
-        },
-      )
-      .then((res) => {
-        console.log(res);
-        location.reload();
-      });
+          {
+            headers: { Authorization: localStorage.getItem('access_token') },
+            status: 'TERMINATION',
+          },
+        )
+        .then(() => {
+          // console.log(res);
+          location.reload();
+        });
+    } catch (error) {
+      console.error('서버 요청 실패:', error);
+    }
   };
 
   // 계약 체결 후 송금, 디테일페이지로 이동
@@ -165,8 +169,8 @@ export default function SharePage() {
             headers: { Authorization: localStorage.getItem('access_token') },
           },
         )
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
         });
 
       // 유저가 빌려줄때 송금
@@ -182,8 +186,8 @@ export default function SharePage() {
             headers: { Authorization: localStorage.getItem('access_token') },
           },
         )
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
           // 송금 완료 후 디테일 페이지로 이동
           navigate(`/detail/${contractId}`);
         });
@@ -194,7 +198,7 @@ export default function SharePage() {
       if (isAuto == 'true') {
         auto_transfer = 'Y';
       }
-      console.log(auto_transfer);
+      // console.log(auto_transfer);
       axios
         .patch(
           `${BASE_URL}/contracts/${contractId}`,
@@ -214,8 +218,8 @@ export default function SharePage() {
             headers: { Authorization: localStorage.getItem('access_token') },
           },
         )
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
         });
 
       // 유저가 빌릴때 송금
@@ -231,8 +235,8 @@ export default function SharePage() {
             headers: { Authorization: localStorage.getItem('access_token') },
           },
         )
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          // console.log(res);
           // 송금 완료 후 디테일 페이지로 이동
           navigate(`/detail/${contractId}`);
         });
@@ -627,7 +631,7 @@ const ButtonFrame = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 28px 0px;
+  margin: 28px 0;
 `;
 
 const Button = styled(MiniConfirmButton)`
