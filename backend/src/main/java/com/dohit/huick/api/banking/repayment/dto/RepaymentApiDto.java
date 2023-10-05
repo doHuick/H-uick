@@ -20,4 +20,23 @@ public class RepaymentApiDto {
 			this.contractId = contractId;
 		}
 	}
+
+	@Getter
+	@NoArgsConstructor
+	@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
+	public static class Response {
+		String pdfPath;
+		
+
+		@Builder
+		private Response(String pdfPath) {
+			this.pdfPath = pdfPath;
+		}
+
+		public static Response from(String pdfPath) {
+			return Response.builder()
+				.pdfPath(pdfPath)
+				.build();
+		}
+	}
 }
