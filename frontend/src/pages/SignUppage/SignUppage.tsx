@@ -39,11 +39,13 @@ export default function SignUppage() {
         {
           headers: { Authorization: localStorage.getItem('access_token') },
         },
-      );
+      )
+      .then(() => {
+        showSignModal();
+      })
     } catch (error) {
       toast('모든 정보를 빠짐없이 정확히 입력해주세요.');
     }
-    showSignModal();
   };
 
   const wrapRef = useRef<HTMLDivElement | null>(null);
@@ -215,7 +217,7 @@ export default function SignUppage() {
           type="string"
           maxLength={11}
           value={phoneNumber}
-          placeholder='ex) 010-1234-5678'
+          placeholder='ex) 01012345678'
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setPhoneNumber(e.target.value)
           }
@@ -241,7 +243,7 @@ export default function SignUppage() {
 const TitleFrame = styled.div`
   position: relative;
   width: calc(100% - 56px);
-  margin-top: 100px;
+  margin-top: 64px;
   margin-left: 28px;
 `;
 

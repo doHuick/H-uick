@@ -2,79 +2,85 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate, useParams } from 'react-router-dom';
-
+import { useAuth } from '../../hooks/useAuth';
 import HeadBar from '../../components/HeadBar/HeadBar';
-// import { ConfirmButton } from '../../components/Button/Button';
 import { MiniConfirmButton } from '../../components/Button/Button';
 import BorrowModal from '../../components/TransferModal/BorrowModal';
 import SharePasswordModal from '../../components/Password/SharePasswordModal';
 import ShareLendModal from '../../components/TransferModal/ShareLendModal';
 
-interface AccountProps{
-  accountId: number,
-  accountNumber: string,
-  balance: number,
-  bankCode: string,
-  bankName: string,
-  createdTime: string,
+interface AccountProps {
+  accountId: number;
+  accountNumber: string;
+  balance: number;
+  bankCode: string;
+  bankName: string;
+  createdTime: string;
 }
 
-interface UserInfoProps{
-  account_info : AccountProps,
-  address: string,
-  created_time: string,
-  issue_date?: string,
-  name: string,
-  password: string,
-  phone_number: string,
-  role: string,
-  rrn: string,
-  signature_url?: string,
-  social_id: string,
-  social_type: string,
-  user_id: number,
-  wallet_address?: string,
-  withdrawal_time? : string,
+interface UserInfoProps {
+  account_info: AccountProps;
+  address: string;
+  created_time: string;
+  issue_date?: string;
+  name: string;
+  password: string;
+  phone_number: string;
+  role: string;
+  rrn: string;
+  signature_url?: string;
+  social_id: string;
+  social_type: string;
+  user_id: number;
+  wallet_address?: string;
+  withdrawal_time?: string;
 }
 
 interface ContractInfoProps {
-  amount: number,
-  contract_id : number,
-  current_amount: number,
-  current_repayment_count: number,
-  due_date: string,
-  lessee_address: string,
-  lessee_id?: number,
-  lessee_name: string,
-  lessee_rrn: string,
+  amount: number;
+  contract_id: number;
+  current_amount: number;
+  current_repayment_count: number;
+  due_date: string;
+  lessee_address: string;
+  lessee_id?: number;
+  lessee_name: string;
+  lessee_rrn: string;
   lessee_phone_number: string;
-  lessor_address: string,
-  lessor_id?: number,
-  lessor_name: string,
-  lessor_phone_number: string,
-  lessor_rrn: string,
-  pdf_path: string,
-  rate: number,
-  repayment_data?: string,
-  start_date: string,
-  status: string,
-  total_repayment_count: number,
-  amount_in_korean: string,
+  lessor_address: string;
+  lessor_id?: number;
+  lessor_name: string;
+  lessor_phone_number: string;
+  lessor_rrn: string;
+  pdf_path: string;
+  rate: number;
+  repayment_data?: string;
+  start_date: string;
+  status: string;
+  total_repayment_count: number;
+  amount_in_korean: string;
 }
 
 export default function SharePage() {
   const params = useParams();
-  const contractId = params.contractId
-
+  const contractId = params.contractId;
+  const isLogin = useAuth();
   const navigate = useNavigate();
 
-  const [contractInfo, setContractInfo] = useState<ContractInfoProps>()
-  const [userInfo, setUserInfo] = useState<UserInfoProps>()
+  localStorage.setItem('contractId', contractId || '');
+
+  if (!isLogin) {
+    navigate('/login');
+  } else {
+    navigate(`/share/${contractId}`)
+    localStorage.removeItem('contractId')
+  }
+
+  const [contractInfo, setContractInfo] = useState<ContractInfoProps>();
+  const [userInfo, setUserInfo] = useState<UserInfoProps>();
   const [firstModalOpen, setFirstModalOpen] = useState(false);
   const [passwordModalOpen, setPasswordModalOpen] = useState(false);
-  
-  localStorage.setItem('contractId', contractId || '');
-  
+
   const closeModal = () => {
     setFirstModalOpen(false);
   };
@@ -82,94 +88,97 @@ export default function SharePage() {
   const transferClicked = () => {
     setFirstModalOpen(false);
     setPasswordModalOpen(true); // 패스워드 모달 열기
-  }
-  
+  };
+
   const openModal = () => {
     setFirstModalOpen(true);
-  }
-  
-  const closePasswordModal = () => {
-    setPasswordModalOpen(false)
   };
-  
+
+  const closePasswordModal = () => {
+    setPasswordModalOpen(false);
+  };
+
   useEffect(() => {
-    axios.get(`${BASE_URL}/users/me`, {
-      headers: { Authorization: localStorage.getItem('access_token') },
-    }).then((res) => {
-      setUserInfo(res.data)
-      // console.log(res.data)
-    })
-    .catch(() => {
-    })
+    axios
+      .get(`${BASE_URL}/users/me`, {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+      .then((res) => {
+        setUserInfo(res.data);
+        // console.log(res.data)
+      })
+      .catch(() => {});
   }, []);
-  
+
   useEffect(() => {
-    axios.get(`${BASE_URL}/contracts/${contractId}`, {
-      headers: { Authorization: localStorage.getItem('access_token') },
-    }).then((res) => {
-      setContractInfo(res.data)
-      console.log(res.data)
-    })
-    .catch((err) => {
-      console.log(err);
-      navigate('/404')
-    })
+    axios
+      .get(`${BASE_URL}/contracts/${contractId}`, {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+      .then((res) => {
+        setContractInfo(res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate('/404');
+      });
   }, []);
-      
 
   const terminateContract = async () => {
     try {
-      await axios.patch(
-        `${BASE_URL}/contracts/status/${contractId}`,
-        
-        {
-          headers: { Authorization: localStorage.getItem('access_token') },
-          status: "TERMINATION"
-        },
+      await axios
+        .patch(
+          `${BASE_URL}/contracts/status/${contractId}`,
+
+          {
+            headers: { Authorization: localStorage.getItem('access_token') },
+            status: 'TERMINATION',
+          },
         )
         .then((res) => {
-          console.log(res)
+          console.log(res);
           location.reload();
-        })
-      } catch (error) {
-        console.error('서버 요청 실패:', error);
-      }
-    };
-      
+        });
+    } catch (error) {
+      console.error('서버 요청 실패:', error);
+    }
+  };
 
   // 계약 체결 후 송금, 디테일페이지로 이동
   const executeContractAndTransfer = () => {
     // 유저가 빌려줌
     if (contractInfo?.lessor_id == null) {
-      axios.patch(
-        `${BASE_URL}/contracts/${contractId}`,
-        {
-          lessee_id: contractInfo?.lessee_id,
-          lessor_id: userInfo?.user_id,
-          start_date: null,
-          due_date: null,
-          amount: null,
-          amount_in_korean: null,
-          rate: null,
-          status: "EXECUTION_COMPLETED",
-          pdf_path: null,
-          use_auto_transfer: null,
-        }
-        ,
-        {
-          headers: { Authorization: localStorage.getItem('access_token') },
-        },
+      axios
+        .patch(
+          `${BASE_URL}/contracts/${contractId}`,
+          {
+            lessee_id: contractInfo?.lessee_id,
+            lessor_id: userInfo?.user_id,
+            start_date: null,
+            due_date: null,
+            amount: null,
+            amount_in_korean: null,
+            rate: null,
+            status: 'EXECUTION_COMPLETED',
+            pdf_path: null,
+            use_auto_transfer: null,
+          },
+          {
+            headers: { Authorization: localStorage.getItem('access_token') },
+          },
         )
         .then((res) => {
-          console.log(res)
-        })
+          console.log(res);
+        });
 
-        // 유저가 빌려줄때 송금
-        axios.post(
+      // 유저가 빌려줄때 송금
+      axios
+        .post(
           `${BASE_URL}/banking/transactions`,
           {
-            sender_id : userInfo?.user_id,
-            receiver_id : contractInfo?.lessee_id,
+            sender_id: userInfo?.user_id,
+            receiver_id: contractInfo?.lessee_id,
             amount: contractInfo?.amount,
           },
           {
@@ -177,21 +186,20 @@ export default function SharePage() {
           },
         )
         .then((res) => {
-          console.log(res)
+          console.log(res);
           // 송금 완료 후 디테일 페이지로 이동
-          navigate(`/detail/${contractId}`)
-        })
-
-
-      } else if (contractInfo?.lessee_id == null) {
-        // 유저가 빌림
-        const isAuto = localStorage.getItem('isAuto');
-        var auto_transfer = "N"
-        if (isAuto == 'true') {
-          auto_transfer = "Y"
-        }
-        console.log(auto_transfer)
-        axios.patch(
+          navigate(`/detail/${contractId}`);
+        });
+    } else if (contractInfo?.lessee_id == null) {
+      // 유저가 빌림
+      const isAuto = localStorage.getItem('isAuto');
+      var auto_transfer = 'N';
+      if (isAuto == 'true') {
+        auto_transfer = 'Y';
+      }
+      console.log(auto_transfer);
+      axios
+        .patch(
           `${BASE_URL}/contracts/${contractId}`,
           {
             lessee_id: userInfo?.user_id,
@@ -201,25 +209,25 @@ export default function SharePage() {
             amount: null,
             amount_in_korean: null,
             rate: null,
-            status: "EXECUTION_COMPLETED",
+            status: 'EXECUTION_COMPLETED',
             pdf_path: null,
-            use_auto_transfer: auto_transfer
-          }
-          ,
+            use_auto_transfer: auto_transfer,
+          },
           {
             headers: { Authorization: localStorage.getItem('access_token') },
           },
         )
         .then((res) => {
-          console.log(res)
-        })
-      
-        // 유저가 빌릴때 송금
-        axios.post(
+          console.log(res);
+        });
+
+      // 유저가 빌릴때 송금
+      axios
+        .post(
           `${BASE_URL}/banking/transactions`,
           {
-            sender_id : contractInfo?.lessor_id,
-            receiver_id : userInfo?.user_id,
+            sender_id: contractInfo?.lessor_id,
+            receiver_id: userInfo?.user_id,
             amount: contractInfo?.amount,
           },
           {
@@ -227,30 +235,25 @@ export default function SharePage() {
           },
         )
         .then((res) => {
-          console.log(res)
+          console.log(res);
           // 송금 완료 후 디테일 페이지로 이동
-          navigate(`/detail/${contractId}`)
-        })
-      }
+          navigate(`/detail/${contractId}`);
+        });
     }
+  };
 
-      return (
-        <Main>
+  return (
+    <Main>
       <HeadBar pageName={'계약 완료하기'} />
       <TextFrame>
-        <TextBoxBold>
-          계약 완료 전 차용증을 검토해주세요
-        </TextBoxBold>
-        <TextBox>
-          오기입된 내용이 있다면
-        </TextBox>
-        <TextBox>
-          계약 파기 후 재작성 해주세요
-        </TextBox>
+        <TextBoxBold>계약 완료 전 차용증을 검토해주세요</TextBoxBold>
+        <TextBox>오기입된 내용이 있다면</TextBox>
+        <TextBox>계약 파기 후 재작성 해주세요</TextBox>
       </TextFrame>
-  
+
       <ContractFrame>
-      <ContractPaper>
+        <ContractPaper>
+          <br />
           <br />
           <br />
           <Title>
@@ -266,7 +269,7 @@ export default function SharePage() {
             {contractInfo?.amount
               .toString()
               .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}{' '}
-            &nbsp;(  {contractInfo?.amount_in_korean} 원 )
+            &nbsp;( {contractInfo?.amount_in_korean} 원 )
           </Body>
           <br />
           <Body>
@@ -276,9 +279,10 @@ export default function SharePage() {
               {contractInfo?.start_date.slice(5, 7)}월{' '}
               {contractInfo?.start_date.slice(8, 10)}일
             </TextBold>
-            에 빌립니다. 이자는{' '}
-            <TextBold>연 {contractInfo?.rate}%</TextBold>로 하여 매달{' '}
-            <TextBold>{contractInfo?.start_date.slice(8, 10)}일</TextBold>에 갚겠으며, 원금은{' '}
+            에 빌립니다. 이자는 <TextBold>연 {contractInfo?.rate}%</TextBold>로
+            하여 매달{' '}
+            <TextBold>{contractInfo?.start_date.slice(8, 10)}일</TextBold>에
+            갚겠으며, 원금은{' '}
             <TextBold>
               {contractInfo?.due_date.slice(0, 4)}년{' '}
               {contractInfo?.due_date.slice(5, 7)}월{' '}
@@ -286,6 +290,7 @@ export default function SharePage() {
             </TextBold>
             까지 채권자에게 갚겠습니다.
           </Body>
+          <br />
           <br />
           <ContractTable>
             <FirstCol>
@@ -310,18 +315,39 @@ export default function SharePage() {
             </ThirdCol>
             <FourthCol>
               <FourthColContext>
-                {contractInfo?.lessor_id? userInfo?.name : contractInfo?.lessee_name}
+                {contractInfo?.lessor_id
+                  ? userInfo?.name
+                  : contractInfo?.lessee_name}
               </FourthColContext>
               <FourthColContext>
-                {contractInfo?.lessor_id? userInfo?.address : contractInfo?.lessee_address}
+                {contractInfo?.lessor_id
+                  ? userInfo?.address
+                  : contractInfo?.lessee_address}
               </FourthColContext>
               <FourthColContext>
-                {contractInfo?.lessor_id? `${userInfo?.rrn.slice(0,6)}-${userInfo?.rrn.slice(6,13)}`
-                : `${contractInfo?.lessee_rrn.slice(0,6)}-${contractInfo?.lessee_rrn.slice(6,13)}`}
+                {contractInfo?.lessor_id
+                  ? `${userInfo?.rrn.slice(0, 6)}-${userInfo?.rrn.slice(6, 13)}`
+                  : `${contractInfo?.lessee_rrn.slice(
+                      0,
+                      6,
+                    )}-${contractInfo?.lessee_rrn.slice(6, 13)}`}
               </FourthColContext>
               <FourthColContext>
-                {contractInfo?.lessor_id? `${userInfo?.phone_number.slice(0,3)}-${userInfo?.phone_number.slice(3,7)}-${userInfo?.phone_number.slice(7,11)}`
-                : `${contractInfo?.lessee_phone_number.slice(0,3)}-${contractInfo?.lessee_phone_number.slice(3,7)}-${contractInfo?.lessee_phone_number.slice(7,11)}` }
+                {contractInfo?.lessor_id
+                  ? `${userInfo?.phone_number.slice(
+                      0,
+                      3,
+                    )}-${userInfo?.phone_number.slice(
+                      3,
+                      7,
+                    )}-${userInfo?.phone_number.slice(7, 11)}`
+                  : `${contractInfo?.lessee_phone_number.slice(
+                      0,
+                      3,
+                    )}-${contractInfo?.lessee_phone_number.slice(
+                      3,
+                      7,
+                    )}-${contractInfo?.lessee_phone_number.slice(7, 11)}`}
               </FourthColContext>
             </FourthCol>
             <FifthCol>( 서 명 )</FifthCol>
@@ -343,100 +369,81 @@ export default function SharePage() {
             </ThirdCol>
             <FourthCol>
               <FourthColContext>
-              {contractInfo?.lessor_id? contractInfo?.lessor_name : userInfo?.name}
+                {contractInfo?.lessor_id
+                  ? contractInfo?.lessor_name
+                  : userInfo?.name}
               </FourthColContext>
               <FourthColContext>
-              {contractInfo?.lessor_id? contractInfo?.lessor_address : userInfo?.address}
+                {contractInfo?.lessor_id
+                  ? contractInfo?.lessor_address
+                  : userInfo?.address}
               </FourthColContext>
             </FourthCol>
             <FifthCol>( 서 명 )</FifthCol>
           </ContractTable>
           <Today>
-            {contractInfo?.start_date.slice(0, 4)}년 {contractInfo?.start_date.slice(5, 7)}월{' '}
+            {contractInfo?.start_date.slice(0, 4)}년{' '}
+            {contractInfo?.start_date.slice(5, 7)}월{' '}
             {contractInfo?.start_date.slice(8, 10)}일
           </Today>
           <br />
+          <br />
+          <br />
         </ContractPaper>
       </ContractFrame>
-      
-      {contractInfo?.status === "BEFORE_EXECUTION" && (
+
+      {contractInfo?.status === 'BEFORE_EXECUTION' && (
         <>
-          <CancelContract onClick={terminateContract}>
-            파기하기
-          </CancelContract>
+          <CancelContract onClick={terminateContract}>파기하기</CancelContract>
 
           <ButtonFrame>
-            <Button onClick={openModal}>
-              확인
-            </Button>
+            <Button onClick={openModal}>확인</Button>
           </ButtonFrame>
         </>
-      ) }
+      )}
 
-      {contractInfo?.status === "EXECUTION_COMPLETED" && (
+      {contractInfo?.status === 'EXECUTION_COMPLETED' && (
         <ButtonFrame>
-          <NoButton>
-          이미 체결된 차용증입니다
-          </NoButton>
+          <NoButton>이미 체결된 차용증입니다</NoButton>
         </ButtonFrame>
       )}
 
-      {contractInfo?.status === "TERMINATION" && (
+      {contractInfo?.status === 'TERMINATION' && (
         <ButtonFrame>
-          <NoButton>
-          이미 파기된 차용증입니다
-          </NoButton>
+          <NoButton>이미 파기된 차용증입니다</NoButton>
         </ButtonFrame>
       )}
 
-      {contractInfo?.status === "REPAYMENT_COMPLETED" && (
+      {contractInfo?.status === 'REPAYMENT_COMPLETED' && (
         <ButtonFrame>
-          <NoButton>
-          이미 상환 완료된 차용증입니다
-          </NoButton>
+          <NoButton>이미 상환 완료된 차용증입니다</NoButton>
         </ButtonFrame>
       )}
-
-      {/* {contractInfo?.lessor_id == userInfo?.user_id && contractInfo?.status === "BEFORE_EXECUTION" && (
-        <ButtonFrame>
-          <NoButton>
-            다른사람에게 공유해보세요
-          </NoButton>
-        </ButtonFrame>
-      )} */}
-
-      {/* {contractInfo?.lessee_id == userInfo?.user_id &&  contractInfo?.status === "BEFORE_EXECUTION" &&(
-        <ButtonFrame>
-          <NoButton>
-            다른사람에게 공유해보세요
-          </NoButton>
-        </ButtonFrame>
-      )} */}
 
       {firstModalOpen && contractInfo?.lessee_id == null ? (
-          <BorrowModal
-            closeModal={closeModal}
-            transferClicked={transferClicked}
-          />
-        ) : null}
+        <BorrowModal
+          closeModal={closeModal}
+          transferClicked={transferClicked}
+        />
+      ) : null}
 
       {firstModalOpen && contractInfo?.lessor_id == null ? (
-          <ShareLendModal
-            closeModal={closeModal}
-            transferClicked={transferClicked}
-            balance={userInfo?.account_info.balance}
-            amount={contractInfo?.amount}
-            lessee={contractInfo?.lessee_name}
-          />
-        ) : null}
+        <ShareLendModal
+          closeModal={closeModal}
+          transferClicked={transferClicked}
+          balance={userInfo?.account_info.balance}
+          amount={contractInfo?.amount}
+          lessee={contractInfo?.lessee_name}
+        />
+      ) : null}
 
       {passwordModalOpen ? (
-          <SharePasswordModal
-            closePasswordModal={closePasswordModal}
-            userPassword={userInfo?.password}
-            passwordCorrect={executeContractAndTransfer}
-          />
-        ) : null}
+        <SharePasswordModal
+          closePasswordModal={closePasswordModal}
+          userPassword={userInfo?.password}
+          passwordCorrect={executeContractAndTransfer}
+        />
+      ) : null}
     </Main>
   );
 }
@@ -455,21 +462,22 @@ const Main = styled.div`
 const TextFrame = styled.div`
   position: relative;
   width: 100%;
-  margin-top: 124px;
+  margin-top: 88px;
   margin-left: 28px;
+`;
 
-`
 const TextBox = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: var(--font-gray);
-`
+`;
 
 const TextBoxBold = styled.div`
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 12px;
-  `
+`;
+
 const ContractFrame = styled.div`
   position: relative;
   margin-top: 24px;
@@ -482,7 +490,7 @@ const ContractFrame = styled.div`
   padding-bottom: 32px;
   background-color: var(--background);
   box-shadow: inset 0px 0px 12px rgba(0, 0, 0, 0.12);
-`
+`;
 
 const ContractPaper = styled.div`
   position: relative;
@@ -492,8 +500,7 @@ const ContractPaper = styled.div`
   background-color: var(--white);
   color: black;
   font-size: 10.5px;
-  box-shadow: 0px 0px 12px rgba(0,0,0, 0.15);
-
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.15);
 `;
 
 const Title = styled.div`
@@ -586,9 +593,6 @@ const FourthColContext = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  /* overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; */
 `;
 
 const FifthCol = styled.div`
@@ -601,7 +605,6 @@ const FifthCol = styled.div`
   right: 0px;
   top: 0px;
 `;
-
 
 const Today = styled.div`
   position: relative;
@@ -619,16 +622,16 @@ const CancelContract = styled.div`
   color: var(--font-gray);
   text-decoration: underline;
   margin-top: 24px;
-  margin-bottom : -16px;
-`
+  margin-bottom: -16px;
+`;
 
 const ButtonFrame = styled.div`
   position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 28px;
-`
+  margin: 28px 0;
+`;
 
 const Button = styled(MiniConfirmButton)`
   position: relative;
@@ -638,8 +641,8 @@ const Button = styled(MiniConfirmButton)`
   width: 100%;
   font-size: 18px;
   font-weight: 600;
-`
+`;
 
 const NoButton = styled(Button)`
   background-color: var(--gray);
-`
+`;
