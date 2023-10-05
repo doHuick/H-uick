@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.LockModeType;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.jpa.repository.Lock;
@@ -106,7 +107,7 @@ public class ContractService {
 
 		// PDF 저장 주소 contract에 저장해주기
 		contract.updatePdfPath(pdfS3Url);
-		contractRepository.save(contract);
+		// contractRepository.save(contract);
 
 		// 스마트 컨트랙트 생성을 위해서 계약 정보 리턴
 		return ContractDto.from(contract);
@@ -140,10 +141,14 @@ public class ContractService {
 
 			Resource resource = resourceLoader.getResource("classpath:fonts/NanumMyeongjo-Regular.ttf");
 
-			if (resource.exists()) {
-				// FontProvider에 폰트 추가
+// Resource resource = resourceLoader.getResource("classpath:fonts/NanumMyeongjo-Regular.ttf");
+			ClassPathResource classPathResource = new ClassPathResource("fonts/NanumMyeongjo-Regular.ttf");
+
+			try {
+				fontProvider.addFont("classpath:fonts/NanumMyeongjo-Regular.ttf");
 				fontProvider.addFont(resource.getURL().getPath());
-			} else {
+				fontProvider.addFont(classPathResource.getPath());
+			} catch (Exception e) {
 				throw new RuntimeException("Font file not found");
 			}
 
