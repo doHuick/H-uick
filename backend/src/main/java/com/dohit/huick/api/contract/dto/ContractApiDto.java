@@ -76,6 +76,7 @@ public class ContractApiDto {
 		Float rate;
 		ContractStatus status;
 		String pdfPath;
+		String useAutoTransfer;
 
 		@Builder
 		private Response(Long contractId, Long lesseeId, Long lessorId, String lesseeName, String lesseeAddress,
@@ -83,7 +84,7 @@ public class ContractApiDto {
 			String lessorAddress, String lessorRrn, String lessorPhoneNumber, String lessorWalletAddress,
 			Integer totalRepaymentCount, Integer currentRepaymentCount, Integer paidCount, LocalDateTime startDate,
 			LocalDateTime dueDate, LocalDateTime repaymentDate, Long currentAmount, Long amount, Long balance,
-			String amountInKorean, Float rate, ContractStatus status, String pdfPath) {
+			String amountInKorean, Float rate, ContractStatus status, String pdfPath, String useAutoTransfer) {
 			this.contractId = contractId;
 			this.lesseeId = lesseeId;
 			this.lessorId = lessorId;
@@ -110,6 +111,7 @@ public class ContractApiDto {
 			this.rate = rate;
 			this.status = status;
 			this.pdfPath = pdfPath;
+			this.useAutoTransfer = useAutoTransfer;
 		}
 
 		public static Response of(ContractDto contractDto, UserDto lesseeDto, UserDto lessorDto,
@@ -139,6 +141,7 @@ public class ContractApiDto {
 				.rate(contractDto.getRate())
 				.status(contractDto.getStatus())
 				.pdfPath(contractDto.getPdfPath())
+				.useAutoTransfer(contractDto.getUseAutoTransfer())
 				.build();
 		}
 
@@ -171,6 +174,7 @@ public class ContractApiDto {
 				.rate(contractDto.getRate())
 				.status(contractDto.getStatus())
 				.pdfPath(contractDto.getPdfPath())
+				.useAutoTransfer(contractDto.getUseAutoTransfer())
 				.build();
 		}
 
@@ -186,6 +190,7 @@ public class ContractApiDto {
 				.rate(contractDto.getRate())
 				.status(contractDto.getStatus())
 				.pdfPath(contractDto.getPdfPath())
+				.useAutoTransfer(contractDto.getUseAutoTransfer())
 				.build();
 		}
 
