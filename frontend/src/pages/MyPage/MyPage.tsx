@@ -51,7 +51,6 @@ export default function MyPage() {
       })
       .then((res) => {
         setUserInfo(res.data);
-        console.log(res.data);
         setSignatureImage(res.data.signature_url);
       })
       .catch(() => {
@@ -68,12 +67,9 @@ export default function MyPage() {
 
   const signOut = () => {
     axios
-      .get(`${BASE_URL}/users/me`, {
+      .delete(`${BASE_URL}/users/me`, {
         headers: { Authorization: localStorage.getItem('access_token') },
       })
-      .then((res) => {
-        console.log(res);
-      });
     navigate('/login');
   };
 
