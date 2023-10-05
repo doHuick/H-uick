@@ -129,5 +129,8 @@ public class Contract {
 		if (this.rate == null && request.getRate() != null) {
 			this.rate = request.getRate();
 		}
+		if(request.getUseAutoTransfer() != null) {
+			this.useAutoTransfer = request.getUseAutoTransfer();
+		}
 	}
 }
