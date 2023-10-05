@@ -34,6 +34,8 @@ interface ContractInfoProps{
   rate: number,
   status: string,
   pdf_path: string
+  paid_count: number,
+  balance: number,
 }
 
 interface AccountProps{
@@ -83,9 +85,10 @@ export default function IOUDetailPage() {
       headers: { Authorization: localStorage.getItem('access_token') },
     }).then((res) => {
       setContractInfo(res.data)
+      // console.log(res.data)
     })
-    .catch((err) => {
-      console.log(err)
+    .catch(() => {
+      // console.log(err)
     })
   }, []);
   
@@ -94,7 +97,7 @@ export default function IOUDetailPage() {
       headers: { Authorization: localStorage.getItem('access_token') },
     }).then((res) => {
       setUserInfo(res.data)
-      console.log(res.data)
+      // console.log(res.data)
     })
     .catch(() => {
     })
@@ -135,7 +138,21 @@ export default function IOUDetailPage() {
 
   const passwordCorrect = () => {
     setPasswordModalOpen(false);
-    // 여기서 송금
+    axios.post(
+      `${BASE_URL}/banking/repayment`,
+      {
+        contract_id: contractId
+      }
+      ,
+      {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      },
+      )
+      .then(() => {
+        // console.log(res)
+        location.reload();
+      })
+
     toast('송금이 완료되었습니다');
   }
 
@@ -158,7 +175,7 @@ export default function IOUDetailPage() {
             납부회수
           </SummaryLeft>
           <SummaryRight>
-            {contractInfo?.current_repayment_count}회
+            {contractInfo?.paid_count}회
           </SummaryRight>
         </CountBox>
 
@@ -167,7 +184,7 @@ export default function IOUDetailPage() {
             납부잔여금액
           </SummaryLeft>
           <SummaryRight>
-            {contractInfo?.current_amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
+            {contractInfo?.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
           </SummaryRight>
         </RemainBox>
         
@@ -214,9 +231,21 @@ export default function IOUDetailPage() {
         <StyledBar/>
 
       </InnerContainer>
-      {contractInfo?.lessee_id == userInfo?.user_id ? (
+
+      {/* @ts-ignore */}
+      {contractInfo?.lessee_id == userInfo?.user_id && contractInfo?.status == 'EXECUTION_COMPLETED' && (contractInfo?.total_repayment_count - contractInfo?.paid_count == 1) ? (
         <MenuBarClickable onClick={openTransferModal}>
-          <MenuContextLeft>{contractInfo?.current_repayment_count ? contractInfo?.current_repayment_count + 1 : null}회차 이자 송금하기</MenuContextLeft>
+          {/* @ts-ignore */}
+          <MenuContextLeft>이자와 잔금 송금하기</MenuContextLeft>
+          <MenuContextRight>
+            <RightArrowResized />
+          </MenuContextRight>
+        </MenuBarClickable>
+        ) : null}
+      {contractInfo?.lessee_id == userInfo?.user_id && contractInfo?.status == 'EXECUTION_COMPLETED' && (contractInfo.total_repayment_count - contractInfo?.paid_count != 1)? (
+        <MenuBarClickable onClick={openTransferModal}>
+          {/* @ts-ignore */}
+          <MenuContextLeft>{contractInfo?.paid_count + 1}회차 이자 송금하기</MenuContextLeft>
           <MenuContextRight>
             <RightArrowResized />
           </MenuContextRight>
@@ -234,7 +263,7 @@ export default function IOUDetailPage() {
         <LeseeTransferModal
         closeModal={closeTransferModal}
         transferClicked={transferClicked}
-        paymentCount={contractInfo?.current_repayment_count}
+        paymentCount={contractInfo?.paid_count}
         lessorName={contractInfo?.lessor_name}
         balance={userInfo?.account_info.balance}
         />
@@ -257,7 +286,7 @@ export default function IOUDetailPage() {
 const InnerContainer = styled.div`
   position: relative;
   width: calc(100% - 40px);
-  margin-top: 116px;
+  margin-top: 80px;
   margin-left: 20px;
   `
 

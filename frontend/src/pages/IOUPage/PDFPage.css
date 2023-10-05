@@ -44,6 +44,17 @@
 }
 
 .zoomOut {
-  position: fixed;
-  /* top: -700px; */
+  display: none !important
+}
+
+.zoomIn {
+  display: none !important
+}
+
+.pageNumber{
+  display: none !important
+}
+
+#footer {
+  display: none !important
 }

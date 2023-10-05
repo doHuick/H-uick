@@ -5,11 +5,11 @@ import { TextBox } from '../../components/TextBox/TextBox';
 import { ReactComponent as Check } from '../../assets/icons/check.svg';
 import { ReactComponent as Bar } from '../../assets/icons/long-bar.svg';
 import { ConfirmButton } from '../../components/Button/Button';
-import HeadBar from '../../components/HeadBar/HeadBar';
 import NavBar from '../../components/NavBar/NavBar';
 import toast, { toastConfig } from 'react-simple-toasts';
 import 'react-simple-toasts/dist/theme/frosted-glass.css';
 import axios, { BASE_URL } from '../../api/apiController';
+import { useNavigate } from 'react-router-dom';
 
 export default function Welcomepage() {
   const [name, setName] = useState<String>('');
@@ -18,12 +18,14 @@ export default function Welcomepage() {
   // 지갑 생성 되면 활성화
   // const [wallet, setWallet] = useState<String>('');
 
+  const navigation = useNavigate();
+
   useEffect(() => {
     axios.get(`${BASE_URL}/users/me`, {
       headers: { Authorization: localStorage.getItem('access_token') },
     }).then((res) => {
-      console.log('res:data : ',res.data);
-      console.log('res.data.name : ', res.data.name);
+      // console.log('res:data : ',res.data);
+      // console.log('res.data.name : ', res.data.name);
       setName(res.data.name);
       setAccountNumber(res.data.account_info.accountNumber);
       setCreatedTime(res.data.created_time);
@@ -50,8 +52,8 @@ export default function Welcomepage() {
   };
 
   return (
-    <Main>
-      <HeadBar pageName="회원가입" color="var(--background)" />
+    <Main backgroundColor="var(--white)">
+      {/* <HeadBar pageName="회원가입" color="var(--white)" /> */}
       <CheckDiv>
         <Check />
       </CheckDiv>
@@ -104,9 +106,9 @@ export default function Welcomepage() {
         <TextBox fontSize="15.5px" fontWeight="500" color="var(--font-gray)">
           {walletAdd}
         </TextBox>
-        <CenterDiv>
-          <ConfirmButton>휙 사용해보기</ConfirmButton>
-        </CenterDiv>
+        <ButtonFrame>
+          <ConfirmButtonRenewed onClick={() => navigation('/')}>휙 사용해보기</ConfirmButtonRenewed>
+        </ButtonFrame>
       </FlexWrapDiv>
       <NavBar />
     </Main>
@@ -147,8 +149,25 @@ const FlexWrapDiv = styled.div`
 `;
 
 const CheckDiv = styled.div`
-  margin-top: 150px;
+  margin-top: 124px;
   margin-bottom: 36px;
   display: flex;
   justify-content: center;
+`;
+
+
+const ButtonFrame = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+`
+
+const ConfirmButtonRenewed = styled(ConfirmButton)`
+  position: relative;
+  width: 324px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 600;
 `;

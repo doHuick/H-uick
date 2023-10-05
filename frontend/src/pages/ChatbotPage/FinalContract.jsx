@@ -22,7 +22,7 @@ const FinalContract = (props) => {
       setUserInfo(res.data)
     })
     .catch((err) => {
-      console.log(err);
+      // console.log(err);
     })
   }, []);
 
@@ -135,7 +135,7 @@ const FinalContract = (props) => {
   };
 
   const sendTempContract = async () => {
-    console.log(withoutAuto)
+    // console.log(withoutAuto)
     try {
       await axios.post(
         `${BASE_URL}/contracts`,
@@ -158,7 +158,7 @@ const FinalContract = (props) => {
       )
       .then((res) => {
         setContractID(res.data.contract_id)
-        console.log(res.data)
+        // console.log(res.data)
       })
     } catch (error) {
       console.error('서버 요청 실패:', error);
@@ -194,8 +194,8 @@ const FinalContract = (props) => {
         'https://file.notion.so/f/f/1eb5f2e9-ac13-43fd-80e4-ff4db0622bcc/7f6b7063-aa36-46d5-a2e5-bf04975592e4/square.png?id=c60b6018-8f6b-411f-92fb-e5817b598d28&table=block&spaceId=1eb5f2e9-ac13-43fd-80e4-ff4db0622bcc&expirationTimestamp=1696428000000&signature=PfA8kipAOlpNPWYXhrThF3Wl23Db8kBlShLxztdx3rE&downloadName=square.png',
         link: {
           // [내 애플리케이션] > [플랫폼] 에서 등록한 사이트 도메인과 일치해야 함
-          mobileWebUrl: `http://localhost:5173/share/${contractID}`,
-          webUrl: `http://localhost:5173/share/${contractID}`,
+          mobileWebUrl: `http://h-uick.com/share/${contractID}`,
+          webUrl: `http://h-uick.com/share/${contractID}`,
         },
       },
     });
@@ -204,7 +204,7 @@ const FinalContract = (props) => {
 
   const closeAndShare = () => {
     var isPWDCorrect = JSON.parse(localStorage.getItem('isPWDCorrect'));
-    console.log(userInfo)
+    // console.log(userInfo)
     shareKakao();
     setShareModalOpen(false);
   };
@@ -402,12 +402,12 @@ const ChatbotButtonShare = styled(ChatbotButton)`
   margin-left: 12px;
   margin-right: 12px;
   line-height: 19px;
-  background-color: #f2f2f7;
+  background-color: #f1f1f1;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  width: 50%;
+  width: 54%;
 `;
 
 const RightArrowResized = styled(RightArrow)`

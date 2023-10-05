@@ -3,8 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { ReactComponent as MainSvg } from '../../assets/icons/mainpage.svg';
 import { ReactComponent as MySvg } from '../../assets/icons/mypage.svg';
-import { ReactComponent as ContractSvg } from '../../assets/icons/contract.svg';
-import { ReactComponent as ChatbotSvg } from '../../assets/icons/chatbot.svg';
+import { ReactComponent as ChatbotSvg } from '../../assets/icons/contract.svg';
 
 type NavItemProps = {
   active: boolean;
@@ -32,7 +31,6 @@ const NavBar = () => {
 
   const navRoutes: Record<string, string> = {
     main: '/',
-    contract: '/contract',
     chatbot: '/chatbot',
     mypage: '/mypage',
   };
@@ -46,24 +44,21 @@ const NavBar = () => {
         active={activeNav === 'main'}
       >
         <MainSvg />
-      </NavItem>
-      <NavItem
-        onClick={() => handleNavClick('contract')}
-        active={activeNav === 'contract'}
-      >
-        <ContractSvg />
+        홈
       </NavItem>
       <NavItem
         onClick={() => handleNavClick('chatbot')}
         active={activeNav === 'chatbot'}
       >
         <ChatbotSvg />
+        계약
       </NavItem>
       <NavItem
         onClick={() => handleNavClick('mypage')}
         active={activeNav === 'mypage'}
       >
         <MySvg />
+        내 정보
       </NavItem>
     </BottomBar>
   );
@@ -76,19 +71,27 @@ const BottomBar = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 80px;
+  height: 70px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 70px;
   background-color: #f0f0f0;
 `;
 
 const NavItem = styled.div<NavItemProps>`
+  width: 33.3%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  position: relative;
   svg {
     cursor: pointer;
     g rect {
       fill: ${(props) => (props.active ? 'var(--huick-blue)' : 'var(--gray)')};
     }
   }
+  color: ${(props) => (props.active ? 'var(--huick-blue)' : 'var(--gray)')};
 `;

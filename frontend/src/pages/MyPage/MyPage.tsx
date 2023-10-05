@@ -10,74 +10,74 @@ import 'react-simple-toasts/dist/theme/light.css';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate } from 'react-router-dom';
 
-interface AccountProps{
-  accountId: number,
-  accountNumber: string,
-  balance: number,
-  bankCode: string,
-  bankName: string,
-  createdTime: string,
+interface AccountProps {
+  accountId: number;
+  accountNumber: string;
+  balance: number;
+  bankCode: string;
+  bankName: string;
+  createdTime: string;
 }
 
-interface UserInfoProps{
-  account_info : AccountProps,
-  address: string,
-  created_time: string,
-  issue_date?: string,
-  name: string,
-  password: string,
-  phone_number: string,
-  role: string,
-  rrn: string,
-  signature_url?: string,
-  social_id: string,
-  social_type: string,
-  user_id: number,
-  wallet_address?: string,
-  withdrawal_time? : string,
+interface UserInfoProps {
+  account_info: AccountProps;
+  address: string;
+  created_time: string;
+  issue_date?: string;
+  name: string;
+  password: string;
+  phone_number: string;
+  role: string;
+  rrn: string;
+  signature_url?: string;
+  social_id: string;
+  social_type: string;
+  user_id: number;
+  wallet_address?: string;
+  withdrawal_time?: string;
 }
 
 export default function MyPage() {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [signatureImage, setSignatureImage] = useState<string | null>(null);
-  const [userInfo, setUserInfo] = useState<UserInfoProps>()
+  const [userInfo, setUserInfo] = useState<UserInfoProps>();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(`${BASE_URL}/users/me`, {
-      headers: { Authorization: localStorage.getItem('access_token') },
-    }).then((res) => {
-      setUserInfo(res.data)
-      console.log(res.data)
-      setSignatureImage(res.data.signature_url)
-    })
-    .catch(() => {
-      navigate('/login');
-    })
+    axios
+      .get(`${BASE_URL}/users/me`, {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+      .then((res) => {
+        setUserInfo(res.data);
+        setSignatureImage(res.data.signature_url);
+      })
+      .catch(() => {
+        navigate('/login');
+      });
   }, []);
 
   const logout = () => {
-    localStorage.clear()
+    localStorage.clear();
     axios.get(`${BASE_URL}/v1/user/logout`, {
       headers: { Authorization: localStorage.getItem('access_token') },
-    })
-  }
-  
+    });
+  };
+
   const signOut = () => {
-    axios.get(`${BASE_URL}/users/me`, {
-      headers: { Authorization: localStorage.getItem('access_token') },
-    }).then((res) => {
-      console.log(res)
-    })
-    navigate('/login')
-  }
+    axios
+      .delete(`${BASE_URL}/users/me`, {
+        headers: { Authorization: localStorage.getItem('access_token') },
+      })
+    navigate('/login');
+  };
 
   toastConfig({
     theme: 'frosted-glass',
     position: 'top-center',
   });
-  
+
   const showModal = () => {
     setModalOpen(true);
   };
@@ -91,13 +91,12 @@ export default function MyPage() {
     axios.patch(
       `${BASE_URL}/users/signature`,
       {
-        signatureBase64: imageData
-      }
-      ,
+        signatureBase64: imageData,
+      },
       {
         headers: { Authorization: localStorage.getItem('access_token') },
       },
-    )
+    );
     setTimeout(() => {
       closeModal();
       toast('서명이 등록되었습니다');
@@ -106,8 +105,8 @@ export default function MyPage() {
 
   return (
     <Main>
-      <HeadBar pageName="마이페이지" color='var(--background)' />
-      <WhiteFrame style={{ marginTop: '108px' }}>
+      <HeadBar pageName="마이페이지" color="var(--background)" />
+      <WhiteFrame style={{ marginTop: '72px' }}>
         <MenuBar style={{ paddingTop: '8px', pointerEvents: 'none' }}>
           <MenuTitle>내 계좌 정보</MenuTitle>
         </MenuBar>
@@ -125,7 +124,16 @@ export default function MyPage() {
         <MenuBar style={{ paddingBottom: '4px' }}>
           <MenuContextLeft>계좌번호</MenuContextLeft>
           <MenuContextRight>{`
-          ${userInfo?.account_info.accountNumber.slice(0,3)}-${userInfo?.account_info.accountNumber.slice(3,6)}-${userInfo?.account_info.accountNumber.slice(6,12)}`}</MenuContextRight>
+          ${userInfo?.account_info.accountNumber.slice(
+            0,
+            3,
+          )}-${userInfo?.account_info.accountNumber.slice(
+            3,
+            6,
+          )}-${userInfo?.account_info.accountNumber.slice(
+            6,
+            12,
+          )}`}</MenuContextRight>
         </MenuBar>
       </WhiteFrame>
       <WhiteFrame>
@@ -172,16 +180,22 @@ export default function MyPage() {
         </MenuBar>
 
         <MenuBar onClick={logout}>
-          <MenuContextLeft style={{color: 'var(--red)'}}>로그아웃</MenuContextLeft>
+          <MenuBarClickable>
+            <MenuContextLeft style={{ color: 'var(--red)' }}>
+              로그아웃
+            </MenuContextLeft>
+          </MenuBarClickable>
         </MenuBar>
 
         <MenuBar onClick={signOut}>
-          <MenuContextLeft>회원탈퇴</MenuContextLeft>
+          <MenuBarClickable>
+            <MenuContextLeft>회원탈퇴</MenuContextLeft>
+          </MenuBarClickable>
         </MenuBar>
       </WhiteFrame>
-      {modalOpen? (
+      {modalOpen ? (
         <SignModal closeModal={closeModal} onSave={handleSave} />
-      ): null}
+      ) : null}
       <LogoutAndVer>
         <HuickVer>©️ H-uick v 1.0.0</HuickVer>
       </LogoutAndVer>
@@ -270,10 +284,10 @@ const LogoutAndVer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`
+`;
 const HuickVer = styled.div`
   font-size: 14;
   color: var(--gray);
   font-weight: 500;
-  margin-bottom: 102px
+  margin-bottom: 102px;
 `;

@@ -6,7 +6,7 @@ export default function PrivateRoute() {
 
   if (isLogin) {
     // 로그인이 된 유저면 리렌더링
-    console.log('로그인 된 상태')
+    // console.log('로그인 된 상태')
     return <Outlet />;
   }
 

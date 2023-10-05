@@ -3,13 +3,12 @@ import styled, { keyframes } from 'styled-components'
 import { ReactComponent as ModalClose } from '../../assets/icons/close-button.svg'
 import { MiniConfirmButton } from '../Button/Button';
 
-interface LesseeTransferModalProps {
+interface ShareLendModalProps {
   closeModal: () => void;
   transferClicked: () => void;
-  paymentCount?: number;
-  lessorName?: string;
-  balance?: number;
-
+  balance?: number,
+  amount?: number,
+  lessee?: string,
 }
 
 interface DarkBackgroundProps {
@@ -21,10 +20,9 @@ interface ModalContainerProps {
   children: React.ReactNode;
 }
 
-export default function LeseeTransferModal({ closeModal, transferClicked, paymentCount, lessorName, balance }: LesseeTransferModalProps) {
+export default function ShareLendModal({ closeModal, transferClicked, balance, amount, lessee }: ShareLendModalProps) {
   const [isClosing, setIsClosing] = useState(false);
-  
-  
+    
   const handleDarkBackgroundClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       closeAndAnimate();
@@ -61,21 +59,19 @@ export default function LeseeTransferModal({ closeModal, transferClicked, paymen
           </TransferModalUpperBar>
 
         <TransferTextLine style={{ marginTop : '32px' }}>
-          <TransferTextBold>
-            {lessorName}
-          </TransferTextBold>
+          <TransferTextBold>{lessee}</TransferTextBold>
           <TransferText>님께</TransferText>
         </TransferTextLine>
-
         <TransferTextLine>
-          {/* @ts-ignore */}
-          <TransferTextBold>{paymentCount + 1}회차&nbsp;</TransferTextBold>
-          <TransferText>이자를 송금합니다</TransferText>
+          <TransferTextBold>
+          {amount?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+          </TransferTextBold>
+          <TransferText>원을 송금합니다</TransferText>
         </TransferTextLine>
     
         {/* <TransferMoadlAccount>계약이 체결되면 휙이 보내드릴게요 </TransferMoadlAccount> */}
         <TransferMoadlAccount>
-          잔액: {balance?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
+          잔액 &nbsp;{balance?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}원
         </TransferMoadlAccount>
 
         <TransferButtonFrame>
@@ -140,7 +136,7 @@ const ModalContainer = styled.div<ModalContainerProps>`
   position: fixed;
   z-index: 3;
   width: 100%;
-  height: 332px;
+  height: 352px;
   left: 0;
   bottom: 0;
   background-color: var(--white);
@@ -197,7 +193,7 @@ const TransferTextBold = styled.span`
 const TransferMoadlAccount = styled.div`
   width: 100%;
   text-align: center;
-  margin-top: 24px;
+  margin-top: 40px;
   font-size: 14px;
   color: var(--font-gray)
 `
@@ -216,4 +212,6 @@ const TransferButton = styled(MiniConfirmButton)`
   margin-right: 30px;
   height: 46px;
   width: 100%;
+  font-size: 17px;
+  font-weight: 600;
 `
