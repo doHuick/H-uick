@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Final Contract</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --white: #ffffff;
+            --black: #000000;
+            --huick-blue: #007bff;
+        }
+
+        /* ContractPaper */
+        .contract-paper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            background-color: var(--white);
+            color: black;
+            font-size: 10.5px;
+        }
+
+        /* Title */
+        .title {
+            font-size: 30px; /* 제목 폰트 크기 조정 */
+            text-align: center; /* 제목 중앙 정렬 */
+            margin-top: 50px; /* 제목과 본문 사이의 여백 조정 */
+            margin-bottom: 50px; /* 제목과 본문 사이의 여백 조정 */
+            font-weight: bold;
+        }
+
+        /* Body */
+        .body {
+            width: 90%;
+            font-size: 18px;
+            margin-bottom: 20px; /* 본문 여백 조정 */
+            background-color: white;
+            /* white-space: normal; */
+            /* word-break: normal; */
+            /* overflow: auto; */
+            word-break: keep-all;
+            line-height: 200%;
+        }
+        .money {
+            font-size: 18px;
+            margin-bottom: 20px; /* 제목과 본문 사이의 여백 조정 */
+            font-weight: 500;
+        }
+
+        /* TextBold */
+        .text-bold {
+            font-weight: bold;
+        }
+        .text-big {
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .text-bigger {
+            font-size: 25px;
+            font-weight: bold;
+        }
+        .date {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        /* ContractTable */
+        .contract-table {
+            position: relative;
+            width: 90%;
+            display: flex;
+            align-items: center;
+            line-height: 1.6;
+            font-size: 10px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* FirstCol */
+        .first-col {
+            position: relative;
+            width: 16%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* SecondCol */
+        .second-col {
+            position: relative;
+            width: 24%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SecondColContext */
+        .second-col-context {
+            position: relative;
+            width: 100%;
+            text-align: justify;
+            line-height: 0.45;
+        }
+
+        .second-col-context:before,
+        .second-col-context:after {
+            content: "";
+            display: inline-block;
+            width: 100%;
+        }
+
+        /* ThirdCol */
+        .third-col {
+            position: relative;
+            width: 5%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* FourthCol */
+        .fourth-col {
+            position: relative;
+            width: 55%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* FourthColContext */
+        .fourth-col-context {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        /* FifthCol */
+        .fifth-col {
+            position: absolute;
+            width: 14%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            right: 0px;
+            top: 0px;
+        }
+
+        /* Signature */
+        .signature {
+            position: absolute;
+            top: 2px;
+            width: 100%;
+        }
+
+        .a4-container {
+            width: 595px;
+            height: 842px;
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+<div class="a4-container">
+    <div class="contract-paper">
+        <br/><br/>
+        <br/><br/>
+        <br/><br/>
+        <div class="title">
+            <span>차&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;용&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;증&nbsp;&nbsp;&nbsp;</span>
+        </div>
+        <br/><br/><br/>
+        <div class="money">
+            &#8361;&nbsp;<span th:text="${contract.amount}"></span> 원&nbsp;( <span th:text="${contract.amountInKorean}"></span>)
+        </div>
+        <br/>
+        <div class="body">
+            위 금액을 채무자가 채권자로부터 <span class="text-bold" th:text="${#temporals.format(contract.startDate, 'yyyy년 MM월 dd일')}"></span> 에 빌립니다.
+            이자는 연 <span class="text-bold" th:text="${contract.rate}"></span> <span class = "text-bold"> % </span> 로 하여
+            매달 <span class="text-bold" th:text="${#temporals.format(contract.startDate, 'd일')}"></span>  에 갚겠으며,
+            원금은 <span class="text-bold" th:text="${#temporals.format(contract.dueDate, 'yyyy년 MM월 dd일')}"></span> 까지 채권자에게 갚겠습니다.
+        </div>
+        <br/><br/>
+        <!-- 채무자 ContractTable -->
+        <div class="contract-table">
+            <div class="first-col">
+                <span class="text-big">채무자</span>
+            </div>
+            <div class="second-col">
+                <span class="text-big">이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;름</span>
+                <span class="text-big">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소</span>
+                <span class="text-big">주 민 등 록 번 호</span>
+                <span class="text-big">전&nbsp;&nbsp;&nbsp;&nbsp;화&nbsp;&nbsp;&nbsp;&nbsp;번&nbsp;&nbsp;&nbsp;호</span>
+            </div>
+            <div class="third-col">
+                <span class="text-big">:</span>
+                <span class="text-big">:</span>
+                <span class="text-big">:</span>
+                <span class="text-big">:</span>
+            </div>
+            <div class="fourth-col">
+                <span class="text-big"th:text="${lessee.name}"></span>
+                <span class="text-big"th:text="${lessee.address}"></span>
+                <span class="text-big"th:text="${lessee.rrn}"></span>
+                <span class="text-big"th:text="${lessee.phoneNumber}"></span>
+            </div>
+            <div class="fifth-col">
+                <span class="text-big">( 서 명 )</span>
+                <img class="signature" th:src="${lessee.signatureUrl}" />
+            </div>
+        </div>
+        <br/>
+
+        <!-- 채권자 ContractTable -->
+        <div class="contract-table">
+            <div class="first-col">
+                <span class="text-big">채권자</span>
+            </div>
+            <div class="second-col">
+                <span class="text-big">이&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;름</span>
+                <span class="text-big">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소</span>
+            </div>
+            <div class="third-col">
+                <span class="text-big">:</span>
+                <span class="text-big">:</span>
+            </div>
+            <div class="fourth-col">
+                <span class="text-big"th:text="${lessor.name}"></span>
+                <span class="text-big"th:text="${lessor.address}"></span>
+            </div>
+            <div class="fifth-col">
+                <span class="text-big">( 서 명 )</span>
+                <img class="signature" th:src="${lessor.signatureUrl}" />
+            </div>
+        </div>
+        <br/><br/>
+        <div class="date">
+        <span class="text-bigger" th:text="${#temporals.format(contract.startDate, 'yyyy년 MM월 dd일')}"></span>
+        </div>
+    </div>
+    
+</div>
+</body>
+</html>
