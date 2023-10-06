@@ -35,7 +35,7 @@ const KakaoAuthHandler = () => {
         })
         .then((res) => {
           const data = res.data;
-          if (data.address !== null) {
+          if (data.address !== null && data.rnn !== null && data.phone_number !== null && data.name !== null) {
             // 회원가입이 된 유저면 메인페이지로 이동
             if (localStorage.getItem('contractId')) {
               // 미로그인 시 카카오톡 공유 리다이렉트를 위한 조건

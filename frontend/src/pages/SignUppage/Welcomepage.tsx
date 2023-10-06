@@ -100,9 +100,11 @@ export default function Welcomepage() {
             복사
           </CopyButton>
         </BetweenDiv>
-        <TextBox fontSize="15.5px" fontWeight="500" color="var(--font-gray)">
-          {wallet}
-        </TextBox>
+        <BetweenDiv>
+          <RenewedTextBox>
+            {wallet}
+          </RenewedTextBox>
+        </BetweenDiv>
         <ButtonFrame>
           <ConfirmButtonRenewed onClick={() => navigation('/')}>휙 사용해보기</ConfirmButtonRenewed>
         </ButtonFrame>
@@ -152,7 +154,6 @@ const CheckDiv = styled.div`
   justify-content: center;
 `;
 
-
 const ButtonFrame = styled.div`
   position: relative;
   width: 100%;
@@ -167,4 +168,13 @@ const ConfirmButtonRenewed = styled(ConfirmButton)`
   border-radius: 16px;
   font-size: 17px;
   font-weight: 600;
+`;
+
+const RenewedTextBox = styled(TextBox)`
+  position: relative;
+  width: 320px;
+  font-size: 15.5px;
+  font-weight: 500;
+  color: var(--font-gray);
+  word-break: break-all;
 `;
