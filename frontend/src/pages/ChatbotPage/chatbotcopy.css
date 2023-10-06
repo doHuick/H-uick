@@ -1,0 +1,121 @@
+.react-chatbot-kit-chat-container {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 176px);
+  white-space: pre-line;
+  bottom: 80px;
+  font-weight: 500;
+}
+
+.react-chatbot-kit-chat-inner-container {
+  /* margin-top: 188px; */
+  height: 100%;
+  width: 100%;
+}
+
+.react-chatbot-kit-chat-header {
+  display: none;
+}
+
+.react-chatbot-kit-chat-input-container {
+  width: 100%;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  box-shadow: 0px -2px 8px rgba(0, 0, 0, 0.1);;
+}
+
+.react-chatbot-kit-chat-message-container {
+  position: relative;
+  padding-top: 36px;
+  height: calc(100% - 120px);
+}
+
+.react-chatbot-kit-chat-input {
+  width: 85%;
+  border: none;
+  margin-left: 5%;
+  background-color: #F0F0F0;
+  border-radius: 20px;
+  outline: none;
+}
+
+.react-chatbot-kit-chat-input-form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.react-chatbot-kit-chat-input::placeholder {
+}
+
+.react-chatbot-kit-chat-btn-send {
+  position: absolute;
+  right: 28px;
+  width: 30px;
+  height: 100%;
+  border-bottom-right-radius: 0px;
+  background-color: transparent
+  
+}
+
+.react-chatbot-kit-chat-btn-send-icon {
+  fill: var(--gray)
+}
+
+.react-chatbot-kit-chat-bot-message-container {
+
+}
+
+.react-chatbot-kit-chat-bot-avatar-container {
+}
+
+.react-chatbot-kit-chat-bot-avatar-icon {
+}
+
+.react-chatbot-kit-chat-bot-avatar-letter {
+}
+
+.react-chatbot-kit-chat-bot-message {
+  padding-left: 10px;
+  padding-right: 11px;
+  margin-left: 12px;
+  width: auto;
+  line-height: 19px;
+}
+
+.react-chatbot-kit-chat-bot-message-arrow {
+  display: none;
+
+}
+
+.react-chatbot-kit-chat-bot-loading-icon-container {
+}
+
+.chatbot-loader-container {
+}
+
+#chatbot-loader #chatbot-loader-dot1 {
+}
+
+#chatbot-loader #chatbot-loader-dot2 {
+}
+
+#chatbot-loader #chatbot-loader-dot3 {
+}
+
+.react-chatbot-kit-error {
+}
+
+.react-chatbot-kit-error-container {
+}
+
+.react-chatbot-kit-error-header {
+}
+
+.react-chatbot-kit-error-docs {
+}
+
+.react-chatbot-kit-user-chat-message{
+  color: var(--black);
+  margin-bottom: 24px;
+}

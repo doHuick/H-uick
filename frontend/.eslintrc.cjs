@@ -16,7 +16,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
     // project: './tsconfig.json',
-    tsconfigRootDir: __dirname,
+    // tsconfigRootDir: __dirname,
   },
   // plugins: 사용할 eslint 플러그인 설정
   plugins: ['react', '@typescript-eslint'],

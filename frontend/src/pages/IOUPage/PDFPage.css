@@ -1,0 +1,60 @@
+.mobile__pdf__container__header{
+  position: fixed;
+  top: 0px;
+  display: none;
+}
+
+
+.mobile__pdf__container {
+  position: relative;
+  height: 100%;
+}
+
+#viewerContainer {
+  position: relative;
+  margin-top : -42px;
+  height: 100%;
+}
+
+.pdfViewer {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page {
+  border: none !important;
+  border-image: none;
+  box-shadow: 0px 0px 12px rgba(0,0,0, 0.15);
+}
+
+.mobile__pdf__container footer {
+  background-image: none !important;
+  background-color: transparent;
+  box-shadow: none !important;
+}
+
+.pageUp {
+  display: none !important
+}
+.pageDown {
+  display: none !important
+}
+
+.zoomOut {
+  display: none !important
+}
+
+.zoomIn {
+  display: none !important
+}
+
+.pageNumber{
+  display: none !important
+}
+
+#footer {
+  display: none !important
+}
