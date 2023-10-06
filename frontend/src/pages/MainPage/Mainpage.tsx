@@ -279,8 +279,8 @@ export default function Mainpage() {
                   textAlign="left"
                   margin="-2px 0px 0px 0px"
                 >
-                  {feed.total_repayment_count}회 중{' '}
-                  {feed.current_repayment_count}회 납부 완료
+                  전체 {feed.total_repayment_count}회 중{' '}
+                  {feed.current_repayment_count}회차 납부 예정
                 </TextBox>
               </FlexDiv>
               <FlexEndDiv margin="14px 30px 0px 30px">
