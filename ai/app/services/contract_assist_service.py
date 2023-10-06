@@ -8,10 +8,11 @@ conversation_history = defaultdict(list)
 
 # OpenAI API model 설정
 MODEL_NAME = 'gpt-3.5-turbo'
-TEMPERATURE = 0.5
+TEMPERATURE = 0.8
 OPENAI_API_KEY = config('OPENAI_API_KEY')
 
 assist_model = ChatOpenAI(model_name=MODEL_NAME, temperature=TEMPERATURE, openai_api_key=OPENAI_API_KEY)
+
 # System 프롬프트 작성
 assist_sys = SystemMessage(content="""
                               Communicate with users in Korean.

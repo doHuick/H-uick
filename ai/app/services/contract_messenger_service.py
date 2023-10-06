@@ -20,19 +20,21 @@ OPENAI_API_KEY = config('OPENAI_API_KEY')
 
 messenger_model = ChatOpenAI(model_name=MODEL_NAME, temperature=TEMPERATURE, openai_api_key=OPENAI_API_KEY)
 
-
+# System 프롬프트 작성
 messenger_sys = SystemMessage(content=
                                 """
+                                When you respond, you'll use the following structure: 
+                                {"contract_info": {"loanAmount": 1000, "interestRate": 3.2, "maturityDate": "20210201"}}.
+                                Do not include anything else.
+
                                 It's an OCR extraction of what was said in the messenger.
                                 So there are some inaccuracies. You'll have to infer them.
                                 The goal is to extract the information needed for a loan agreement between two people promising to lend money.
                                 Today's date is """ + str(now.date()) + """.
                                 Currently, the maximum legal interest rate is 20% (except for small amounts up to 100,000 won).
 
-                                The dialogue will include the amount to be lent (loanAmount), the interest rate (interestRate), and the date to be received (maturityDate).
-                                When you respond, you'll use the following structure: 
-                                {"contract_info": {"loanAmount": 1000, "interestRate": 3.2, "maturityDate": "20210201"}}.
-                                Do not include anything else.
+                                The dialogue will include the amount to be lent (loanAmount),
+                                the interest rate (interestRate), and the date to be received (maturityDate).
                                 """
                               )
 
