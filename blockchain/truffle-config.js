@@ -41,10 +41,10 @@
  * https://trufflesuite.com/docs/truffle/getting-started/using-the-truffle-dashboard/
  */
 
-// require('dotenv').config();
-// const { MNEMONIC, PROJECT_ID } = process.env;
+require('dotenv').config();
+const { MNEMONIC, INFURA_API_KEY } = process.env;
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 module.exports = {
   /**
@@ -64,11 +64,18 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
-    // development: {
-    //  host: "127.0.0.1",     // Localhost (default: none)
-    //  port: 8545,            // Standard Ethereum port (default: none)
-    //  network_id: "*",       // Any network (default: none)
-    // },
+    development: {
+      host: "127.0.0.1",     // Localhost (default: none)
+      port: 8545,            // Standard Ethereum port (default: none)
+      network_id: "*",       // Any network (default: none)
+    },
+    sepolia: {
+      provider: () => new HDWalletProvider(MNEMONIC, `https://sepolia.infura.io/v3/${INFURA_API_KEY}`),
+      network_id: 11155111,            // Sepolia의 네트워크 ID
+      // gas: 8000000,                  // 가스 한도
+      // gasPrice: 20000000000,        // 가스 가격
+      // skipDryRun: true              // 건너뛰기 설정
+    },
     //
     // An additional network, but with some advanced options…
     // advanced: {
@@ -106,15 +113,15 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.21",      // Fetch exact version from solc-bin (default: truffle's version)
+      version: "0.5.1",      // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      // settings: {          // See the solidity docs for advice about optimization and evmVersion
-      //  optimizer: {
-      //    enabled: false,
-      //    runs: 200
-      //  },
+      settings: {          // See the solidity docs for advice about optimization and evmVersion
+        optimizer: {
+          enabled: true,
+          runs: 200
+        },
       //  evmVersion: "byzantium"
-      // }
+      }
     }
   },
 
