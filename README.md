@@ -15,7 +15,7 @@
 <a href="https://h-uick.com/"> 지금 바로 이용해보기</a>
 </p>
 <p>
-<a href="https://h-uick.com/"> 팀 노션</a>
+<a href="https://lemonade-log.notion.site/d5dbe681c64b445cb95b81abe46e449e?v=8c62ac358f3044bd80bf3909e75b622f&pvs=4"><img src="https://img.shields.io/badge/팀%20했다치고%20Wiki-000000?style=flat-square&logo=notion&logoColor=white"/></a>
 </p>
 
 [프로젝트 소개](#🚀-프로젝트-소개) • [주요 기능](#✨-주요-기능) • [기술 스택](#🔧-기술-스택)• [인프라 구조](#⚙️-인프라-구조)• [개발 일지](#📚-팀-ashe-개발-일지)• [팀원 소개](#👩‍💻-팀원-소개)
@@ -27,8 +27,8 @@
  <table>
     <tr>
       <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273084861-673d33c3-b634-4b81-a9ad-bed8cb9ca644.gif" /></td>
-      <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/0087115c-7aaf-476e-9983-233038ab2fb6" /></td>
-            <td align="center"><img src="https://github.com/fluffymn/readme-test/assets/55385934/de5911ee-24e8-4d11-bc78-cde9bc1e6360" /></td>
+      <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273088967-78b9c05f-017f-42a3-8326-b635506da256.gif" /></td>
+            <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273084875-2e2f2e3a-6ca3-499b-a3c3-3dd6ad9b3b62.gif" /></td>
     </tr>
 </table>
 
@@ -63,11 +63,11 @@
     </tr>
     <tr>
       <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273088967-78b9c05f-017f-42a3-8326-b635506da256.gif" /></td>
-      <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273084870-8591880d-857d-477f-9e72-39365b5a1fb2.gif" /></td>
+      <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273089827-522b8617-3e6d-4e1a-b4c0-4add6b76d2d1.PNG" /></td>
     </tr>
     <tr>
-      <td align="center">소셜 로그인으로 로그인이 가능한 페이지</td>
-      <td align="center">차용증 작성을 위한 개인정보 입력 페이지</td>
+      <td align="center">내가 빌리거나 빌려준 돈을 확인하는 페이지</td>
+      <td align="center">계약의 상세정보를 확인할 수 있는 페이지</td>
     </tr>
     <tr>
       <td align="center" style="font-weight: bold; font-size: 18;">휙봇과 차용증 작성하기</td>
@@ -75,23 +75,23 @@
     </tr>
     <tr>
       <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273084875-2e2f2e3a-6ca3-499b-a3c3-3dd6ad9b3b62.gif" /></td>
-      <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273084870-8591880d-857d-477f-9e72-39365b5a1fb2.gif" /></td>
-    </tr>
-    <tr>
-      <td align="center">소셜 로그인으로 로그인이 가능한 페이지</td>
-      <td align="center">차용증 작성을 위한 개인정보 입력 페이지</td>
-    </tr>
-    <tr>
-      <td align="center" style="font-weight: bold; font-size: 18;">상환하기</td>
-      <td align="center" style="font-weight: bold; font-size: 18;">카카오톡 캡쳐로 차용증 작성하기</td>
-    </tr>
-    <tr>
-      <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273084879-cdf248b1-0ece-4037-8871-42dd2b5e8a2e.gif" /></td>
       <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273088184-ce4b0c0b-fdd7-45f5-bc94-1a5ed5572424.gif" /></td>
     </tr>
     <tr>
-      <td align="center">소셜 로그인으로 로그인이 가능한 페이지</td>
-      <td align="center">차용증 작성을 위한 개인정보 입력 페이지</td>
+      <td align="center">채팅으로 차용증을 작성한다</td>
+      <td align="center">카카오톡 캡쳐로 차용증을 작성한다</td>
+    </tr>
+    <tr>
+      <td align="center" style="font-weight: bold; font-size: 18;">상환하기</td>
+      <td align="center" style="font-weight: bold; font-size: 18;">차용증 PDF로 확인하기</td>
+    </tr>
+    <tr>
+      <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273084879-cdf248b1-0ece-4037-8871-42dd2b5e8a2e.gif" /></td>
+      <td align="center"><img src="https://user-images.githubusercontent.com/55385934/273091003-2cdab912-a2af-466a-872a-3fdf11537b0f.gif" /></td>
+    </tr>
+    <tr>
+      <td align="center">차용에 대한 이자나 원금을 상환하는 페이지</td>
+      <td align="center">차용증을 PDF로 확인하는 페이지</td>
     </tr>
 
  </table>
@@ -142,7 +142,7 @@
 
 ## ⚙️ 인프라 구조
 
-<img src="https://user-images.githubusercontent.com/55385934/272822759-3e3c2030-89dc-4fea-a6c9-93c21a29214a.png" width="800" />
+<img src="https://user-images.githubusercontent.com/55385934/273091395-1fe6846b-0111-4d36-8853-218e68e4bb90.png" width="800" />
 
 <br />
 
