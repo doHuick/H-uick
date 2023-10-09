@@ -74,6 +74,23 @@ export default function IOUDetailPage() {
   const [contractInfo, setContractInfo] = useState<ContractInfoProps>()
   const [userInfo, setUserInfo] = useState<UserInfoProps>()
 
+  toastConfig({
+    theme: 'frosted-glass',
+    position: 'top-center',
+    zIndex: 5,
+    maxVisibleToasts: 1
+  })
+
+  const justTransferred = localStorage.getItem("justTransferred");
+  if (justTransferred == "true") {
+    toast('송금이 완료되었습니다');
+    localStorage.setItem("justTransferred", "false")
+  } else {
+    localStorage.setItem("justTransferred", 'false')
+
+  }
+
+  
 
   toastConfig({
     theme: 'frosted-glass',
@@ -150,10 +167,9 @@ export default function IOUDetailPage() {
       )
       .then(() => {
         // console.log(res)
+        localStorage.setItem("justTransferred", 'true')
         location.reload();
       })
-
-    toast('송금이 완료되었습니다');
   }
 
   const toPDF = () => {

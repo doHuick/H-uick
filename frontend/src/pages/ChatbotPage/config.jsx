@@ -20,8 +20,8 @@ const config = {
       <div
         style={{
           position: 'absolute',
-          marginTop: '-33px',
-          marginLeft: '14px',
+          marginTop: '-32px',
+          marginLeft: '3px',
           display: 'flex',
           alignItems: 'flex-end',
           zIndex: '0',

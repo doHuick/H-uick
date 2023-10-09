@@ -41,7 +41,7 @@ const TabContainer = styled.div`
   height: 35px;
   align-items: center;
   line-height: 40px;
-  margin: 10px 14px 8px 14px;
+  margin: 14px 14px 11px 14px;
 `;
 
 const Tab = styled.div<TabProps>`
