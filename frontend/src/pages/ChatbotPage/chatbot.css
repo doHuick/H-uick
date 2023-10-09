@@ -3,7 +3,7 @@
   width: 100%;
   height: calc(100% - 140px);
   white-space: pre-line;
-  bottom: 70px;
+  bottom: 76px;
   font-weight: 400;
 }
 
@@ -61,6 +61,7 @@
 }
 
 .react-chatbot-kit-chat-btn-send-icon {
+  margin-top: 3px;
   fill: var(--gray)
 }
 
@@ -80,7 +81,7 @@
 .react-chatbot-kit-chat-bot-message {
   padding-left: 10px;
   padding-right: 11px;
-  margin-left: 12px;
+  margin-left: 0px;
   width: auto;
   line-height: 19px;
 

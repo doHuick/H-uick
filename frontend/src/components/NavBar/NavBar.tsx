@@ -43,22 +43,28 @@ const NavBar = () => {
         onClick={() => handleNavClick('main')}
         active={activeNav === 'main'}
       >
-        <MainSvg />
-        홈
+        <MainSvg/>
+        <NavText>
+          홈
+        </NavText>
       </NavItem>
       <NavItem
         onClick={() => handleNavClick('chatbot')}
         active={activeNav === 'chatbot'}
       >
         <ChatbotSvg />
-        계약
+        <NavText>
+          계약
+        </NavText>
       </NavItem>
       <NavItem
         onClick={() => handleNavClick('mypage')}
         active={activeNav === 'mypage'}
       >
         <MySvg />
-        내 정보
+        <NavText>
+          내 정보
+        </NavText>
       </NavItem>
     </BottomBar>
   );
@@ -71,10 +77,10 @@ const BottomBar = styled.div`
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 70px;
+  height: 76px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   background-color: #f0f0f0;
 `;
 
@@ -87,6 +93,7 @@ const NavItem = styled.div<NavItemProps>`
   flex-wrap: wrap;
   flex-direction: column;
   position: relative;
+  margin-top: -4px;
   svg {
     cursor: pointer;
     g rect {
@@ -95,3 +102,11 @@ const NavItem = styled.div<NavItemProps>`
   }
   color: ${(props) => (props.active ? 'var(--huick-blue)' : 'var(--gray)')};
 `;
+
+
+const NavText = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  font-size: 13px
+`

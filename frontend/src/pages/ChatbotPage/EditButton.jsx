@@ -40,7 +40,7 @@ const EditButton = (props) => {
 export default EditButton;
 
 const ChatbotButton = styled.div`
-  margin-left: 12px;
+  margin-right: 12px;
   width: auto;
   padding-left: 12px;
   padding-right: 12px;

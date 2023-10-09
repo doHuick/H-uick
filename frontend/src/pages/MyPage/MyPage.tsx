@@ -286,8 +286,8 @@ const LogoutAndVer = styled.div`
   align-items: center;
 `;
 const HuickVer = styled.div`
-  font-size: 14;
+  font-size: 13px;
   color: var(--gray);
-  font-weight: 500;
-  margin-bottom: 102px;
+  font-weight: 400;
+  margin-bottom: 96px;
 `;

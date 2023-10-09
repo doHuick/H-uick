@@ -318,13 +318,9 @@ const FinalContract = (props) => {
         </ContractPaper>
       </ChatbotButton>
       <ChatbotButtonShare>
-        <span
-          onClick={() => {
-            showModal();
-          }}
-        >
-          {buttonText}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        </span>
+        <ShareText onClick={() => {showModal();}}>
+          {buttonText}
+        </ShareText>
         <RightArrowResized
           onClick={() => {
             showModal();
@@ -380,8 +376,8 @@ const ChatbotButton = styled.span`
   text-align: left;
   padding-left: 10px;
   padding-right: 11px;
-  margin-left: 12px;
   margin-right: 12px;
+  /* margin-right: 12px; */
   line-height: 19px;
   background-color: var(--huick-blue);
   display: flex;
@@ -399,7 +395,6 @@ const ChatbotButtonShare = styled(ChatbotButton)`
   text-align: left;
   padding-left: 10px;
   padding-right: 11px;
-  margin-left: 12px;
   margin-right: 12px;
   line-height: 19px;
   background-color: #f1f1f1;
@@ -407,7 +402,7 @@ const ChatbotButtonShare = styled(ChatbotButton)`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  width: 54%;
+  width: 52%;
 `;
 
 const RightArrowResized = styled(RightArrow)`
@@ -550,3 +545,8 @@ const ToFirst = styled(ChatbotButton)`
   justify-content: flex-start;
   width: 180px;
 `;
+
+const ShareText = styled.div`
+  position: relative;
+  width: 90%;
+`

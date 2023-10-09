@@ -247,7 +247,7 @@ export default function SignUppage() {
 
 const TitleFrame = styled.div`
   position: relative;
-  width: calc(100% - 56px);
+  width: calc(100% - 58px);
   margin-top: 64px;
   margin-left: 28px;
 `;

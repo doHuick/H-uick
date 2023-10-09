@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import axios, { BASE_URL } from '../../api/apiController';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import HeadBar from '../../components/HeadBar/HeadBar';
 import { MiniConfirmButton } from '../../components/Button/Button';
 import BorrowModal from '../../components/TransferModal/BorrowModal';
 import SharePasswordModal from '../../components/Password/SharePasswordModal';
@@ -278,7 +277,6 @@ export default function SharePage() {
 
   return (
     <Main>
-      <HeadBar pageName={'계약 완료하기'} />
       <TextFrame>
         <TextBoxBold>계약 완료 전 차용증을 검토해주세요</TextBoxBold>
         <TextBox>오기입된 내용이 있다면</TextBox>
@@ -496,7 +494,7 @@ const Main = styled.div`
 const TextFrame = styled.div`
   position: relative;
   width: 100%;
-  margin-top: 88px;
+  margin-top: 36px;
   margin-left: 28px;
 `;
 

@@ -193,7 +193,7 @@ export default function Mainpage() {
           <TextBox
             fontSize="14px"
             fontWeight="300"
-            color="var(--background)"
+            color="var(--white)"
             textAlign="left"
           >
             싸피{' '}
@@ -214,7 +214,7 @@ export default function Mainpage() {
           fontWeight="600"
           color="var(--white)"
           textAlign="left"
-          margin="21px 30px 22px 30px"
+          margin="31px 30px 27px 30px"
         >
           {nowBalance}
           <TextBox
@@ -235,15 +235,20 @@ export default function Mainpage() {
       <MainTab setNowActive={handleTabClick} />
       {feeds.length === 0 ? (
         <CenterDiv>
-          <PigImg src="/pig-head.png" />
-          <TextBox
-            fontSize="25px"
-            fontWeight="700"
-            color="var(--black)"
-            textAlign="center"
-          >
-            아직 체결된 계약이 없습니다.
-          </TextBox>
+          <LineFrame>
+            <PigImg src="/pig-head.png" />
+
+          </LineFrame>
+          <LineFrame>
+            <TextBox
+              fontSize="20px"
+              fontWeight="500"
+              color="var(--font-gray)"
+              textAlign="center"
+              >
+              아직 체결된 계약이 없습니다.
+            </TextBox>
+            </LineFrame>
         </CenterDiv>
       ) : (
         <ContractsDiv>
@@ -314,10 +319,10 @@ export default function Mainpage() {
 const BlueBox = styled.div`
   background-color: var(--huick-blue);
   width: 360px;
-  height: 160px;
+  height: 176px;
   border-radius: 10px;
   box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.04);
-  margin: 20px 14px 6.5px 14px;
+  margin: 20px 13px 6.5px 15px;
   padding: 20px 0px;
 `;
 
@@ -326,7 +331,7 @@ const WhiteBox = styled.div`
   width: 360px;
   border-radius: 10px;
   box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.04);
-  margin: 11px 14px;
+  margin: 0px 13px 12px 15px;
   padding: 14px 0px;
   padding-bottom: 18px;
   &:hover {
@@ -351,9 +356,9 @@ const FlexDiv2 = styled(FlexDiv)`
 `;
 
 const PigImg = styled.img`
-  width: 125px;
-  height: 125px;
-  margin: 80px 0 30px 0;
+  width: 88px;
+  height: 88px;
+  margin: 124px 0 16px 0;
 `;
 
 const CenterDiv = styled.div`
@@ -369,6 +374,14 @@ const StyledMain = styled(Main)`
 
 const ContractsDiv = styled.div`
   overflow-y: scroll;
-  height: calc(100% - 352px);
+  height: calc(100% - 373px);
   /* height: 490px; */
 `;
+
+const LineFrame = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
