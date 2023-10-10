@@ -214,7 +214,7 @@ export default function Mainpage() {
           fontWeight="600"
           color="var(--white)"
           textAlign="left"
-          margin="31px 30px 27px 30px"
+          margin="30px 30px 31px 30px"
         >
           {nowBalance}
           <TextBox
@@ -319,7 +319,7 @@ export default function Mainpage() {
 const BlueBox = styled.div`
   background-color: var(--huick-blue);
   width: 360px;
-  height: 176px;
+  height: 181px;
   border-radius: 10px;
   box-shadow: 2px 2px 8px 0px rgba(0, 0, 0, 0.04);
   margin: 20px 13px 6.5px 15px;
@@ -374,7 +374,7 @@ const StyledMain = styled(Main)`
 
 const ContractsDiv = styled.div`
   overflow-y: scroll;
-  height: calc(100% - 373px);
+  height: calc(100% - 378px);
   /* height: 490px; */
 `;
 
