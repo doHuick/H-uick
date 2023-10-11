@@ -10,7 +10,7 @@ const ChatKakaoButton = (props) => {
           id: 1,
         },
         {
-          text: "카카오톡 캡처로 작성",
+          text: "메신저 캡처로 작성",
           handler: props.actionProvider.handleKakaoCreate,
           id: 2
         },

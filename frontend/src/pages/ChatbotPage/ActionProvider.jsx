@@ -113,7 +113,7 @@ const ActionProvider = ({ createChatBotMessage, setState, children }) => {
       userButtons.push('createwithChat')
       localStorage.setItem("userButtonsLocal", JSON.stringify(userButtons))
       localStorage.setItem("kakaoUploaded", 'false')
-      const clientmessage = createClientMessage('카카오톡 캡처로 작성', { widget: 'userimageupload', delay: 900 });
+      const clientmessage = createClientMessage('메신저 캡처로 작성', { widget: 'userimageupload', delay: 900 });
         
       setState((prev) => ({
         ...prev,
