@@ -179,7 +179,7 @@ export default function IOUDetailPage() {
 
 
   return (
-    <Main backgroundColor='var(--white)'>
+    <ScrollMain backgroundColor='var(--white)'>
       <HeadBar pageName="차용증" />
       <InnerContainer>
         <TitleFrame>
@@ -294,9 +294,13 @@ export default function IOUDetailPage() {
       ): null}
 
       
-    </Main>
+    </ScrollMain>
   );
 }
+
+const ScrollMain = styled(Main)`
+  height: calc(100% - 76px);
+`
 
 
 const InnerContainer = styled.div`
